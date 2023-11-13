@@ -1,4 +1,4 @@
-# counter-venny
+# GEA-MEDICAL-FRONTEND-WEBAPPS
 
 ## Project setup
 ```
