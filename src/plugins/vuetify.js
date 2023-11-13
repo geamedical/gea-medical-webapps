@@ -20,7 +20,7 @@ Vue.use(VueGoogleMaps, {
         libraries: "places"
     }
 });
-const url = 'http://127.0.0.1:3333/'
+const url = 'http://localhost:3333/'
 const SocketInstance = socketio.connect(url)
 Vue.use(new VueSocketIO({
     debug: true,

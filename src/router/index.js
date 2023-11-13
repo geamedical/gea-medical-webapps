@@ -6,13 +6,22 @@ Vue.use(VueRouter)
 
 const routes = [
   { path: '/', redirect: { name: 'login' } },
-  // { path: "*", redirect: { name: 'error-404' } },
+  { path: "*", redirect: { name: 'error-404' } },
   {
     path: '/error-404',
     name: 'error-404',
     component: () => import('@/views/ErrorView.vue'),
     meta: {
       layout: 'blank',
+    },
+  },
+  {
+    path: '/new-employee-request-form',
+    name: 'new-employee-request-form',
+    component: () => import('@/views/apps/beranda/Forms/Permintaan/FormPermintaan.vue'),
+    meta: {
+      layout: 'blank',
+      requiresAuth: false,
     },
   },
   {

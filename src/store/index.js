@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import $axios from './api'
 // modules::start
 import auth from './modules/auth.js'
 import masterdata_user from './modules/masterdata_user.js'
@@ -15,6 +15,10 @@ export default new Vuex.Store({
   state: {
     token: localStorage.getItem('token'),
     token_expired: localStorage.getItem('expires_at'),
+    snackbar: {
+      status: false,
+      data: []
+    },
   },
   getters: {
     isAuth: state => state.token !== 'null' && state.token != null,
@@ -23,11 +27,34 @@ export default new Vuex.Store({
     SET_TOKEN(state, payload) {
       state.token = payload
     },
+    SET_SNACKBAR(state, payload) {
+      state.snackbar = {
+        status: payload.status,
+        data: payload.data,
+      }
+    },
     SET_TOKEN_EXPIRED(state, payload) {
       state.token_expired = payload
     },
   },
   actions: {
+    // eslint-disable-next-line no-empty-pattern
+    getnotif({},payload) {
+      return new Promise(resolve => {
+        const {
+          page,
+          limit,
+          sortDesc,
+        } = payload
+        $axios.get(`api/notification?page=${page}&limit=${limit}&sortDesc=${sortDesc}`)
+          .then(response => {
+            resolve(response.data.data)
+          })
+          .catch(error => {
+            resolve(error.response)
+          })
+      })
+    },
   },
   modules: {
     auth,

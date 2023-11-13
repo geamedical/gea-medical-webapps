@@ -87,6 +87,7 @@ export default {
           title: res.data.msg,
           msg: res.data.msg === 'login error' ? 'Email & password salah !!' : 'Berhasil.'
         }
+        this.$router.push({ name: 'dashboard' })
       })
     }
   }

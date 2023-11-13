@@ -43,9 +43,8 @@ export default {
           this.$router.push({ name: 'login' })
         } else {
           const cekRoute = this.$router.currentRoute.meta.requiresAuth
-          if (!cekRoute) {
-            this.$router.push({ name: 'dashboard' })
-          }
+          const cekUrl = this.$router.currentRoute.name
+          cekRoute === undefined ? this.$router.push({ name: 'dashboard' }).catch(()=>{}) : this.$router.push({ name: cekUrl }).catch(()=>{})
         }
       })
     },

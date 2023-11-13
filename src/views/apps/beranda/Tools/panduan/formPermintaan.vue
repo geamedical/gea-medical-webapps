@@ -1,10 +1,9 @@
 <template>
-  <v-card class="card">
+  <v-card class="card" flat>
     <v-card-title> Persiapan </v-card-title>
     <v-card-text>
       <p>
-        Sebelum fitur absensi digunakan, terlebih dulu anda harus mempersiapkan
-        beberapa data antara lain :
+        Sebelum form permintaan digunakan, pastikan HR sudah melakukan melakukan beberapa hal antara lain :
       </p>
       <ul>
         <li>
@@ -32,11 +31,11 @@
           </p>
         </li>
         <li>
-          <strong>Data Toko</strong><br />
+          <strong>Data Divisi</strong><br />
           <p>
-            Data toko disiapkan terlebih dulu sebelum pembuatan data pengguna
+            Data divisi disiapkan terlebih dulu sebelum pembuatan data pengguna
             karena akan digunakan pada saat penambahan data pengguna untuk
-            menentukan lokasi kordinat dimana pengguna dapat melakukan absensi.
+            menentukan divisi pengguna.
           </p>
         </li>
         <h3>Roudmap Persiapan data</h3>
@@ -45,7 +44,7 @@
             <v-icon>mdi-forward</v-icon>
           </template>
         </v-breadcrumbs>
-        <h3>Roudmap Aktifitas absensi</h3>
+        <h3>Roudmap Aktifitas Permintaan</h3>
         <v-breadcrumbs :items="itemss">
           <template v-slot:divider>
             <v-icon>mdi-forward</v-icon>
@@ -55,7 +54,7 @@
       <v-alert color="info" dark icon="mdi-firework" dense>
         <p>
           Jika anda mengalami kesulitan dalam proses penggunaan sistem, anda
-          dapat menghubungi kami di nomor yang tertera di footer sistem.
+          dapat menghubungi divisi IT.
           terimakasih.
         </p>
       </v-alert>
@@ -63,5 +62,87 @@
   </v-card>
 </template>
 <script>
-export default {};
+export default {
+  data: () => ({
+    items: [
+      {
+        text: "Persiapan data role",
+        disabled: false,
+        href: "1",
+      },
+      {
+        text: "Tentukan akses setiap role",
+        disabled: false,
+        href: "2",
+      },
+      {
+        text: "Siapkan data divisi",
+        disabled: false,
+        href: "3",
+      },
+      {
+        text: "Siapkan data pengguna",
+        disabled: false,
+        href: "4",
+      },
+      {
+        text: "Pengguna siap menggunakan sistem",
+        disabled: false,
+        href: "5",
+      },
+    ],
+    itemss: [
+      {
+        text: "Pengguna melakukan login",
+        disabled: false,
+        href: "1",
+      },
+      {
+        text: "Pengguna memilih menu form/form permintaan",
+        disabled: false,
+        href: "2",
+      },
+      {
+        text: "Pengguna mengisi form permintaan",
+        disabled: false,
+        href: "3",
+      },
+      {
+        text: "Submit form",
+        disabled: false,
+        href: "4",
+      },
+      {
+        text: "Data terkirim dan otomatis mengirimkan notifikasi pada divisi GA & IT",
+        disabled: false,
+        href: "5",
+      },
+      {
+        text: "Divisi GA & IT menerima notifikasi",
+        disabled: false,
+        href: "5",
+      },
+      {
+        text: "Divisi GA & IT menyiapkan apa yang dipinta",
+        disabled: false,
+        href: "5",
+      },
+      {
+        text: "Divisi GA & IT menyerahkan apa yang dipinta",
+        disabled: false,
+        href: "5",
+      },
+      {
+        text: "Pengguna mengkonfirmasi permintaan diterima.",
+        disabled: false,
+        href: "5",
+      },
+      {
+        text: "Proses selesai",
+        disabled: false,
+        href: "5",
+      },
+    ],
+  }),
+};
 </script>
