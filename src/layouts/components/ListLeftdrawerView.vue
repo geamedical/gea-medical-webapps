@@ -92,7 +92,7 @@ export default {
                 icon: 'mdi-list-box-outline',
                 child: true,
                 itemchild: [
-                    ['Form Permintaan', 'mdi-frequently-asked-questions', '/users-absen'],
+                    ['Form Permintaan', 'mdi-frequently-asked-questions', '/form-permintaan'],
                 ],
                 link: '/'
             },

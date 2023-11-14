@@ -11,7 +11,14 @@
         </v-btn>
       </v-badge>
     </template>
-    <v-list subheader two-line dense>
+    <v-list
+      subheader
+      two-line
+      dense
+      v-scroll.self="onScroll"
+      class="overflow-y-auto"
+      max-height="400"
+    >
       <v-list-item-group
         v-model="selected"
         active-class="pink--text"
@@ -20,23 +27,38 @@
         <div
           v-for="(item, index) in notifdata"
           :key="index"
-          @click="lihat(item.type)"
+          @click="lihat(item.id)"
         >
-          <v-list-item>
+          <v-list-item v-if="validateView(item.user_notif_target)">
             <v-icon :color="item.color">
               {{ item.icon }}
             </v-icon>
             <v-list-item-content>
-              <v-list-item-title v-html="title(item.data_encode)" class="ml-3" />
-              <v-list-item-subtitle v-html="subtitle(item.data_encode, item.type)" class="ml-3" />
+              <v-list-item-title
+                v-html="title(item.data_encode)"
+                class="ml-3"
+              />
+              <v-list-item-subtitle
+                v-html="subtitle2(item.data_encode, item.type)"
+                class="ml-3"
+              />
+              <v-list-item-subtitle
+                v-html="subtitle(item.data_encode, item.type)"
+                class="ml-3"
+              />
             </v-list-item-content>
 
             <v-list-item-action>
-              <v-list-item-action-text>Lihat</v-list-item-action-text>
+              <v-list-item-action-text>{{
+                item.view === "n" ? "Lihat" : ""
+              }}</v-list-item-action-text>
             </v-list-item-action>
           </v-list-item>
 
-          <v-divider v-if="index < notifdata.length - 1" :key="index"></v-divider>
+          <v-divider
+            v-if="index < notifdata.length - 1"
+            :key="index"
+          ></v-divider>
         </div>
       </v-list-item-group>
       <v-list-item v-else>
@@ -52,11 +74,12 @@
   </v-menu>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 import moment from "moment";
 export default {
   data() {
     return {
+      scroll: 0,
       count: null,
       selected: null,
       notifdata: [],
@@ -68,24 +91,66 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["isAuth"]),
     ...mapState("auth", {
       authenticated: (state) => state.authenticated,
     }),
   },
   mounted() {
-    this.getNotifLogin();
-    this.getNotifLogout();
-    this.getNotifData();
+    if (this.isAuth) {
+      this.getNotifLogin();
+      this.getNotifLogout();
+      this.getNotifData();
+    }
+  },
+  watch: {
+    scroll(e) {
+      if (e > 420) {
+        this.options.page ++;
+        this.getNotifData();
+      }
+      if (e < 0) {
+        this.options.page --;
+        this.getNotifData();
+      }
+    },
   },
   methods: {
     ...mapActions(["getnotif"]),
-    title(data){
-        const dt = JSON.parse(data)
-        return `<strong>${dt.name}</strong>`
+    onScroll(e) {
+      this.scroll = e.target.scrollTop;
     },
-    subtitle(data, type){
-        const dt = JSON.parse(data)
-        return `${type.replace(/-/g, " ")} pada <strong>${moment(dt.created_at).locale('id').startOf('hour').fromNow()}</strong>`
+    title(data) {
+      const dt = JSON.parse(data);
+      if (dt.name !== undefined)
+        return `<strong>${
+          dt.name.charAt(0).toUpperCase() + dt.name.slice(1).toLowerCase()
+        }</strong>`;
+      if (dt.user.name !== undefined)
+        return `<strong>${
+          dt.user.name.charAt(0).toUpperCase() +
+          dt.user.name.slice(1).toLowerCase()
+        }</strong>`;
+    },
+    subtitle(data, type) {
+      const dt = JSON.parse(data);
+      return `<strong>${
+        type.charAt(0).toUpperCase() +
+        type.slice(1).toLowerCase().replace(/-/g, " ")
+      } </strong> pada <strong>${moment(dt.created_at)
+        .locale("id")
+        .startOf("hour")
+        .fromNow()}</strong>`;
+    },
+    subtitle2(data, type) {
+      const dt = JSON.parse(data);
+      var htmlParse = "<table>";
+      if (type === "form-permintaan")
+        dt.request.forEach((e) => {
+          htmlParse += `<tr><th>Mengajukan</th><td>: ${e.type}</td></tr>`;
+        });
+      htmlParse += "</table>";
+      return htmlParse;
     },
     getNotifLogin() {
       this.sockets.subscribe("auth-login:user", (data) => {
@@ -109,9 +174,17 @@ export default {
     },
     getNotifData() {
       this.getnotif(this.options).then((e) => {
-        this.count=e.count
-        this.notifdata = e.pagination.data
+        this.count = e.count;
+        this.notifdata = e.pagination.data;
       });
+    },
+    validateView() {
+      // const visible = this.authenticated.id === e || e === null ? true : false;
+      // return visible;
+      return true;
+    },
+    lihat(e) {
+      console.log(e);
     },
   },
 };

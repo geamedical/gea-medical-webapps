@@ -451,6 +451,90 @@ const routes = [
       },
     ]
   },
+  {
+    path: '/form-permintaan',
+    component: () => import('@/views/apps/Form/FormPermintaan/IndexView.vue'),
+    meta: {
+      layout: 'content',
+      requiresAuth: true,
+      title: 'Form Permintaan',
+    },
+    children: [
+      {
+        path: '',
+        name: 'form-permintaan.data',
+        component: () => import('@/views/apps/Form/FormPermintaan/DataView.vue'),
+        meta: {
+          requiresAuth: true,
+          title: 'Kelola Departement',
+          breadscrum: [
+            {
+              text: 'Beranda',
+              disabled: false,
+              href: '/',
+            },
+            {
+              text: 'Master Data Departement',
+              disabled: true,
+              href: '/form-permintaan',
+            },
+          ]
+        }
+      },
+      {
+        path: 'add',
+        name: 'form-permintaan.add',
+        component: () => import('@/views/apps/Form/FormPermintaan/AddView.vue'),
+        meta: {
+          requiresAuth: true,
+          title: 'Tambah data Departement',
+          breadscrum: [
+            {
+              text: 'Beranda',
+              disabled: false,
+              href: '/',
+            },
+            {
+              text: 'Master Data Departement',
+              disabled: true,
+              href: '/form-permintaan',
+            },
+            {
+              text: 'Tambah Data Departement',
+              disabled: true,
+              href: '/form-permintaan/add',
+            },
+          ]
+        }
+      },
+      {
+        path: 'show/:id',
+        name: 'form-permintaan.show',
+        component: () => import('@/views/apps/Form/FormPermintaan/ShowView.vue'),
+        meta: {
+          requiresAuth: true,
+          title: 'Detail/Update Departement',
+          breadscrum: [
+            {
+              text: 'Beranda',
+              disabled: false,
+              href: '/',
+            },
+            {
+              text: 'Master Data Departement',
+              disabled: true,
+              href: '/form-permintaan',
+            },
+            {
+              text: 'Lihat Data Departement',
+              disabled: true,
+              href: '/form-permintaan/show/:id',
+            },
+          ]
+        }
+      },
+    ]
+  },
 ]
 
 const router = new VueRouter({

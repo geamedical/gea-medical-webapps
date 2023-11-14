@@ -9,106 +9,138 @@
           <v-row>
             <v-col col="12" md="4">
               <v-text-field
-                v-model="message4"
+                dense
+                outlined
+                class="mb-input"
                 label="Nama"
-                outlined
-                dense
-                clearable
+                v-model="form.user.name"
               ></v-text-field>
             </v-col>
             <v-col col="12" md="4">
-              <v-text-field
-                v-model="message4"
+              <v-select
+                dense
+                outlined
+                :items="data_divisi"
+                item-text="deptname"
+                item-value="id"
                 label="Divisi"
-                outlined
-                dense
-                clearable
-              ></v-text-field>
+                class="mb-input"
+                v-model="form.user.dept_id"
+              ></v-select>
             </v-col>
             <v-col col="12" md="4">
-              <v-text-field
-                v-model="message4"
-                label="Jabatan"
-                outlined
+              <v-select
                 dense
-                clearable
-              ></v-text-field>
+                outlined
+                :items="data_role"
+                item-text="rolename"
+                item-value="id"
+                label="Jabatan"
+                class="mb-input"
+                v-model="form.user.role_id"
+              ></v-select>
             </v-col>
           </v-row>
         </v-card-text>
         <v-card-title>Permintaan</v-card-title>
         <v-card-text>
           <v-checkbox
-            v-model="form.checkboxMail"
-            :label="`Apakah anda membutuhkan email?: ${
-              form.checkboxMail ? 'Ya, butuh' : 'Tidak'
-            }`"
+            v-model="email"
+            :label="`Email: ${email ? 'ya' : 'tidak'}`"
           ></v-checkbox>
           <v-text-field
-            v-if="form.checkboxMail"
-            v-model="message4"
-            label="Alamat email"
-            outlined
+            :disabled="!email"
             dense
-            clearable
+            outlined
+            class="mb-input"
+            label="Alamat email"
+            v-model="permintaan[0].detail"
           ></v-text-field>
           <v-checkbox
-            v-model="form.checkboxWifi"
-            :label="`Apakah anda membutuhkan akses wifi?: ${
-              form.checkboxWifi ? 'Ya, butuh' : 'Tidak'
-            }`"
+            v-model="wifi"
+            :label="`Wifi: ${wifi ? 'ya' : 'tidak'}`"
           ></v-checkbox>
-          <v-row v-if="form.checkboxWifi">
-            <v-col>
+          <v-container>
+            <v-row>
               <v-text-field
-                v-model="message4"
+                :disabled="!wifi"
+                dense
+                outlined
+                class="mb-input"
                 label="Nama lengkap"
-                outlined
-                dense
-                clearable
+                v-model="akseswifi.nama"
               ></v-text-field>
-            </v-col>
-            <v-col>
               <v-text-field
-                v-model="message4"
+                :disabled="!wifi"
+                dense
+                outlined
+                class="mb-input"
                 label="Alamat email aktif"
-                outlined
-                dense
-                clearable
+                v-model="akseswifi.email"
               ></v-text-field>
-            </v-col>
-            <v-col>
               <v-text-field
-                v-model="message4"
-                label="Pin"
-                outlined
+                :disabled="!wifi"
                 dense
-                clearable
+                outlined
+                class="mb-input"
+                label="Pin"
+                v-model="akseswifi.pin"
               ></v-text-field>
-            </v-col>
-          </v-row>
+            </v-row>
+          </v-container>
           <v-checkbox
-            v-model="form.checkboxServer"
-            :label="`Apakah anda membutuhkan akses server?: ${
-              form.checkboxServer ? 'Ya, butuh' : 'Tidak'
-            }`"
+            v-model="server"
+            :label="`Server: ${server ? 'ya' : 'tidak'}`"
           ></v-checkbox>
           <v-text-field
-            v-if="form.checkboxServer"
-            v-model="message4"
-            label="Catatan permintaan akses server"
-            outlined
+            :disabled="!server"
             dense
-            clearable
+            outlined
+            class="mb-input"
+            label="Keterangan server"
+            v-model="permintaan[2].detail"
           ></v-text-field>
         </v-card-text>
         <v-card-title>Permintaan tambahan</v-card-title>
         <v-card-text>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum iusto, fuga atque odio nihil fugit ab delectus. Hic, praesentium! Ex officiis voluptatem, voluptas minus qui consectetur atque dolore veritatis ipsam!
-        </v-card-text>
-        <v-card-title>Untuk keperluan</v-card-title>
-        <v-card-text>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero aspernatur excepturi eum doloremque maxime, reiciendis veniam doloribus cupiditate nobis voluptate temporibus, quos dolor, pariatur officiis ratione. Facilis totam eveniet illo?
+          <v-container>
+            <v-row
+              no-gutters
+              v-for="(item, index) in permintaan.slice(3)"
+              :key="index"
+            >
+              <v-col>
+                <v-text-field
+                  dense
+                  outlined
+                  class="mb-input"
+                  label="Detail permintaan"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  dense
+                  outlined
+                  class="mb-input"
+                  label="Untuk keperluan ?"
+                ></v-text-field>
+              </v-col>
+              <v-btn class="mx-2" fab dark color="primary" small @click="add()">
+                <v-icon dark> mdi-plus </v-icon>
+              </v-btn>
+              <v-btn
+                class="mx-2"
+                fab
+                dark
+                color="error"
+                small
+                v-if="permintaan.length > 4"
+                @click="remove(index)"
+              >
+                <v-icon dark> mdi-delete </v-icon>
+              </v-btn>
+            </v-row>
+          </v-container>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -128,19 +160,52 @@
   </v-container>
 </template>
 <script>
+import { mapActions, mapState } from "vuex";
 export default {
   data: () => ({
     validform: false,
     loading: false,
-    form: {
-      checkboxMail: false,
-      checkboxWifi: false,
-      checkboxServer: false,
+    data_divisi: [],
+    data_role: [],
+    email: false,
+    wifi: false,
+    server: false,
+    akseswifi: {
+      nama: "",
+      email: "",
+      pin: "",
     },
+    permintaan: [
+      { type: "email", detail: "", notes: "" },
+      { type: "akses-wifi", detail: "", notes: "" },
+      { type: "akses-server", detail: "", notes: "" },
+      { type: "lainya", detail: "", notes: "" },
+    ],
   }),
+  computed: {
+    ...mapState("form_permintaan", {
+      form: (state) => state.form,
+    }),
+  },
+  created() {
+    this.attr_form().then((res) => {
+      this.data_divisi = res.data.depts;
+      this.data_role = res.data.roles;
+    });
+  },
   methods: {
+    ...mapActions("form_permintaan", ["attr_form", "store"]),
+    add() {
+      this.permintaan.push({ type: "lainya", detail: "", notes: "" });
+    },
+    remove(e) {
+      this.permintaan.splice(e, 1);
+    },
     submit() {
       this.$refs.form.validate();
+      this.permintaan[1].detail = this.akseswifi;
+      this.form.permintaan = this.permintaan;
+      console.log(this.form);
     },
   },
 };
