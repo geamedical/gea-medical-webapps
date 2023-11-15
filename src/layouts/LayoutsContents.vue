@@ -19,8 +19,9 @@
         </v-btn>
       </v-app-bar>
       <v-main>
-        <v-snackbar v-model="snackbar.status">
+        <v-snackbar v-model="snackbar.status" right top color="primary">
           <template v-slot:action="{ attrs }">
+            <v-container v-html="parseSnackBar(snackbar.data)"></v-container>
             <v-btn color="pink" text v-bind="attrs" @click="snackbar.status = false">
               Close
             </v-btn>
@@ -28,14 +29,7 @@
         </v-snackbar>
         <router-view></router-view>
       </v-main>
-      <v-navigation-drawer
-        v-model="rightDrawer"
-        right
-        app
-        fixed
-        clipped
-        color="rightdrawer"
-      >
+      <v-navigation-drawer v-model="rightDrawer" right app fixed clipped color="rightdrawer">
         <list-rightdrawer-view />
       </v-navigation-drawer>
       <v-footer app inset padless absolute>
@@ -86,6 +80,12 @@ export default {
     toggleFullscreen() {
       this.fullscreen = !this.fullscreen;
     },
+    parseSnackBar(data) {
+      let phtml = '<div>'
+      phtml += `Permintaan ${data.type} dengan detail ${data.detail} telah diperbaharui, periksa sekarang!`
+      phtml += '</div>'
+      return phtml
+    }
   },
   computed: {
     theme() {
@@ -96,7 +96,7 @@ export default {
 };
 </script>
 <style scoped>
-.v-navigation-drawer >>> .v-navigation-drawer__border {
+.v-navigation-drawer>>>.v-navigation-drawer__border {
   display: none;
 }
 

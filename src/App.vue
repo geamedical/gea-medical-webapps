@@ -36,17 +36,16 @@ export default {
     ...mapActions("auth", ["getUserLogin"]),
     check() {
       this.getUserLogin().then((res) => {
-        if (res.status > 200) {
+        if (res.status !== 200) {
           localStorage.setItem("token", null);
           this.$store.commit("SET_TOKEN", null, { root: true });
           this.$router.push({ name: "login" }).catch(() => true);
         } else {
           const cekRoute = this.$router.currentRoute.meta.requiresAuth;
-          console.log(cekRoute);
-          // const cekUrl = this.$router.currentRoute.name;
-          // cekRoute === undefined
-          //   ? this.$router.push({ name: "dashboard" }).catch(() => {})
-          //   : this.$router.push({ name: cekUrl }).catch(() => {});
+          const cekUrl = this.$router.currentRoute.name;
+          cekRoute === undefined
+            ? this.$router.push({ name: "dashboard" }).catch(() => {})
+            : this.$router.push({ name: cekUrl }).catch(() => {});
         }
       });
     },

@@ -466,7 +466,7 @@ const routes = [
         component: () => import('@/views/apps/Form/FormPermintaan/DataView.vue'),
         meta: {
           requiresAuth: true,
-          title: 'Kelola Departement',
+          title: 'Kelola Permintaan',
           breadscrum: [
             {
               text: 'Beranda',
@@ -474,7 +474,7 @@ const routes = [
               href: '/',
             },
             {
-              text: 'Master Data Departement',
+              text: 'Data Permintaan',
               disabled: true,
               href: '/form-permintaan',
             },
@@ -487,7 +487,7 @@ const routes = [
         component: () => import('@/views/apps/Form/FormPermintaan/AddView.vue'),
         meta: {
           requiresAuth: true,
-          title: 'Tambah data Departement',
+          title: 'Tambah data Permintaan',
           breadscrum: [
             {
               text: 'Beranda',
@@ -495,12 +495,12 @@ const routes = [
               href: '/',
             },
             {
-              text: 'Master Data Departement',
+              text: 'Data Permintaan',
               disabled: true,
               href: '/form-permintaan',
             },
             {
-              text: 'Tambah Data Departement',
+              text: 'Tambah Data Permintaan',
               disabled: true,
               href: '/form-permintaan/add',
             },
@@ -513,7 +513,7 @@ const routes = [
         component: () => import('@/views/apps/Form/FormPermintaan/ShowView.vue'),
         meta: {
           requiresAuth: true,
-          title: 'Detail/Update Departement',
+          title: 'Detail/Update Permintaan',
           breadscrum: [
             {
               text: 'Beranda',
@@ -521,12 +521,12 @@ const routes = [
               href: '/',
             },
             {
-              text: 'Master Data Departement',
+              text: 'Data Permintaan',
               disabled: true,
               href: '/form-permintaan',
             },
             {
-              text: 'Lihat Data Departement',
+              text: 'Lihat Data Permintaan',
               disabled: true,
               href: '/form-permintaan/show/:id',
             },

@@ -139,12 +139,27 @@ export default {
                     this.selectedRightDrawer = 1
                     this.isDashboard = false
                     break;
+                case 'form-permintaan.data':
+                    this.menu = this.$store.state.form_permintaan.rightMenuDrawer
+                    this.selectedRightDrawer = 0
+                    this.isDashboard = false
+                    break;
+                case 'form-permintaan.add':
+                    this.menu = this.$store.state.form_permintaan.rightMenuDrawer
+                    this.selectedRightDrawer = 1
+                    this.isDashboard = false
+                    break;
+                case 'form-permintaan.show':
+                    this.menu = this.$store.state.form_permintaan.rightMenuDrawer
+                    this.selectedRightDrawer = 1
+                    this.isDashboard = false
+                    break;
                 default:
                     break;
             }
         },
         movePage(nameurl) {
-            this.$router.push({ name: nameurl })
+            this.$router.push({ name: nameurl }).catch(() => {})
         }
     }
 };

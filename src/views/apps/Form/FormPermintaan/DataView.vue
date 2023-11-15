@@ -1,37 +1,27 @@
 <template>
   <v-card flat color="card">
-    <v-card-title>Master Departemen</v-card-title>
+    <v-card-title>Data Permintaan</v-card-title>
     <v-card-text>
-      <v-text-field
-        label="Cari data..."
-        prepend-inner-icon="mdi-text-search"
-        outlined
-        dense
-        v-model="search"
-        @keyup="filter()"
-      ></v-text-field>
-      <v-data-table
-        dense
-        flat
-        :headers="headers"
-        :items="desserts"
-        :options.sync="options"
-        :server-items-length="totalDesserts"
-        :loading="loading"
-      >
+      <v-text-field label="Cari data..." prepend-inner-icon="mdi-text-search" outlined dense v-model="search"
+        @keyup="filter()"></v-text-field>
+      <v-data-table dense flat :headers="headers" :items="desserts" :options.sync="options"
+        :server-items-length="totalDesserts" :loading="loading">
         <template v-slot:[`item.created_at`]="{ item }">
           {{ parseDate(item) }}
         </template>
-        <template v-slot:[`item.updated_at`]="{ item }">
-          {{ parseDate(item) }}
+        <template v-slot:[`item.status`]="{ item }">
+          <v-chip class="ma-2" :color="chipColor(item)" label text-color="white">
+            <v-icon left>
+              {{ chipIcon(item) }}
+            </v-icon>
+            {{ chipText(item) }}
+          </v-chip>
         </template>
         <template v-slot:[`item.act`]="{ item }">
-          <v-icon
-            small
-            class="mr-2"
-            @click="editItem(item.id)"
-            v-if="$can('update-dept')"
-          >
+          <v-icon small class="mr-2" @click="execItem(item.id)" v-if="$can('update-dept')">
+            mdi-gift-outline
+          </v-icon>
+          <v-icon small class="mr-2" @click="editItem(item.id)" v-if="$can('update-dept')">
             mdi-pencil
           </v-icon>
           <v-icon small @click="deleteItem(item.id)" v-if="$can('delete-dept')">
@@ -54,9 +44,12 @@ export default {
       loading: true,
       options: {},
       headers: [
-        { text: "Nama", value: "deptname" },
+        { text: "NIK", value: "user.nik" },
+        { text: "Nama", value: "user.name" },
+        { text: "Type", value: "type" },
+        { text: "Detail", value: "detail" },
+        { text: "Status", value: "status" },
         { text: "Tgl Dibuat", value: "created_at" },
-        { text: "Tgl Diperbaharui", value: "updated_at" },
         { text: "ACT", value: "act" },
       ],
     };
@@ -70,7 +63,16 @@ export default {
     },
   },
   methods: {
-    ...mapActions("masterdata_dept", ["index", "edit", "delete"]),
+    ...mapActions("form_permintaan", ["index", "edit", "delete", "setStatus"]),
+    chipText(text) {
+      return text.status == 'n' ? 'Belum dipersiapkan' : text.status == 'w' ? 'Menunggu konfirm penerima' : 'Permintaan selesai'
+    },
+    chipColor(text) {
+      return text.status == 'n' ? 'error' : text.status == 'w' ? 'accent' : 'primary'
+    },
+    chipIcon(text) {
+      return text.status == 'n' ? 'mdi-alert' : text.status == 'w' ? 'mdi-sync-alert' : 'mdi-hand-okay'
+    },
     getDataFromApi() {
       this.loading = true;
       const tableAttr = { options: this.options, search: this.search };
@@ -87,7 +89,7 @@ export default {
       return moment(e).format("yyyy-MM-DD, h:mm:ss");
     },
     editItem(id) {
-      this.$router.push({ path: `/master-data-dept/show/${id}` });
+      this.$router.push({ path: `/form-permintaan/show/${id}` });
     },
     deleteItem(id) {
       this.$swal({
@@ -119,6 +121,41 @@ export default {
         }
       });
     },
+    execItem(id) {
+      this.$swal({
+        title: "Apakah anda sudah menyelesaikan permintaan ini?",
+        text: "Pastikan anda sudah menyelesaikan permintaan ini untuk menunjang kenyamanan pada pekerjaan selanjutnya!",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, sudah diselesaikan!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.setStatus({ id, status: 'w' }).then((e) => {
+            if (e.status === true) {
+              this.$swal({
+                title: "Diperbaharui!",
+                text: "Data berhasil diperbaharui.",
+                icon: "success",
+              });
+            } else {
+              this.$swal({
+                title: "Error!",
+                text: "Terjadi kesalahan, silahkan hubungi tim IT!",
+                icon: "warning",
+              });
+            }
+            this.getDataFromApi();
+          });
+          this.$swal({
+            title: "Terhapus!",
+            text: "Data berhasil dihapus." + id,
+            icon: "success",
+          });
+        }
+      });
+    }
   },
 };
 </script>
