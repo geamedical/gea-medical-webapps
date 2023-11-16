@@ -3,23 +3,20 @@ import Vue from 'vue';
 import Vuetify from 'vuetify/lib/framework';
 import VueApexCharts from 'vue-apexcharts'
 import VueFullscreen from 'vue-fullscreen'
-import * as VueGoogleMaps from "vue2-google-maps"
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import socketio from 'socket.io-client'
 import VueSocketIO from 'vue-socket.io'
+import VueNativeNotification from 'vue-native-notification'
 
 Vue.use(VueApexCharts)
 Vue.use(VueFullscreen)
 Vue.component('apexchart', VueApexCharts)
 Vue.use(Vuetify)
 Vue.use(VueSweetalert2);
-Vue.use(VueGoogleMaps, {
-    load: {
-        key: process.env.GMAP_API_TOKEN,
-        libraries: "places"
-    }
-});
+Vue.use(VueNativeNotification, {
+    requestOnNotify: true
+  })
 const url = 'http://localhost:3333/'
 const SocketInstance = socketio.connect(url)
 Vue.use(new VueSocketIO({

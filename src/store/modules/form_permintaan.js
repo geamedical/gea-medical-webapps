@@ -4,12 +4,12 @@ import $axios from '../api'
 const state = () => ({
     form: {
         user: {
-            name:'',
-            telp:'',
-            role_id:'',
-            dept_id:'',
+            name: '',
+            telp: '',
+            role_id: '',
+            dept_id: '',
         },
-        request:[]
+        request: []
     },
     rightMenuDrawer: [
         ['List Data', 'mdi-view-list', 'form-permintaan.data', 'read-user'],
@@ -21,12 +21,12 @@ const mutations = {
     CLEAR_FORM(state) {
         state.form = {
             user: {
-                name:'',
-                telp:'',
-                role_id:'',
-                dept_id:'',
+                name: '',
+                telp: '',
+                role_id: '',
+                dept_id: '',
             },
-            request:[]
+            request: []
         }
     },
 }
@@ -85,21 +85,10 @@ const actions = {
                 })
         })
     },
-    edit({ state }, payload) {
+    edit({ }, payload) {
         return new Promise(resolve => {
             $axios.get(`api/form-permintaan/${payload}`)
                 .then(response => {
-                    const x = response.data.data
-                    console.log(x);
-                    state.form = {
-                        user: {
-                            name:'',
-                            telp:'',
-                            role_id:'',
-                            dept_id:'',
-                        },
-                        request:[]
-                    }
                     resolve(response.data)
                 })
                 .catch(error => {
@@ -118,10 +107,9 @@ const actions = {
                 })
         })
     },
-    update({ state }, payload) {
+    update({ }, payload) {
         return new Promise(resolve => {
-            const { form } = state
-            $axios.put(`api/users/${payload}`, form)
+            $axios.put(`api/form-permintaan/${payload.id}`, payload.form)
                 .then(response => {
                     resolve(response.data)
                 })
@@ -130,17 +118,17 @@ const actions = {
                 })
         })
     },
-    // delete({ }, payload) {
-    //     return new Promise(resolve => {
-    //         $axios.delete(`api/users/${payload}`)
-    //             .then(response => {
-    //                 resolve(response.data)
-    //             })
-    //             .catch(error => {
-    //                 resolve(error.response)
-    //             })
-    //     })
-    // },
+    delete({ }, payload) {
+        return new Promise(resolve => {
+            $axios.delete(`api/form-permintaan/${payload}`)
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    resolve(error.response)
+                })
+        })
+    },
 }
 
 export default {

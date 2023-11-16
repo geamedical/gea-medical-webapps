@@ -17,11 +17,17 @@
             {{ chipText(item) }}
           </v-chip>
         </template>
+        <template v-slot:[`item.detail`]="{ item }">
+          <div v-html="parseingDetail(item)"></div>
+        </template>
         <template v-slot:[`item.act`]="{ item }">
-          <v-icon small class="mr-2" @click="execItem(item.id)" v-if="$can('update-dept')">
+          <v-icon small class="mr-2" @click="execItem(item.id, 'y')" v-if="authenticated.id === item.user_id && item.status === 'w'">
+            mdi-hand-okay
+          </v-icon>
+          <v-icon small class="mr-2" @click="execItem(item.id, 'w')" v-if="$can('update-dept') && item.status === 'n'">
             mdi-gift-outline
           </v-icon>
-          <v-icon small class="mr-2" @click="editItem(item.id)" v-if="$can('update-dept')">
+          <v-icon small class="mr-2" @click="editItem(item.user_id)" v-if="$can('update-dept')">
             mdi-pencil
           </v-icon>
           <v-icon small @click="deleteItem(item.id)" v-if="$can('delete-dept')">
@@ -34,7 +40,7 @@
 </template>
 <script>
 import moment from "moment";
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
@@ -54,6 +60,11 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapState("auth", {
+      authenticated: (state) => state.authenticated,
+    }),
+  },
   watch: {
     options: {
       handler() {
@@ -64,6 +75,18 @@ export default {
   },
   methods: {
     ...mapActions("form_permintaan", ["index", "edit", "delete", "setStatus"]),
+    parseingDetail(item) {
+      if (item.type === 'akses-wifi') {
+        const p = JSON.parse(item.detail)
+        var html = '<div>'
+        html += `<strong>Nama Lengkap :</strong> ${p.nama} </br>`
+        html += `<strong>Email Aktif :</strong> ${p.email} </br>`
+        html += `<strong>Pin :</strong> ${p.pin}`
+        html += '</div>'
+        return html
+      }
+      return `<strong>${item.detail}</strong>`
+    },
     chipText(text) {
       return text.status == 'n' ? 'Belum dipersiapkan' : text.status == 'w' ? 'Menunggu konfirm penerima' : 'Permintaan selesai'
     },
@@ -99,7 +122,7 @@ export default {
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: "Ya, hapus sekarang!",
       }).then((result) => {
         if (result.isConfirmed) {
           this.delete(id).then((e) => {
@@ -121,10 +144,12 @@ export default {
         }
       });
     },
-    execItem(id) {
+    execItem(id, act) {
+      let title = act === 'w'?"Apakah anda sudah menyelesaikan permintaan ini?":"Apakah permintaan anda sudah dipenuhi?"
+      let text = act === 'w'?"Pastikan anda sudah menyelesaikan permintaan ini untuk menunjang kenyamanan pada pekerjaan selanjutnya!":"Pastikan anda sudah menerima permintaan ini untuk menunjang kenyamanan pada pekerjaan anda!"
       this.$swal({
-        title: "Apakah anda sudah menyelesaikan permintaan ini?",
-        text: "Pastikan anda sudah menyelesaikan permintaan ini untuk menunjang kenyamanan pada pekerjaan selanjutnya!",
+        title: title,
+        text: text,
         icon: "info",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -132,7 +157,7 @@ export default {
         confirmButtonText: "Ya, sudah diselesaikan!",
       }).then((result) => {
         if (result.isConfirmed) {
-          this.setStatus({ id, status: 'w' }).then((e) => {
+          this.setStatus({ id, status: act }).then((e) => {
             if (e.status === true) {
               this.$swal({
                 title: "Diperbaharui!",

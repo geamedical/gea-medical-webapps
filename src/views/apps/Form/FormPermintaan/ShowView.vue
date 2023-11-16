@@ -1,26 +1,28 @@
 <template>
   <v-form ref="form" v-model="validform" lazy-validation>
-    <v-card class="card">
+    <v-card class="card" flat>
       <v-card-title class="d-flex justify-center mb-6">
         <h3>Form Permintaan</h3>
       </v-card-title>
       <v-card-text>
         <v-row>
           <v-col col="12" md="3">
-            <v-text-field dense outlined class="mb-input" label="Nama" v-model="form.user.name"
-              :error-messages="showErr(errors, 'user.name')"></v-text-field>
+            <v-text-field dense outlined class="mb-input" label="Nama" v-model="user.name"
+              :error-messages="showErr(errors, 'user.name')" disabled></v-text-field>
           </v-col>
           <v-col col="12" md="3">
-            <v-text-field dense outlined class="mb-input" label="HP/WA" v-model="form.user.telp"
-              :error-messages="showErr(errors, 'user.telp')" counter maxlength="13"></v-text-field>
+            <v-text-field dense outlined class="mb-input" label="HP/WA" v-model="user.telp"
+              :error-messages="showErr(errors, 'user.telp')" counter maxlength="13" disabled></v-text-field>
           </v-col>
           <v-col col="12" md="3">
             <v-select dense outlined :items="data_divisi" item-text="deptname" item-value="id" label="Divisi"
-              class="mb-input" v-model="form.user.dept_id" :error-messages="showErr(errors, 'user.dept_id')"></v-select>
+              class="mb-input" v-model="user.dept_id" :error-messages="showErr(errors, 'user.dept_id')"
+              disabled></v-select>
           </v-col>
           <v-col col="12" md="3">
             <v-select dense outlined :items="data_role" item-text="rolename" item-value="id" label="Jabatan"
-              class="mb-input" v-model="form.user.role_id" :error-messages="showErr(errors, 'user.role_id')"></v-select>
+              class="mb-input" v-model="user.role_id" :error-messages="showErr(errors, 'user.role_id')"
+              disabled></v-select>
           </v-col>
         </v-row>
       </v-card-text>
@@ -58,12 +60,6 @@
                 v-model="permintaan[permintaan.length - 1].notes"
                 :error-messages="showErr(errors, `request.${permintaan.length - 1}.notes`)"></v-text-field>
             </v-col>
-            <v-btn class="mx-2" fab dark color="primary" small @click="add()">
-              <v-icon dark> mdi-plus </v-icon>
-            </v-btn>
-            <v-btn class="mx-2" fab dark color="error" small v-if="permintaan.length > 4" @click="remove(index)">
-              <v-icon dark> mdi-delete </v-icon>
-            </v-btn>
           </v-row>
         </v-container>
       </v-card-text>
@@ -76,7 +72,7 @@
   </v-form>
 </template>
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data: () => ({
     validform: false,
@@ -92,40 +88,82 @@ export default {
       email: "",
       pin: "",
     },
+    form: [],
+    user: {
+      name: '',
+      telp: '',
+      role_id: '',
+      dept_id: '',
+    },
     permintaan: [
-      { type: "email", detail: "", notes: "" },
-      { type: "akses-wifi", detail: "", notes: "" },
-      { type: "akses-server", detail: "", notes: "" },
-      { type: "lainya", detail: "", notes: "" },
+      { type: "email", detail: "", notes: "", created_at: "", updated_at: "" },
+      { type: "akses-wifi", detail: "", notes: "", created_at: "", updated_at: "" },
+      { type: "akses-server", detail: "", notes: "", created_at: "", updated_at: "" },
+      { type: "lainya", detail: "", notes: "", created_at: "", updated_at: "" },
     ],
+    created_at: "",
+    updated_at: ""
   }),
-  computed: {
-    ...mapState("form_permintaan", {
-      form: (state) => state.form,
-    }),
-  },
   created() {
-    this.edit(this.$route.params.id);
     this.attr_form().then((res) => {
       this.data_divisi = res.data.depts;
       this.data_role = res.data.roles;
     });
+    this.edit(this.$route.params.id).then((res) => {
+      this.form = res.data
+      const arr = this.form
+      this.user = {
+        name: arr.user.name,
+        telp: arr.user.telp,
+        role_id: arr.user.role_id,
+        dept_id: arr.user.dept_id,
+      }
+      const e = arr.request.findIndex((i) => i.type == "email")
+      const f = arr.request.findIndex((i) => i.type == "akses-wifi")
+      const s = arr.request.findIndex((i) => i.type == "akses-server")
+      const l = arr.request.findIndex((i) => i.type == "lainya")
+      const req = arr.request
+      const fwifi = JSON.parse(req[f].detail)
+      this.akseswifi = {
+        nama: fwifi.nama,
+        email: fwifi.email,
+        pin: fwifi.pin,
+      }
+      this.permintaan[0].detail = req[e].detail
+      this.permintaan[0].created_at = req[e].created_at
+      this.permintaan[0].updated_at = req[e].updated_at
+
+      this.permintaan[1].detail = JSON.stringify(this.akseswifi)
+      this.permintaan[1].created_at = req[f].created_at
+      this.permintaan[1].updated_at = req[f].updated_at
+
+      this.permintaan[2].detail = req[s].detail
+      this.permintaan[2].created_at = req[s].created_at
+      this.permintaan[2].updated_at = req[s].updated_at
+
+      this.permintaan[3].detail = req[l].detail
+      this.permintaan[3].notes = req[l].notes
+      this.permintaan[3].created_at = req[l].created_at
+      this.permintaan[3].updated_at = req[l].updated_at
+      this.created_at = req[l].created_at
+      this.updated_at = req[l].updated_at
+    });
   },
   methods: {
     ...mapActions("form_permintaan", ["edit", "update", "attr_form"]),
-    add() {
-      this.permintaan.push({ type: "lainya", detail: "", notes: "" });
-    },
-    remove(e) {
-      this.permintaan.splice(e, 1);
-    },
     showErr(arr, index) {
       const find = arr.find(x => x.field === index)
       return find !== undefined ? find.message : ''
     },
     submit() {
       this.loading = true;
-      this.update(this.$route.params.id).then((e) => {
+      let payload = {
+        id: this.$route.params.id, form: {
+          user: this.user,
+          request: this.permintaan
+        }
+      }
+      this.update(payload).then((e) => {
         this.loading = false;
         if (e.status === true) {
           this.$swal({

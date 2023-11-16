@@ -26,12 +26,12 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-card flat class="mt-5" color="card">
+    <!-- <v-card flat class="mt-5" color="card">
       <v-card-text>
         <apexchart type="bar" :options="options" :series="series"></apexchart>
       </v-card-text>
-    </v-card>
-    <v-row>
+    </v-card> -->
+    <!-- <v-row>
       <v-col cols="12" md="6">
         <v-card flat class="mt-5" color="card">
           <v-card-text>
@@ -51,7 +51,7 @@
           </v-card-text>
         </v-card>
       </v-col>
-    </v-row>
+    </v-row> -->
   </v-container>
 </template>
 <script>
@@ -96,46 +96,46 @@ export default {
           src: 'mdi-frequently-asked-questions',
           title: 'Permintaan',
           artist: 'Daftar data permintaan',
-          link:'/master-data-akses',
-          authorization:'read-permission'
+          link:'/form-permintaan',
+          authorization:'read-form-permintaan'
         },
       ],
-      optionsDonuts: {
-        series: [44, 55, 13, 33],
-        labels: ['Apple', 'Mango', 'Orange', 'Watermelon']
-      },
-      options: {
-        chart: {
-          foreColor: '#ccc',
-          toolbar: {
-            show: false
-          },
-        },
-        stroke: {
-          width: 3
-        },
-        dataLabels: {
-          enabled: false
-        },
-        tooltip: {
-          theme: (this.$vuetify.theme.dark) ? 'dark' : 'light'
-        },
-        grid: {
-          borderColor: "#535A6C",
-          xaxis: {
-            lines: {
-              show: true
-            }
-          }
-        },
-        xaxis: {
-          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
-        }
-      },
-      series: [{
-        name: 'series-1',
-        data: [30, 40, 45, 50, 49, 60, 70, 91]
-      }]
+      // optionsDonuts: {
+      //   series: [44, 55, 13, 33],
+      //   labels: ['Apple', 'Mango', 'Orange', 'Watermelon']
+      // },
+      // options: {
+      //   chart: {
+      //     foreColor: '#ccc',
+      //     toolbar: {
+      //       show: false
+      //     },
+      //   },
+      //   stroke: {
+      //     width: 3
+      //   },
+      //   dataLabels: {
+      //     enabled: false
+      //   },
+      //   tooltip: {
+      //     theme: (this.$vuetify.theme.dark) ? 'dark' : 'light'
+      //   },
+      //   grid: {
+      //     borderColor: "#535A6C",
+      //     xaxis: {
+      //       lines: {
+      //         show: true
+      //       }
+      //     }
+      //   },
+      //   xaxis: {
+      //     categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
+      //   }
+      // },
+      // series: [{
+      //   name: 'series-1',
+      //   data: [30, 40, 45, 50, 49, 60, 70, 91]
+      // }]
     }
   },
 }

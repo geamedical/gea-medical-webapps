@@ -108,6 +108,8 @@ const actions = {
                     resolve(response)
                 })
                 .catch(error => {
+                    localStorage.setItem('token', null)
+                    commit('SET_TOKEN', null, { root: true })
                     resolve(error.response)
                 })
         })

@@ -19,14 +19,6 @@
         </v-btn>
       </v-app-bar>
       <v-main>
-        <v-snackbar v-model="snackbar.status" right top color="primary">
-          <template v-slot:action="{ attrs }">
-            <v-container v-html="parseSnackBar(snackbar.data)"></v-container>
-            <v-btn color="pink" text v-bind="attrs" @click="snackbar.status = false">
-              Close
-            </v-btn>
-          </template>
-        </v-snackbar>
         <router-view></router-view>
       </v-main>
       <v-navigation-drawer v-model="rightDrawer" right app fixed clipped color="rightdrawer">
@@ -55,7 +47,6 @@
   </fullscreen>
 </template>
 <script>
-import { mapState } from "vuex";
 import SwitchMode from "@/components/SwitchMode.vue";
 import ListLeftDrawer from "@/layouts/components/ListLeftdrawerView.vue";
 import ListRightdrawerView from "./components/ListRightdrawerView.vue";
@@ -91,7 +82,6 @@ export default {
     theme() {
       return this.$vuetify.theme.dark ? "dark" : "light";
     },
-    ...mapState(["snackbar"]),
   },
 };
 </script>

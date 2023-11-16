@@ -28,12 +28,6 @@ export default new Vuex.Store({
     SET_TOKEN(state, payload) {
       state.token = payload
     },
-    SET_SNACKBAR(state, payload) {
-      state.snackbar = {
-        status: payload.status,
-        data: payload.data,
-      }
-    },
     SET_TOKEN_EXPIRED(state, payload) {
       state.token_expired = payload
     },
@@ -50,6 +44,18 @@ export default new Vuex.Store({
         $axios.get(`api/notification?page=${page}&limit=${limit}&sortDesc=${sortDesc}`)
           .then(response => {
             resolve(response.data.data)
+          })
+          .catch(error => {
+            resolve(error.response)
+          })
+      })
+    },
+    // eslint-disable-next-line no-empty-pattern
+    showNotif({},payload) {
+      return new Promise(resolve => {
+        $axios.get(`api/notification/${payload}`)
+          .then(response => {
+            resolve(response.data)
           })
           .catch(error => {
             resolve(error.response)

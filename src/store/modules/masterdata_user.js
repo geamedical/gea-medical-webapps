@@ -14,7 +14,6 @@ const state = () => ({
     rightMenuDrawer: [
         ['List Data', 'mdi-view-list', 'master-data-pengguna.data', 'read-user'],
         ['Buat Data Baru', 'mdi-plus-box', 'master-data-pengguna.add', 'create-user'],
-        // ['Grafik', 'mdi-chart-bar', 'grafik-data-users-user'],
     ]
 })
 
