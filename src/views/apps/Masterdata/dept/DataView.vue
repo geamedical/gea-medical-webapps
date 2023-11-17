@@ -54,6 +54,8 @@ export default {
       loading: true,
       options: {},
       headers: [
+        { text: "Perusahaan", value: "company" },
+        { text: "Code", value: "code" },
         { text: "Nama", value: "deptname" },
         { text: "Tgl Dibuat", value: "created_at" },
         { text: "Tgl Diperbaharui", value: "updated_at" },

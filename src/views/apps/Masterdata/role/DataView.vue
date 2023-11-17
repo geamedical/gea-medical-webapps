@@ -19,12 +19,6 @@
         :server-items-length="totalDesserts"
         :loading="loading"
       >
-        <template v-slot:[`item.created_at`]="{ item }">
-          {{ parseDate(item) }}
-        </template>
-        <template v-slot:[`item.updated_at`]="{ item }">
-          {{ parseDate(item) }}
-        </template>
         <template v-slot:[`item.act`]="{ item }">
           <v-icon
             small
@@ -51,7 +45,6 @@
   </v-card>
 </template>
 <script>
-import moment from "moment";
 import { mapActions } from "vuex";
 export default {
   data() {
@@ -63,9 +56,10 @@ export default {
       loading: true,
       options: {},
       headers: [
-        { text: "Nama Role", value: "rolename" },
-        { text: "Tanggal Dibuat", value: "created_at" },
-        { text: "Tanggal Diperbaharui", value: "updated_at" },
+        { text: "Group Perusahaan", value: "company" },
+        { text: "Kode", value: "code" },
+        { text: "Nama", value: "rolename" },
+        { text: "Kode-Role", value: "coderole" },
         { text: "ACT", value: "act" },
       ],
     };
@@ -91,9 +85,6 @@ export default {
     },
     filter() {
       this.getDataFromApi();
-    },
-    parseDate(e) {
-      return moment(e).format("yyyy-MM-DD, h:mm:ss");
     },
     setpermission(id) {
       this.$router.push({ path: `/master-data-role/setrole/${id}` });

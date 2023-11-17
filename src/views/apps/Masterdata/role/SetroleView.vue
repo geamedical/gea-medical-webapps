@@ -22,14 +22,36 @@
           :options.sync="options"
           :server-items-length="totalDesserts"
           :loading="loadingtable"
-          class="elevation-0"
+          class="elevation-0 mt-5"
         >
-          <template v-slot:[`item.act`]="{ item }">
+          <template v-slot:[`item.create`]="{ item }">
             <v-switch
               v-model="formsetrole.permission_id"
               color="primary"
-              :value="item.id"
+              :value="GetId(`create-${item.basepermission}`)"
             ></v-switch>
+          </template>
+          <template v-slot:[`item.read`]="{ item }">
+            <v-switch
+              v-model="formsetrole.permission_id"
+              color="primary"
+              :value="GetId(`read-${item.basepermission}`)"
+            ></v-switch>
+          </template>
+          <template v-slot:[`item.update`]="{ item }">
+            <v-switch
+              v-model="formsetrole.permission_id"
+              color="primary"
+              :value="GetId(`update-${item.basepermission}`)"
+            ></v-switch>
+          </template>
+          <template v-slot:[`item.delete`]="{ item }">
+            <v-switch
+              v-model="formsetrole.permission_id"
+              color="primary"
+              :value="GetId(`delete-${item.basepermission}`)"
+            ></v-switch>
+            {{ GetId(`delete-${item.basepermission}`) }}
           </template>
         </v-data-table>
       </v-card-text>
@@ -62,8 +84,10 @@ export default {
     options: {},
     headers: [
       { text: "Grup Akses", value: "basepermission" },
-      { text: "Nama Akses", value: "name" },
-      { text: "ACT", value: "act" },
+      { text: "Create", value: "create" },
+      { text: "Read", value: "read" },
+      { text: "Update", value: "update" },
+      { text: "Delete", value: "delete" },
     ],
   }),
   watch: {
@@ -87,12 +111,17 @@ export default {
   },
   methods: {
     ...mapActions("masterdata_user", ["attr_form_user"]),
-    ...mapActions("masterdata_role", ["setroleedit", "submitSetRole"]),
-    ...mapActions("masterdata_akses", ["index"]),
+    ...mapActions("masterdata_role", ["setroleedit", "submitSetRole","listRolePermission"]),
+    ...mapActions("masterdata_akses", ["edit"]),
+    GetId(name){
+      this.edit(name).then((res)=>{
+        return res.data.data.id
+      })
+    },
     getDataFromApi() {
       this.loadingtable = true;
       const tableAttr = { options: this.options, search: this.search };
-      this.index(tableAttr).then((e) => {
+      this.listRolePermission(tableAttr).then((e) => {
         this.desserts = e.data.data;
         this.totalDesserts = e.data.meta.total;
         this.loadingtable = false;

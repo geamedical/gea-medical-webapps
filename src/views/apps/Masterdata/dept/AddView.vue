@@ -4,7 +4,27 @@
       <v-card-title>Form masterdata departemen</v-card-title>
       <v-card-text>
         <v-row no-gutters>
-          <v-col cols="12" md="12">
+          <v-col cols="12" md="4">
+            <v-text-field
+              dense
+              outlined
+              v-model="form.company"
+              label="Inisial Perusahaan"
+              class="mb-input"
+              :rules="[(v) => !!v || 'Item is required']"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" md="4">
+            <v-text-field
+              dense
+              outlined
+              v-model="form.code"
+              label="Kode Departemen"
+              class="mb-input"
+              :rules="[(v) => !!v || 'Item is required']"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" md="4">
             <v-text-field
               dense
               outlined

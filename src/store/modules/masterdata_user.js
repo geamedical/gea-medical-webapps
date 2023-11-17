@@ -6,10 +6,16 @@ const state = () => ({
         role_id: '',
         dept_id: '',
         name: '',
-        email: '',
         nik: '',
-        password: '',
-        password_confirmation: '',
+        email: '',
+        username: '',
+        birthdate: '',
+        gender: '',
+        marital: '',
+        npwp: '',
+        noktp: '',
+        address: '',
+        telp: '',
     },
     rightMenuDrawer: [
         ['List Data', 'mdi-view-list', 'master-data-pengguna.data', 'read-user'],
@@ -23,10 +29,16 @@ const mutations = {
             role_id: '',
             dept_id: '',
             name: '',
-            email: '',
             nik: '',
-            password: '',
-            password_confirmation: '',
+            email: '',
+            username: '',
+            birthdate: '',
+            gender: '',
+            marital: '',
+            npwp: '',
+            noktp: '',
+            address: '',
+            telp: '',
         }
     },
 }
@@ -78,15 +90,20 @@ const actions = {
             $axios.get(`api/users/${payload}`)
                 .then(response => {
                     const x = response.data.data
-                    console.log(x);
                     state.form = {
                         role_id: x.role_id,
                         dept_id: x.dept_id,
                         name: x.name,
-                        email: x.email,
                         nik: x.nik,
-                        password: x.password,
-                        password_confirmation: x.password,
+                        email: x.email,
+                        username: x.username,
+                        birthdate: x.birthdate,
+                        gender: x.gender,
+                        marital: x.marital,
+                        npwp: x.npwp,
+                        noktp: x.noktp,
+                        address: x.address,
+                        telp: x.telp,
                     }
                     resolve(response.data)
                 })

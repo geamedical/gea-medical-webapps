@@ -3,6 +3,8 @@ import $axios from '../api'
 
 const state = () => ({
     form: {
+        company: '',
+        code: '',
         deptname: '',
     },
     rightMenuDrawer: [
@@ -15,11 +17,15 @@ const state = () => ({
 const mutations = {
     SET_FORM(state, payload) {
         state.form = {
+            company: payload.company,
+            code: payload.code,
             deptname: payload.deptname,
         }
     },
     CLEAR_FORM(state) {
         state.form = {
+            company: '',
+            code: '',
             deptname: '',
         }
     },
@@ -61,6 +67,8 @@ const actions = {
             $axios.get(`api/dept/${payload}`)
                 .then(response => {
                     const form = {
+                        company: response.data.data.company,
+                        code: response.data.data.code,
                         deptname: response.data.data.deptname,
                     }
                     commit('SET_FORM', form)

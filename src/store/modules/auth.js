@@ -9,13 +9,10 @@ const state = () => ({
         dept_id: '',
         name: '',
         email: '',
+        telp: '',
         nik: '',
         password: '',
         password_confirmation: '',
-        work_location: '',
-        saldo_cuti: '',
-        activation: '',
-        avatar: [],
     },
 })
 
@@ -32,17 +29,10 @@ const mutations = {
             dept_id: payload.dept_id,
             name: payload.name,
             email: payload.email,
+            telp: payload.telp,
             nik: payload.nik,
             password: payload.password,
             password_confirmation: payload.password_confirmation,
-            activation: payload.activation,
-            avatar: payload.avatar,
-            work_location: payload.work_location,
-            saldo_cuti: payload.saldo_cuti,
-            hp: payload.hp,
-            status: payload.status,
-            tgl_join: payload.tgl_join,
-            limit_kasbon: payload.limit_kasbon,
         }
     },
     CLEAR_FORM_PROFILE(state) {
@@ -51,17 +41,10 @@ const mutations = {
             dept_id: '',
             name: '',
             email: '',
+            telp: '',
             nik: '',
             password: '',
             password_confirmation: '',
-            activation: '',
-            avatar: [],
-            work_location: '',
-            saldo_cuti: '',
-            hp: '',
-            status: '',
-            tgl_join: '',
-            limit_kasbon: '',
         }
     },
 }
@@ -135,17 +118,10 @@ const actions = {
                         dept_id: user.dept_id,
                         name: user.name,
                         email: user.email,
+                        telp: user.telp,
                         nik: user.nik,
                         password: '',
                         password_confirmation: '',
-                        activation: user.activation === 'true' ? true : false,
-                        avatar: [],
-                        work_location: user.work_location,
-                        saldo_cuti: user.saldo_cuti,
-                        hp: user.hp,
-                        status: user.status,
-                        tgl_join: '',
-                        limit_kasbon: user.limit_kasbon,
                     }
                     commit('SET_FORM_PROFILE', payload)
                     resolve(response)
@@ -158,24 +134,7 @@ const actions = {
     updateProfile({ state }) {
         return new Promise(resolve => {
             const { formProfile } = state
-            const formData = new FormData()
-            formData.append('role_id', formProfile.role_id)
-            formData.append('dept_id', formProfile.dept_id)
-            formData.append('name', formProfile.name)
-            formData.append('email', formProfile.email)
-            formData.append('nik', formProfile.nik)
-            formData.append('password', formProfile.password)
-            formData.append('password_confirmation', formProfile.password_confirmation)
-            formData.append('activation', formProfile.activation)
-            formData.append('avatar', formProfile.avatar)
-            formData.append('work_location', formProfile.work_location)
-            formData.append('saldo_cuti', formProfile.saldo_cuti)
-            formData.append('hp', formProfile.hp)
-            formData.append('status', formProfile.status)
-            formData.append('tgl_join', formProfile.tgl_join)
-            formData.append('limit_kasbon', formProfile.limit_kasbon)
-            const headers = { 'Content-Type': 'multipart/form-data' };
-            $axios.post('profile-update', formData, { headers })
+            $axios.post('api/profile-update', formProfile)
                 .then(response => {
                     resolve(response.data)
                 })

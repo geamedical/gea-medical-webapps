@@ -45,6 +45,9 @@ export default {
                 case 'dashboard':
                     this.isDashboard = true
                     break;
+                case 'profile':
+                    this.isDashboard = true
+                    break;
                 case 'users-info':
                     this.isDashboard = true
                     break;

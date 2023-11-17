@@ -3,24 +3,27 @@
     <v-card color="card" flat>
       <v-card-title>Form Role</v-card-title>
       <v-card-text>
-        <v-text-field
-          dense
-          outlined
-          v-model="form.rolename"
-          label="name"
-          class="mb-input"
-          :rules="[(v) => !!v || 'Item is required']"
-        ></v-text-field>
+        <v-row no-gutters>
+          <v-col col="12" md="3">
+            <v-text-field dense outlined v-model="form.company" label="Inisial Group Perusahaan" class="mb-input"
+              :rules="[(v) => !!v || 'Item is required']"></v-text-field>
+          </v-col>
+          <v-col col="12" md="3">
+            <v-text-field dense outlined v-model="form.code" label="Kode" class="mb-input"
+              :rules="[(v) => !!v || 'Item is required']"></v-text-field>
+          </v-col>
+          <v-col col="12" md="3">
+            <v-text-field dense outlined v-model="form.rolename" label="Nama Role/Jabatan" class="mb-input"
+              :rules="[(v) => !!v || 'Item is required']"></v-text-field>
+          </v-col>
+          <v-col col="12" md="3">
+            <v-text-field dense outlined v-model="form.coderole" label="Kode-Role" class="mb-input"
+              :rules="[(v) => !!v || 'Item is required']"></v-text-field>
+          </v-col>
+        </v-row>
       </v-card-text>
       <v-card-actions>
-        <v-btn
-          depressed
-          :loading="loading"
-          color="primary"
-          block
-          :disabled="!valid"
-          @click="submit"
-        >
+        <v-btn depressed :loading="loading" color="primary" block :disabled="!valid" @click="submit">
           Submit data
         </v-btn>
       </v-card-actions>
@@ -45,7 +48,7 @@ export default {
       this.loading = true;
       this.store().then((e) => {
         this.loading = false;
-        if (e.status === true) {
+        if (e.status) {
           this.$swal({
             title: "Ditambahkan!",
             text: "Data berhasil ditambahkan.",

@@ -10,15 +10,7 @@
           </v-card-title>
           <v-card-text>
             <v-form>
-              <v-text-field label="Tulis Email Anda Disini" name="email" prepend-inner-icon="mdi-email" type="email"
-                class="rounded-0" outlined placeholder="test@mail.tes" :rules="[
-                  (v) => !!v || 'Email is required',
-                  (v) =>
-                    !v ||
-                    /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
-                    'E-mail must be valid',
-                ]" v-model="form.email"></v-text-field>
-
+              <v-text-field label="Tulis Username Anda Disini" name="username" prepend-inner-icon="mdi-account" class="rounded-0" outlined placeholder="Username" v-model="form.username"></v-text-field>
               <v-text-field label="Tulis Kata Sandi Anda Disini" name="password" prepend-inner-icon="mdi-lock"
                 class="rounded-0" outlined :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="showPass ? 'text' : 'password'" @click:append="showPass = !showPass"
@@ -58,7 +50,7 @@ export default {
       showPass: false,
       loading: false,
       form: {
-        email: "",
+        username: "",
         password: "",
         remember_me: "",
       },
@@ -91,7 +83,7 @@ export default {
           title: res.data.msg,
           msg:
             res.data.msg === "login error"
-              ? "Email & password salah !!"
+              ? "Username & password salah !!"
               : "Berhasil.",
         };
         this.$router.push({ name: "dashboard" });

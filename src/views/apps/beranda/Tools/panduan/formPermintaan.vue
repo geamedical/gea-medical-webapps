@@ -38,19 +38,22 @@
             menentukan divisi pengguna.
           </p>
         </li>
-        <h3>Roudmap Persiapan data</h3>
-        <v-breadcrumbs :items="items">
-          <template v-slot:divider>
-            <v-icon>mdi-forward</v-icon>
-          </template>
-        </v-breadcrumbs>
         <h3>Roudmap Aktifitas Permintaan</h3>
-        <v-breadcrumbs :items="itemss">
+        <v-breadcrumbs :items="RuleKaryawan">
           <template v-slot:divider>
             <v-icon>mdi-forward</v-icon>
           </template>
         </v-breadcrumbs>
+        <h3>Roudmap Aktifitas Permintaan (Karyawan baru)</h3>
+        <v-breadcrumbs :items="RuleKaryawanBaru">
+          <template v-slot:divider>
+            <v-icon>mdi-forward</v-icon>
+          </template>
+        </v-breadcrumbs>
+        <FlowChart :nodes="ShapeKaryawanBaru" :conns="FlowKaryawanBaru"></FlowChart>
       </ul>
+    </v-card-text>
+    <v-card-text>
       <v-alert color="info" dark icon="mdi-firework" dense>
         <p>
           Jika anda mengalami kesulitan dalam proses penggunaan sistem, anda
@@ -59,104 +62,17 @@
         </p>
       </v-alert>
     </v-card-text>
-    <v-card-text>
-      <VFlowChart ref="flowChart" :nodes="nodes" :connections="conns" :footer-style="{ 'margin-left': '35%' }"
-        :enableConnContextMenu="true" :enableNodeContextMenu="true" :connLineType="'step'">
-        <div slot="nodeContextmenu" slot-scope="props" class="context__container d-inline-flex">
-          <div class="context__button">
-            <a href="javascript:;" class="context__link my-auto d-inline-flex">
-              <i class="bi bi-circle-fill bg-white"></i><i class="bi bi-caret-down"></i>
-            </a>
-          </div>
-          <div class="context__button">
-            <a href="javascript:;" class="context__link">
-              <i class="bi bi-border-outer"></i>
-            </a>
-          </div>
-          <div class="context__button">
-            <a href="javascript:;" class="context__link">
-              <i class="bi bi-type-underline"></i>
-            </a>
-          </div>
-          <div class="context__button" style="width: 550px">
-            <select class="form-select" aria-label="Default select example">
-              <option selected>Small</option>
-            </select>
-          </div>
-          <div class="context__button-2" @click="$refs.flowChart.removeNode(props.node.id)">
-            <a href="javascript:;" class="context__link">
-              <i class="bi bi-trash3"></i>
-            </a>
-          </div>
-        </div>
-        <div slot="connContextmenu" class="context__container"></div>
-
-        <div class="toolbar" slot="footer">
-          <div class="context__button">
-            <a href="javascript:;" class="context__link">
-              <i class="bi bi-cursor"></i>
-            </a>
-          </div>
-          <div class="context__button">
-            <a href="javascript:;" class="context__link">
-              <i class="bi bi-hand-index-thumb"></i>
-            </a>
-          </div>
-          <div class="context__button" @click="$refs.flowChart.addNode()">
-            <a href="javascript:;" class="context__link">
-              <i class="bi bi-plus-lg"></i>
-            </a>
-          </div>
-          <div class="context__button">
-            <a href="javascript:;" class="context__link">
-              <i class="bi bi-arrow-counterclockwise"></i>
-            </a>
-          </div>
-          <div class="context__button">
-            <a href="javascript:;" class="context__link">
-              <i class="bi bi-arrow-clockwise"></i>
-            </a>
-          </div>
-        </div>
-      </VFlowChart>
-    </v-card-text>
   </v-card>
 </template>
 <script>
-import VFlowChart from "vue2-flow";
+import FlowChart from '@/components/FlowChart.vue';
 export default {
+  name: 'FormPermintaan',
   components: {
-    VFlowChart,
+    FlowChart
   },
   data: () => ({
-    items: [
-      {
-        text: "Persiapan data role",
-        disabled: false,
-        href: "1",
-      },
-      {
-        text: "Tentukan akses setiap role",
-        disabled: false,
-        href: "2",
-      },
-      {
-        text: "Siapkan data divisi",
-        disabled: false,
-        href: "3",
-      },
-      {
-        text: "Siapkan data pengguna",
-        disabled: false,
-        href: "4",
-      },
-      {
-        text: "Pengguna siap menggunakan sistem",
-        disabled: false,
-        href: "5",
-      },
-    ],
-    itemss: [
+    RuleKaryawan: [
       {
         text: "Pengguna melakukan login",
         disabled: false,
@@ -208,7 +124,64 @@ export default {
         href: "5",
       },
     ],
-    nodes: [
+    RuleKaryawanBaru: [
+      {
+        text: "Akses link (link yang sudah disiapkan)",
+        disabled: false,
+        href: "1",
+      },
+      {
+        text: "Pengguna mengisi form permintaan",
+        disabled: false,
+        href: "2",
+      },
+      {
+        text: "Submit form",
+        disabled: false,
+        href: "3",
+      },
+      {
+        text: "Data terkirim dan otomatis mengirimkan notifikasi pada divisi GA & IT",
+        disabled: false,
+        href: "4",
+      },
+      {
+        text: "Divisi GA & IT menerima notifikasi",
+        disabled: false,
+        href: "5",
+      },
+      {
+        text: "Divisi GA & IT menyiapkan apa yang dipinta",
+        disabled: false,
+        href: "6",
+      },
+      {
+        text: "Divisi GA & IT menyerahkan apa yang dipinta",
+        disabled: false,
+        href: "7",
+      },
+      {
+        text: "Karyawan baru login (menggunakan data username=nama & password=default(123456))",
+        disabled: false,
+        href: "8",
+      },
+      {
+        text: "Karyawan baru akses menu Form/Form permintaan.",
+        disabled: false,
+        href: "9",
+      },
+      {
+        text: "Karyawan baru mengkonfirmasi permintaan diterima.",
+        disabled: false,
+        href: "10",
+      },
+      {
+        text: "Proses selesai",
+        disabled: false,
+        href: "11",
+      },
+    ],
+    ShapeKaryawanBaru: [
       {
         id: 1,
         x: 10,
@@ -310,7 +283,7 @@ export default {
         shape: "rect",
       },
     ],
-    conns: [
+    FlowKaryawanBaru: [
       {
         id: "con-1",
         source: { id: "1", position: "right" }, //balok kiri

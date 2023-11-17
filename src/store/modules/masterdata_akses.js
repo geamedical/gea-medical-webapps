@@ -68,7 +68,6 @@ const actions = {
                         name: parse[1],
                         permission: parse[0],
                     }
-                    console.log(form);
                     commit('SET_FORM', form)
                     resolve(response)
                 })

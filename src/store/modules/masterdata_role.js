@@ -3,7 +3,10 @@ import $axios from '../api'
 
 const state = () => ({
     form: {
+        company: '',
+        code: '',
         rolename: '',
+        coderole: '',
     },
     formsetrole: {
         role_id: '',
@@ -19,7 +22,10 @@ const state = () => ({
 const mutations = {
     CLEAR_FORM(state) {
         state.form = {
+            company: '',
+            code: '',
             rolename: '',
+            coderole: '',
         }
     },
     SET_FORMSETROLE(state, payload) {
@@ -55,6 +61,24 @@ const actions = {
                 })
         })
     },
+    listRolePermission({ }, payload) {
+        return new Promise(resolve => {
+            const {
+                page,
+                itemsPerPage,
+                sortBy,
+                sortDesc
+            } = payload.options
+            const search = payload.search
+            $axios.get(`api/role-permission?page=${page}&limit=${itemsPerPage}&sortBy=${sortBy}&sortDesc=${sortDesc}&search=${search}`)
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    resolve(error.response)
+                })
+        })
+    },
     store({ state, commit }) {
         return new Promise(resolve => {
             $axios.post('api/role', state.form)
@@ -71,7 +95,10 @@ const actions = {
         return new Promise(resolve => {
             $axios.get(`api/role/${payload}`)
                 .then(response => {
+                    state.form.company = response.data.data.company
+                    state.form.code = response.data.data.code
                     state.form.rolename = response.data.data.rolename
+                    state.form.coderole = response.data.data.coderole
                     resolve(response.data)
                 })
                 .catch(error => {
@@ -94,12 +121,12 @@ const actions = {
     delete({ }, payload) {
         return new Promise(resolve => {
             $axios.delete(`api/role/${payload}`)
-            .then(response => {
-                resolve(response.data)
-            })
-            .catch(error => {
-                resolve(error.response)
-            })
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    resolve(error.response)
+                })
         })
     },
     setroleedit({ commit }, payload) {
@@ -132,20 +159,20 @@ const actions = {
                 .catch(error => {
                     resolve(error.response)
                 })
-            })
-        },
-        submitSetRole({ state, commit }, payload) {
-            return new Promise(resolve => {
-                $axios.put(`api/role-permission/${payload}`, state.formsetrole)
-                    .then(response => {
-                        commit('CLEAR_FORMSETROLE')
-                        resolve(response.data)
-                    })
-                    .catch(error => {
-                        resolve(error.response)
-                    })
-            })
-        },
+        })
+    },
+    submitSetRole({ state, commit }, payload) {
+        return new Promise(resolve => {
+            $axios.put(`api/role-permission/${payload}`, state.formsetrole)
+                .then(response => {
+                    commit('CLEAR_FORMSETROLE')
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    resolve(error.response)
+                })
+        })
+    },
 }
 
 export default {

@@ -2,31 +2,55 @@
   <v-card flat color="card">
     <v-card-title>Master Data Pengguna</v-card-title>
     <v-card-text>
-      <v-text-field
-        label="Cari data..."
-        prepend-inner-icon="mdi-text-search"
-        outlined
-        dense
-        v-model="search"
-        @keyup="filter()"
-      ></v-text-field>
-      <v-data-table
-        dense
-        flat
-        :headers="headers"
-        :items="desserts"
-        :options.sync="options"
-        :server-items-length="totalDesserts"
-        :loading="loading"
-        item-key="id"
-      >
+      <v-text-field label="Cari data..." prepend-inner-icon="mdi-text-search" outlined dense v-model="search"
+        @keyup="filter()"></v-text-field>
+      <v-data-table dense flat :headers="headers" :items="desserts" :options.sync="options"
+        :server-items-length="totalDesserts" :loading="loading" item-key="id" single-expand :expanded.sync="expanded"
+        show-expand>
+        <template v-slot:expanded-item="{ headers, item }">
+          <td :colspan="headers.length">
+            <v-container>
+              <v-simple-table dense>
+                <template v-slot:default>
+                  <tr>
+                    <th class="text-left">Username</th>
+                    <td class="text-left">: {{ item.username }}</td>
+                  </tr>
+                  <tr>
+                    <th class="text-left">Tgl. Lahir</th>
+                    <td class="text-left">: {{ parseDate(item.birthdate) }}</td>
+                  </tr>
+                  <tr>
+                    <th class="text-left">Jenis Kelamin</th>
+                    <td class="text-left">: {{ item.gender }}</td>
+                  </tr>
+                  <tr>
+                    <th class="text-left">Status Pernikahan</th>
+                    <td class="text-left">: {{ item.marital }}</td>
+                  </tr>
+                  <tr>
+                    <th class="text-left">No. NPWP</th>
+                    <td class="text-left">: {{ item.npwp }}</td>
+                  </tr>
+                  <tr>
+                    <th class="text-left">No. KTP</th>
+                    <td class="text-left">: {{ item.noktp }}</td>
+                  </tr>
+                  <tr>
+                    <th class="text-left">Alamat tempat tinggal</th>
+                    <td class="text-left">: {{ item.address }}</td>
+                  </tr>
+                  <tr>
+                    <th class="text-left">No. Ponsel</th>
+                    <td class="text-left">: {{ item.telp }}</td>
+                  </tr>
+                </template>
+              </v-simple-table>
+            </v-container>
+          </td>
+        </template>
         <template v-slot:[`item.act`]="{ item }">
-          <v-icon
-            small
-            class="mr-2"
-            @click="editItem(item.id)"
-            v-if="$can('update-user')"
-          >
+          <v-icon small class="mr-2" @click="editItem(item.id)" v-if="$can('update-user')">
             mdi-pencil
           </v-icon>
           <v-icon small @click="deleteItem(item.id)" v-if="$can('delete-user')">
@@ -44,6 +68,7 @@ export default {
   data() {
     return {
       search: "",
+      expanded: [],
       totalDesserts: 0,
       desserts: [],
       loading: true,
@@ -81,7 +106,7 @@ export default {
       this.getDataFromApi();
     },
     parseDate(e) {
-      return moment(e).format("yyyy-MM-DD, h:mm:ss");
+      return moment(e).format("yyyy-MM-DD");
     },
     editItem(id) {
       this.$router.push({
