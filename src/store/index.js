@@ -8,6 +8,7 @@ import masterdata_role from './modules/masterdata_role.js'
 import masterdata_akses from './modules/masterdata_akses.js'
 import masterdata_dept from './modules/masterdata_dept.js'
 import form_permintaan from './modules/form_permintaan.js'
+import dokumentasi from './modules/dokumentasi.js'
 // modules::end
 
 Vue.use(Vuex)
@@ -69,6 +70,7 @@ export default new Vuex.Store({
     masterdata_role,
     masterdata_akses,
     masterdata_dept,
-    form_permintaan
+    form_permintaan,
+    dokumentasi
   }
 })

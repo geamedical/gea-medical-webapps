@@ -36,7 +36,7 @@
         </v-list>
         <v-divider></v-divider>
         <v-list nav dense shaped subheader>
-            <v-subheader>Summary Data</v-subheader>
+            <v-subheader>Perlengkapan Data</v-subheader>
             <div v-for="(item) in menus" :key="item.no">
                 <v-list-item v-if="!item.child" link :to="item.link">
                     <v-list-item-icon>
@@ -61,6 +61,15 @@
             </div>
             <v-subheader>Master Data</v-subheader>
             <div v-for="(item) in menus_masterdata" :key="item.no">
+                <v-list-item link :to="item.link" v-if="$can(item.permission)">
+                    <v-list-item-icon>
+                        <v-icon>{{ item.icon }}</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item>
+            </div>
+            <v-subheader>Informasi</v-subheader>
+            <div v-for="(item) in menus_informasi" :key="item.no">
                 <v-list-item link :to="item.link" v-if="$can(item.permission)">
                     <v-list-item-icon>
                         <v-icon>{{ item.icon }}</v-icon>
@@ -95,6 +104,19 @@ export default {
                     ['Form Permintaan', 'mdi-frequently-asked-questions', '/form-permintaan'],
                 ],
                 link: '/'
+            },
+        ],
+        menus_informasi: [
+            {
+                no:10,
+                title: 'Dokumentasi',
+                icon: 'mdi-television-guide',
+                child: true,
+                itemchild: [
+                    ['Dokumentasi', 'mdi-frequently-asked-questions', '/dokumentasi'],
+                ],
+                link: '/dokumentasi',
+                permission: 'read-user'
             },
         ],
         menus_masterdata:[

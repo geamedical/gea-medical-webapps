@@ -86,7 +86,7 @@ export default {
               ? "Username & password salah !!"
               : "Berhasil.",
         };
-        this.$router.push({ name: "dashboard" });
+        this.$router.push({ name: "dashboard" }).catch(() => true);
       });
     },
   },

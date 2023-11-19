@@ -286,8 +286,8 @@ export default {
     FlowKaryawanBaru: [
       {
         id: "con-1",
-        source: { id: "1", position: "right" }, //balok kiri
-        destination: {//koneksi ke balok kanan
+        source: { id: "1", position: "right" },
+        destination: {
           id: "2",
           position: "left",
         },

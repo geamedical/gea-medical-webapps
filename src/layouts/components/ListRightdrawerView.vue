@@ -15,13 +15,16 @@
             </v-list-item-group>
         </v-list>
         <ListDocumentation v-if="isDashboard"></ListDocumentation>
+        <form-flowchart v-if="$route.name === 'dokumentasi.add'"></form-flowchart>
     </div>
 </template>
 <script>
 import ListDocumentation from '@/components/ListDocumentation.vue';
+import FormFlowchart from '@/components/FormFlowchart.vue';
 export default {
-    components:{
-        ListDocumentation
+    components: {
+        ListDocumentation,
+        FormFlowchart
     },
     data() {
         return {
@@ -30,7 +33,7 @@ export default {
             isDashboard: false
         }
     },
-    mounted(){
+    mounted() {
         this.rendered(this.$route.name)
     },
     watch: {
@@ -39,8 +42,8 @@ export default {
         }
     },
     methods: {
-        rendered(e){
-            // console.log(e);
+        rendered(e) {
+            console.log(e);
             switch (e) {
                 case 'dashboard':
                     this.isDashboard = true
@@ -131,12 +134,27 @@ export default {
                     this.selectedRightDrawer = 1
                     this.isDashboard = false
                     break;
+                case 'dokumentasi.data':
+                    this.menu = this.$store.state.dokumentasi.rightMenuDrawer
+                    this.selectedRightDrawer = 0
+                    this.isDashboard = false
+                    break;
+                case 'dokumentasi.add':
+                    this.menu = this.$store.state.dokumentasi.rightMenuDrawer
+                    this.selectedRightDrawer = 1
+                    this.isDashboard = false
+                    break;
+                case 'dokumentasi.show':
+                    this.menu = this.$store.state.dokumentasi.rightMenuDrawer
+                    this.selectedRightDrawer = 1
+                    this.isDashboard = false
+                    break;
                 default:
                     break;
             }
         },
         movePage(nameurl) {
-            this.$router.push({ name: nameurl }).catch(() => {})
+            this.$router.push({ name: nameurl }).catch(() => { })
         }
     }
 };

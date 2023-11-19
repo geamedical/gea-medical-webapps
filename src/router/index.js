@@ -535,6 +535,90 @@ const routes = [
       },
     ]
   },
+  {
+    path: '/dokumentasi',
+    component: () => import('@/views/apps/Informasi/Dokumentasi/IndexView.vue'),
+    meta: {
+      layout: 'content',
+      requiresAuth: true,
+      title: 'Dokumentasi',
+    },
+    children: [
+      {
+        path: '',
+        name: 'dokumentasi.data',
+        component: () => import('@/views/apps/Informasi/Dokumentasi/DataView.vue'),
+        meta: {
+          requiresAuth: true,
+          title: 'Kelola Dokumentasi',
+          breadscrum: [
+            {
+              text: 'Beranda',
+              disabled: false,
+              href: '/',
+            },
+            {
+              text: 'Data Dokumentasi',
+              disabled: true,
+              href: '/dokumentasi',
+            },
+          ]
+        }
+      },
+      {
+        path: 'add',
+        name: 'dokumentasi.add',
+        component: () => import('@/views/apps/Informasi/Dokumentasi/AddView.vue'),
+        meta: {
+          requiresAuth: true,
+          title: 'Tambah data Dokumentasi',
+          breadscrum: [
+            {
+              text: 'Beranda',
+              disabled: false,
+              href: '/',
+            },
+            {
+              text: 'Data Dokumentasi',
+              disabled: true,
+              href: '/dokumentasi',
+            },
+            {
+              text: 'Tambah Data Dokumentasi',
+              disabled: true,
+              href: '/dokumentasi/add',
+            },
+          ]
+        }
+      },
+      {
+        path: 'show/:id',
+        name: 'dokumentasi.show',
+        component: () => import('@/views/apps/Informasi/Dokumentasi/ShowView.vue'),
+        meta: {
+          requiresAuth: true,
+          title: 'Detail/Update Dokumentasi',
+          breadscrum: [
+            {
+              text: 'Beranda',
+              disabled: false,
+              href: '/',
+            },
+            {
+              text: 'Data Dokumentasi',
+              disabled: true,
+              href: '/dokumentasi',
+            },
+            {
+              text: 'Lihat Data Dokumentasi',
+              disabled: true,
+              href: '/dokumentasi/show/:id',
+            },
+          ]
+        }
+      },
+    ]
+  },
 ]
 
 const router = new VueRouter({
