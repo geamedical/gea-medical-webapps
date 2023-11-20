@@ -62,7 +62,7 @@ const actions = {
                 sortDesc
             } = payload.options
             const search = payload.search
-            $axios.get(`api/dokumentasi?page=${page}&limit=${itemsPerPage}&sortBy=${sortBy}&sortDesc=${sortDesc}&search=${search}`)
+            $axios.get(`api/documentation?page=${page}&limit=${itemsPerPage}&sortBy=${sortBy}&sortDesc=${sortDesc}&search=${search}`)
                 .then(response => {
                     resolve(response.data)
                 })
@@ -71,9 +71,9 @@ const actions = {
                 })
         })
     },
-    store({ state }) {
+    store({ }, payload) {
         return new Promise(resolve => {
-            $axios.post('api/dokumentasi', state.form)
+            $axios.post('api/documentation', payload)
                 .then(response => {
                     resolve(response.data)
                 })
@@ -82,40 +82,40 @@ const actions = {
                 })
         })
     },
-    edit({ }, payload) {
-        return new Promise(resolve => {
-            $axios.get(`api/dokumentasi/${payload}`)
-                .then(response => {
-                    resolve(response.data)
-                })
-                .catch(error => {
-                    resolve(error.response)
-                })
-        })
-    },
-    update({ state }, payload) {
-        return new Promise(resolve => {
-            const { form } = state
-            $axios.put(`api/dokumentasi/${payload}`, form)
-                .then(response => {
-                    resolve(response.data)
-                })
-                .catch(error => {
-                    resolve(error.response)
-                })
-        })
-    },
-    delete({ }, payload) {
-        return new Promise(resolve => {
-            $axios.delete(`api/dokumentasi/${payload}`)
-                .then(response => {
-                    resolve(response.data)
-                })
-                .catch(error => {
-                    resolve(error.response)
-                })
-        })
-    },
+    // edit({ }, payload) {
+    //     return new Promise(resolve => {
+    //         $axios.get(`api/dokumentasi/${payload}`)
+    //             .then(response => {
+    //                 resolve(response.data)
+    //             })
+    //             .catch(error => {
+    //                 resolve(error.response)
+    //             })
+    //     })
+    // },
+    // update({ state }, payload) {
+    //     return new Promise(resolve => {
+    //         const { form } = state
+    //         $axios.put(`api/dokumentasi/${payload}`, form)
+    //             .then(response => {
+    //                 resolve(response.data)
+    //             })
+    //             .catch(error => {
+    //                 resolve(error.response)
+    //             })
+    //     })
+    // },
+    // delete({ }, payload) {
+    //     return new Promise(resolve => {
+    //         $axios.delete(`api/dokumentasi/${payload}`)
+    //             .then(response => {
+    //                 resolve(response.data)
+    //             })
+    //             .catch(error => {
+    //                 resolve(error.response)
+    //             })
+    //     })
+    // },
 }
 
 export default {

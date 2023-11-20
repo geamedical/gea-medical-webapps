@@ -26,7 +26,7 @@ export default {
     }),
     watch:{
         text(e){
-            this.$emit('callback', e)
+            this.$emit('event', e)
         }
     }
 }

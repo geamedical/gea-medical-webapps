@@ -8,12 +8,14 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import socketio from 'socket.io-client'
 import VueSocketIO from 'vue-socket.io'
 import VueNativeNotification from 'vue-native-notification'
+import VueCryptojs from 'vue-cryptojs'
 
 Vue.use(VueApexCharts)
 Vue.use(VueFullscreen)
 Vue.component('apexchart', VueApexCharts)
 Vue.use(Vuetify)
 Vue.use(VueSweetalert2);
+Vue.use(VueCryptojs);
 Vue.use(VueNativeNotification, {
     requestOnNotify: true
   })

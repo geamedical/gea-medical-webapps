@@ -1,39 +1,45 @@
 <template>
   <v-card flat color="card">
-    <v-card-title>Master Data Role</v-card-title>
+    <v-card-title>Data Dokumentasi</v-card-title>
     <v-card-text>
-      <v-text-field
-        label="Cari data..."
-        prepend-inner-icon="mdi-text-search"
-        outlined
-        dense
-        v-model="search"
-        @keyup="filter()"
-      ></v-text-field>
-      <v-data-table
-        dense
-        flat
-        :headers="headers"
-        :items="desserts"
-        :options.sync="options"
-        :server-items-length="totalDesserts"
-        :loading="loading"
-      >
+      <v-text-field label="Cari data..." prepend-inner-icon="mdi-text-search" outlined dense v-model="search"
+        @keyup="filter()"></v-text-field>
+      <v-data-table dense flat :headers="headers" :items="desserts" :options.sync="options"
+        :server-items-length="totalDesserts" :loading="loading" :expanded.sync="expanded" item-key="id" show-expand>
+        <template v-slot:expanded-item="{ headers, item }">
+          <td :colspan="headers.length">
+            <h3>{{ item.title }}</h3>
+            <div v-html="item.desc"></div>
+            <h4>Point</h4>
+            <ul>
+              <div v-for="i in item.listep" :key="i.id">
+                <li>
+                  <strong>{{ i.title }}</strong><br />
+                  <div v-html="i.desc"></div>
+                </li>
+              </div>
+            </ul>
+            <h3>Roudmap Aktifitas</h3>
+            <v-breadcrumbs :items="item.map">
+              <template v-slot:divider>
+                <v-icon>mdi-forward</v-icon>
+              </template>
+            </v-breadcrumbs>
+            <h3>Flowchart</h3>
+            <FlowChart :nodes="item.chart" :conns="parseFlow(item.flow)"></FlowChart>
+          </td>
+        </template>
+        <template v-slot:[`item.created_at`]="{ item }">
+          {{ parseDate(item.created_at) }}
+        </template>
+        <template v-slot:[`item.desc`]="{ item }">
+          <div v-html="item.desc"></div>
+        </template>
+        <template v-slot:[`item.updated_at`]="{ item }">
+          {{ parseDate(item.updated_at) }}
+        </template>
         <template v-slot:[`item.act`]="{ item }">
-          <v-icon
-            small
-            class="mr-2"
-            @click="setpermission(item.id)"
-            v-if="$can('update-role')"
-          >
-            mdi-key-chain
-          </v-icon>
-          <v-icon
-            small
-            class="mr-2"
-            @click="editItem(item.id)"
-            v-if="$can('update-role')"
-          >
+          <v-icon small class="mr-2" @click="editItem(item.id)" v-if="$can('update-user')">
             mdi-pencil
           </v-icon>
           <v-icon small @click="deleteItem(item.id)" v-if="$can('delete-role')">
@@ -46,20 +52,24 @@
 </template>
 <script>
 import { mapActions } from "vuex";
+import moment from 'moment'
+import FlowChart from '@/components/FlowChart.vue'
 export default {
+  components: { FlowChart },
   data() {
     return {
       search: "",
       baseUrl: `http://${process.env.BASE_URL_API}/api/images/avatar-users/`,
       totalDesserts: 0,
+      expanded: [],
       desserts: [],
       loading: true,
       options: {},
       headers: [
-        { text: "Group Perusahaan", value: "company" },
-        { text: "Kode", value: "code" },
-        { text: "Nama", value: "rolename" },
-        { text: "Kode-Role", value: "coderole" },
+        { text: "JUDUL", value: "title" },
+        { text: "KETERANGAN", value: "desc" },
+        { text: "DIBUAT", value: "created_at" },
+        { text: "DIPERBAHARUI", value: "updated_at" },
         { text: "ACT", value: "act" },
       ],
     };
@@ -73,7 +83,24 @@ export default {
     },
   },
   methods: {
-    ...mapActions("masterdata_role", ["index", "edit", "delete"]),
+    parseDate(e) {
+      return moment(e).format("MMMM Do YYYY, h:mm:ss a");
+    },
+    parseFlow(e) {
+      const data = {
+        id: e.id,
+        documentation_id: e.documentation_id,
+        source: '',
+        destination: '',
+        type: '',
+        style: '',
+        markerd: '',
+        created_at: '',
+        updated_at: '',
+      }
+      console.log(data);
+    },
+    ...mapActions("dokumentasi", ["index", "edit", "delete"]),
     getDataFromApi() {
       this.loading = true;
       const tableAttr = { options: this.options, search: this.search };

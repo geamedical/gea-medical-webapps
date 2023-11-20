@@ -84,15 +84,17 @@ export default {
     methods: {
         addChart() {
             let idset = this.chart.length - 1
+            let find = this.chart.length - 1
+            const data = this.chart[find]
             this.chart.push({
                 id: `${++idset}`,
-                x: 0,
-                y: 0,
-                width: 0,
-                height: 0,
-                name: '',
-                type: '',
-                shape: ''
+                x: data.x * 2,
+                y: data.y * 2,
+                width: data.width,
+                height: data.height,
+                name: 'chartname',
+                type: data.type,
+                shape: data.shape
             })
         },
         delChart() {

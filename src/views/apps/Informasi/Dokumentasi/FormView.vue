@@ -9,7 +9,7 @@
                             :rules="[(v) => !!v || 'Item is required']"></v-text-field>
                     </v-col>
                     <v-col col="12" md="12">
-                        <html-editor @callback="callback" />
+                        <html-editor @event="setdesc" />
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -28,11 +28,13 @@
                     </v-btn>
                 </div>
             </v-card-title>
-            <v-card-text v-for="i in docinfo.listep" :key="i.id">
-                <v-text-field dense outlined v-model="i.title" :label="`Judul Langkah ${i.id}`" class="mb-input"
-                    :rules="[(v) => !!v || 'Item is required']"></v-text-field>
-                <v-textarea dense outlined v-model="i.desc" :label="`Keterangan ${i.id}`" class="mb-input"
-                    :rules="[(v) => !!v || 'Item is required']"></v-textarea>
+            <v-card-text>
+                <div v-for="i in docinfo.listep" :key="i.id">
+                    <v-text-field dense outlined v-model="i.title" :label="`Judul Langkah ${i.id}`" class="mb-input"
+                        :rules="[(v) => !!v || 'Item is required']"></v-text-field>
+                    <v-textarea dense outlined v-model="i.desc" :label="`Keterangan ${i.id}`" class="mb-input"
+                        :rules="[(v) => !!v || 'Item is required']"></v-textarea>
+                </div>
             </v-card-text>
             <v-card-title class="d-flex justify-space-between">
                 Langkah-langkah dalam Roudmap
@@ -49,15 +51,16 @@
                     </v-btn>
                 </div>
             </v-card-title>
-            <v-card-text v-for="i in docinfo.mapstep" :key="i.id">
-                <v-row no-gutters>
+            <v-card-text>
+                <v-row no-gutters v-for="index in docinfo.mapstep" :key="index.id">
                     <v-col col="12" md="2">
-                        <v-text-field type="number" dense outlined v-model="i.step" :label="`Urutan Langkah ${i.step}`"
-                            class="mb-input" :rules="[(v) => !!v || 'Item is required']"></v-text-field>
+                        <v-text-field type="number" dense outlined v-model="index.step"
+                            :label="`Urutan Langkah ${index.step}`" class="mb-input"
+                            :rules="[(v) => !!v || 'Item is required']"></v-text-field>
                     </v-col>
                     <v-col col="12" md="10">
-                        <v-text-field dense outlined v-model="i.title" :label="`Judul Langkah ${i.step}`" class="mb-input"
-                            :rules="[(v) => !!v || 'Item is required']"></v-text-field>
+                        <v-text-field dense outlined v-model="index.title" :label="`Judul Langkah ${index.step}`"
+                            class="mb-input" :rules="[(v) => !!v || 'Item is required']"></v-text-field>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -94,7 +97,7 @@ export default {
             ],
             mapstep: [
                 {
-                    id: 1,
+                    id: 0,
                     step: 1,
                     title: ''
                 }
@@ -108,7 +111,10 @@ export default {
         }),
     },
     methods: {
-        callback(text) {
+        enc(text) {
+            return this.$CryptoJS.AES.encrypt(text).toString()
+        },
+        setdesc(text) {
             this.docinfo.desc = text
         },
         addlist() {
@@ -122,12 +128,12 @@ export default {
         removelist() {
             this.docinfo.listep.splice(this.docinfo.listep.length - 1, 1);
         },
+
         addlistmap() {
-            let idset = this.docinfo.mapstep.length
-            let set = ++idset
+            let idset = this.docinfo.mapstep.length - 1
             this.docinfo.mapstep.push({
-                id: set,
-                step: set,
+                id: ++idset,
+                step: ++idset,
                 title: ''
             })
         },
@@ -135,27 +141,19 @@ export default {
             this.docinfo.mapstep.splice(this.docinfo.mapstep.length - 1, 1);
         },
         submit() {
-            console.log(this.docinfo);
-            // this.loading = true;
-            // this.$emit('someEvent', 'exec-action')
-
-            // this.store().then((e) => {
-            //     this.loading = false;
-            //     if (e.status) {
-            //         this.$swal({
-            //             title: "Ditambahkan!",
-            //             text: "Data berhasil ditambahkan.",
-            //             icon: "success",
-            //         });
-            //     } else {
-            //         this.$swal({
-            //             title: "Error!",
-            //             text: "Terjadi kesalahan, silahkan hubungi tim IT!",
-            //             icon: "warning",
-            //         });
-            //     }
-            //     this.$router.push({ name: "dokumentasi.data" });
-            // });
+            const datapost = {
+                title: this.docinfo.title,
+                desc: this.docinfo.desc,
+                listep: this.docinfo.listep,
+                mapstep: this.docinfo.mapstep,
+                flowchart: {
+                    chart: this.chart,
+                    flow: this.flow
+                }
+            }
+            this.loading = true;
+            this.$emit('action', datapost)
+            this.loading = false;
         },
     },
 };
