@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 import $axios from '../api'
-
+import moment from 'moment'
 const state = () => ({
     authenticated: [],
     permissions: [],
@@ -8,11 +8,19 @@ const state = () => ({
         role_id: '',
         dept_id: '',
         name: '',
-        email: '',
-        telp: '',
         nik: '',
+        email: '',
+        username: '',
+        birthdate: '',
+        gender: '',
+        marital: '',
+        npwp: '',
+        noktp: '',
+        address: '',
+        telp: '',
         password: '',
         password_confirmation: '',
+        activation: false,
     },
 })
 
@@ -28,11 +36,19 @@ const mutations = {
             role_id: payload.role_id,
             dept_id: payload.dept_id,
             name: payload.name,
-            email: payload.email,
-            telp: payload.telp,
             nik: payload.nik,
+            email: payload.email,
+            username: payload.username,
+            birthdate: moment(payload.birthdate).format('YYYY-MM-DD'),
+            gender: payload.gender,
+            marital: payload.marital,
+            npwp: payload.npwp,
+            noktp: payload.noktp,
+            address: payload.address,
+            telp: payload.telp,
             password: payload.password,
             password_confirmation: payload.password_confirmation,
+            activation: payload.activation,
         }
     },
     CLEAR_FORM_PROFILE(state) {
@@ -40,11 +56,19 @@ const mutations = {
             role_id: '',
             dept_id: '',
             name: '',
-            email: '',
-            telp: '',
             nik: '',
+            email: '',
+            username: '',
+            birthdate: '',
+            gender: '',
+            marital: '',
+            npwp: '',
+            noktp: '',
+            address: '',
+            telp: '',
             password: '',
             password_confirmation: '',
+            activation: false,
         }
     },
 }
@@ -117,11 +141,19 @@ const actions = {
                         role_id: user.role_id,
                         dept_id: user.dept_id,
                         name: user.name,
-                        email: user.email,
-                        telp: user.telp,
                         nik: user.nik,
+                        email: user.email,
+                        username: user.username,
+                        birthdate: user.birthdate,
+                        gender: user.gender,
+                        marital: user.marital,
+                        npwp: user.npwp,
+                        noktp: user.noktp,
+                        address: user.address,
+                        telp: user.telp,
                         password: '',
                         password_confirmation: '',
+                        activation: user.activation === 'valid' ? true : false,
                     }
                     commit('SET_FORM_PROFILE', payload)
                     resolve(response)

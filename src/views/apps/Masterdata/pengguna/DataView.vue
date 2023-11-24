@@ -13,6 +13,12 @@
               <v-simple-table dense>
                 <template v-slot:default>
                   <tr>
+                    <th class="text-left">Aktivasi</th>
+                    <td class="text-left">: <strong
+                        :class="item.activation === 'invalid' ? 'error--text' : 'accent--text'">{{
+                          item.activation.toUpperCase() }}</strong></td>
+                  </tr>
+                  <tr>
                     <th class="text-left">Username</th>
                     <td class="text-left">: {{ item.username }}</td>
                   </tr>
@@ -49,6 +55,10 @@
             </v-container>
           </td>
         </template>
+        <template v-slot:[`item.activation`]="{ item }">
+          <strong :class="item.activation === 'invalid' ? 'error--text' : 'accent--text'">{{
+            item.activation.toUpperCase() }}</strong>
+        </template>
         <template v-slot:[`item.act`]="{ item }">
           <v-icon small class="mr-2" @click="editItem(item.id)" v-if="$can('update-user')">
             mdi-pencil
@@ -77,7 +87,8 @@ export default {
         { text: "NIK", value: "nik" },
         { text: "NAMA", value: "name" },
         { text: "EMAIL", value: "email" },
-        { text: "ROLE", value: "roles.rolename" },
+        { text: "AKTIVASI", value: "activation" },
+        { text: "ROLE/JABATAN", value: "roles.rolename" },
         { text: "DEPT", value: "dept.deptname" },
         { text: "ACT", value: "act" },
       ],

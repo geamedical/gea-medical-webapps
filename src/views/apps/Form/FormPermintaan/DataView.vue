@@ -24,13 +24,13 @@
           <v-icon small class="mr-2" @click="execItem(item.id, 'y')" v-if="authenticated.id === item.user_id && item.status === 'w'">
             mdi-hand-okay
           </v-icon>
-          <v-icon small class="mr-2" @click="execItem(item.id, 'w')" v-if="$can('update-dept') && item.status === 'n'">
+          <v-icon small class="mr-2" @click="execItem(item.id, 'w')" v-if="$can('update-form-permintaan') && item.status === 'n'">
             mdi-gift-outline
           </v-icon>
-          <v-icon small class="mr-2" @click="editItem(item.user_id)" v-if="$can('update-dept')">
+          <v-icon small class="mr-2" @click="editItem(item.user_id)" v-if="$can('update-form-permintaan')">
             mdi-pencil
           </v-icon>
-          <v-icon small @click="deleteItem(item.id)" v-if="$can('delete-dept')">
+          <v-icon small @click="deleteItem(item.id)" v-if="$can('delete-form-permintaan')">
             mdi-delete
           </v-icon>
         </template>

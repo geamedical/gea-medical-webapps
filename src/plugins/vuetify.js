@@ -9,7 +9,9 @@ import socketio from 'socket.io-client'
 import VueSocketIO from 'vue-socket.io'
 import VueNativeNotification from 'vue-native-notification'
 import VueCryptojs from 'vue-cryptojs'
+import infiniteScroll from 'vue-infinite-scroll'
 
+Vue.use(infiniteScroll)
 Vue.use(VueApexCharts)
 Vue.use(VueFullscreen)
 Vue.component('apexchart', VueApexCharts)
@@ -39,7 +41,7 @@ export default new Vuetify({
                 card: '#ffffff',
                 primary: '#0C134F',
                 secondary: '#1D267D',
-                accent: '#FFB000',
+                accent: '#43A047',
                 error: '#D80032',
             },
             dark: {

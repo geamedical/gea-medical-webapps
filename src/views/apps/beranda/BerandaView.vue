@@ -73,7 +73,7 @@ export default {
           title: 'Departemen',
           artist: 'Daftar data pengguna',
           link:'/master-data-dept',
-          authorization:'read-dept'
+          authorization:'read-departement'
         },
         {
           color: 'accent',
@@ -98,6 +98,14 @@ export default {
           artist: 'Daftar data permintaan',
           link:'/form-permintaan',
           authorization:'read-form-permintaan'
+        },
+        {
+          color: 'error',
+          src: 'mdi-television-guide',
+          title: 'Informasi',
+          artist: 'Daftar informasi/panduan',
+          link:'/dokumentasi',
+          authorization:'read-documentation'
         },
       ],
       // optionsDonuts: {

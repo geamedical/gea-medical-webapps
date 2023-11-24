@@ -45,15 +45,13 @@
                     <v-list-item-title>{{ item.title }}</v-list-item-title>
                 </v-list-item>
 
-                <v-list-group v-else :prepend-icon="item.icon" no-action color="#FFFFFF">
+                <v-list-group v-else :prepend-icon="item.icon" color="#FFFFFF" v-model="menuchildren" no-action>
                     <template v-slot:activator>
                         <v-list-item-title>{{ item.title }}</v-list-item-title>
                     </template>
-
-                    <v-list-item v-for="([title, icon, link], x) in item.itemchild" :key="x" link :to="link">
-                        <v-list-item-title>{{ title }}</v-list-item-title>
-
-                        <v-list-item-icon>
+                    <v-list-item v-for="([title, icon, link, permission], x) in item.itemchild" :key="x" :to="link" link >
+                        <v-list-item-title v-if="$can(permission)">{{ title }}</v-list-item-title>
+                        <v-list-item-icon v-if="$can(permission)">
                             <v-icon>{{ icon }}</v-icon>
                         </v-list-item-icon>
                     </v-list-item>
@@ -86,9 +84,10 @@ export default {
     data: () => ({
         appname: 'GEA MEDICAL APPS',
         LeftSelectedDrawer: 0,
+        menuchildren: 0,
         menus: [
             {
-                no:0,
+                no: 0,
                 title: 'Beranda',
                 icon: 'mdi-apps',
                 child: false,
@@ -96,32 +95,29 @@ export default {
                 link: '/dashboard'
             },
             {
-                no:1,
+                no: 1,
                 title: 'Forms',
                 icon: 'mdi-list-box-outline',
                 child: true,
                 itemchild: [
-                    ['Form Permintaan', 'mdi-frequently-asked-questions', '/form-permintaan'],
+                    ['Form Permintaan', 'mdi-frequently-asked-questions', '/form-permintaan', 'read-form-permintaan'],
                 ],
                 link: '/'
             },
         ],
         menus_informasi: [
             {
-                no:10,
+                no: 10,
                 title: 'Dokumentasi',
                 icon: 'mdi-television-guide',
                 child: true,
-                itemchild: [
-                    ['Dokumentasi', 'mdi-frequently-asked-questions', '/dokumentasi'],
-                ],
                 link: '/dokumentasi',
-                permission: 'read-user'
+                permission: 'read-documentation'
             },
         ],
-        menus_masterdata:[
+        menus_masterdata: [
             {
-                no:6,
+                no: 6,
                 title: 'Data Pengguna',
                 icon: 'mdi-account-group',
                 child: false,
@@ -130,7 +126,7 @@ export default {
                 permission: 'read-user'
             },
             {
-                no:7,
+                no: 7,
                 title: 'Data Departemen',
                 icon: 'mdi-lightbulb-group-outline',
                 child: false,
@@ -139,7 +135,7 @@ export default {
                 permission: 'read-dept'
             },
             {
-                no:8,
+                no: 8,
                 title: 'Data Role',
                 icon: 'mdi-group',
                 child: false,
@@ -148,7 +144,7 @@ export default {
                 permission: 'read-role'
             },
             {
-                no:9,
+                no: 9,
                 title: 'Data Akses',
                 icon: 'mdi-security',
                 child: false,
@@ -164,11 +160,12 @@ export default {
         },
         ...mapState('auth', {
             authenticated: state => state.authenticated,
+            permissions: state => state.permissions,
         }),
     },
-    methods:{
+    methods: {
         ...mapActions('auth', ['logout']),
-        keluar(){
+        keluar() {
             this.logout().then(e => {
                 if (e === true) {
                     this.$router.push({ name: 'login' })

@@ -38,34 +38,16 @@
           Submit
         </v-btn>
       </v-card-actions>
-      <v-card-actions>
-        <div class="d-flex justify-center mt-5">
-          <alert-components
-            :type="alert.type"
-            :title="alert.title"
-            :msg="alert.msg"
-          ></alert-components>
-        </div>
-      </v-card-actions>
     </v-card>
   </v-form>
 </template>
 <script>
-import AlertComponents from "@/components/AlertComponents.vue";
 import { mapActions, mapState } from "vuex";
 export default {
-  components: {
-    AlertComponents,
-  },
   data: () => ({
-    radioGroup: ["create", "read", "update", "delete", "export", "import"],
+    radioGroup: ["create", "read", "update", "delete"],
     valid: false,
     loading: false,
-    alert: {
-      type: "",
-      title: "",
-      msg: [],
-    },
   }),
   computed: {
     ...mapState("masterdata_akses", {

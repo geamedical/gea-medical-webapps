@@ -153,7 +153,6 @@ const actions = {
                         role_id: arrayUnique(idRole)[0],
                         permission_id: idPermission
                     })
-                    console.log();
                     resolve(response.data)
                 })
                 .catch(error => {

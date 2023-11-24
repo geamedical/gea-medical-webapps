@@ -3,67 +3,33 @@
     <v-card color="card" flat>
       <v-card-title>Form Set Role</v-card-title>
       <v-card-text>
-        <v-select
-          dense
-          outlined
-          v-model="formsetrole.role_id"
-          :items="role"
-          item-text="rolename"
-          item-value="id"
-          label="pilih role user"
-          :rules="[(v) => !!v || 'Item is required']"
-          class="mb-input"
-        ></v-select>
-        <v-data-table
-          dense
-          flat
-          :headers="headers"
-          :items="desserts"
-          :options.sync="options"
-          :server-items-length="totalDesserts"
-          :loading="loadingtable"
-          class="elevation-0 mt-5"
-        >
+        <v-select dense outlined v-model="formsetrole.role_id" :items="role" item-text="rolename" item-value="id"
+          label="pilih role user" :rules="[(v) => !!v || 'Item is required']" class="mb-input"></v-select>
+        <v-data-table dense flat :headers="headers" :items="desserts" :options.sync="options"
+          :server-items-length="totalDesserts" :loading="loadingtable" class="elevation-0 mt-5">
+          <template v-slot:[`item.name`]="{ item }">
+            <strong>{{ item.name.toUpperCase() }}</strong>
+          </template>
           <template v-slot:[`item.create`]="{ item }">
-            <v-switch
-              v-model="formsetrole.permission_id"
-              color="primary"
-              :value="GetId(`create-${item.basepermission}`)"
-            ></v-switch>
+            <v-switch inset v-model="formsetrole.permission_id" color="primary"
+            :value="item.child[0].id"></v-switch>
           </template>
           <template v-slot:[`item.read`]="{ item }">
-            <v-switch
-              v-model="formsetrole.permission_id"
-              color="primary"
-              :value="GetId(`read-${item.basepermission}`)"
-            ></v-switch>
+            <v-switch inset v-model="formsetrole.permission_id" color="primary"
+            :value="item.child[1].id"></v-switch>
           </template>
           <template v-slot:[`item.update`]="{ item }">
-            <v-switch
-              v-model="formsetrole.permission_id"
-              color="primary"
-              :value="GetId(`update-${item.basepermission}`)"
-            ></v-switch>
+            <v-switch inset v-model="formsetrole.permission_id" color="primary"
+            :value="item.child[2].id"></v-switch>
           </template>
           <template v-slot:[`item.delete`]="{ item }">
-            <v-switch
-              v-model="formsetrole.permission_id"
-              color="primary"
-              :value="GetId(`delete-${item.basepermission}`)"
-            ></v-switch>
-            {{ GetId(`delete-${item.basepermission}`) }}
+            <v-switch inset v-model="formsetrole.permission_id" color="primary"
+            :value="item.child[3].id"></v-switch>
           </template>
         </v-data-table>
       </v-card-text>
       <v-card-actions>
-        <v-btn
-          depressed
-          :loading="loading"
-          color="primary"
-          block
-          :disabled="!valid"
-          @click="submit"
-        >
+        <v-btn depressed :loading="loading" color="primary" block :disabled="!valid" @click="submit">
           Submit data
         </v-btn>
       </v-card-actions>
@@ -83,7 +49,7 @@ export default {
     loadingtable: true,
     options: {},
     headers: [
-      { text: "Grup Akses", value: "basepermission" },
+      { text: "Grup Akses", value: "name" },
       { text: "Create", value: "create" },
       { text: "Read", value: "read" },
       { text: "Update", value: "update" },
@@ -111,13 +77,8 @@ export default {
   },
   methods: {
     ...mapActions("masterdata_user", ["attr_form_user"]),
-    ...mapActions("masterdata_role", ["setroleedit", "submitSetRole","listRolePermission"]),
+    ...mapActions("masterdata_role", ["setroleedit", "submitSetRole", "listRolePermission"]),
     ...mapActions("masterdata_akses", ["edit"]),
-    GetId(name){
-      this.edit(name).then((res)=>{
-        return res.data.data.id
-      })
-    },
     getDataFromApi() {
       this.loadingtable = true;
       const tableAttr = { options: this.options, search: this.search };

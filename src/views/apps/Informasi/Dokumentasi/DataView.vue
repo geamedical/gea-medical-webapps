@@ -25,15 +25,13 @@
                 <v-icon>mdi-forward</v-icon>
               </template>
             </v-breadcrumbs>
-            <h3>Flowchart</h3>
-            <FlowChart :nodes="item.chart" :conns="parseFlow(item.flow)"></FlowChart>
           </td>
         </template>
         <template v-slot:[`item.created_at`]="{ item }">
           {{ parseDate(item.created_at) }}
         </template>
-        <template v-slot:[`item.desc`]="{ item }">
-          <div v-html="item.desc"></div>
+        <template v-slot:[`item.title`]="{ item }">
+          {{ stringLimiter(item.title, 20) }}
         </template>
         <template v-slot:[`item.updated_at`]="{ item }">
           {{ parseDate(item.updated_at) }}
@@ -53,9 +51,7 @@
 <script>
 import { mapActions } from "vuex";
 import moment from 'moment'
-import FlowChart from '@/components/FlowChart.vue'
 export default {
-  components: { FlowChart },
   data() {
     return {
       search: "",
@@ -67,11 +63,11 @@ export default {
       options: {},
       headers: [
         { text: "JUDUL", value: "title" },
-        { text: "KETERANGAN", value: "desc" },
         { text: "DIBUAT", value: "created_at" },
         { text: "DIPERBAHARUI", value: "updated_at" },
         { text: "ACT", value: "act" },
       ],
+      connflow: [],
     };
   },
   watch: {
@@ -83,24 +79,13 @@ export default {
     },
   },
   methods: {
+    ...mapActions("dokumentasi", ["index", "edit", "delete"]),
     parseDate(e) {
       return moment(e).format("MMMM Do YYYY, h:mm:ss a");
     },
-    parseFlow(e) {
-      const data = {
-        id: e.id,
-        documentation_id: e.documentation_id,
-        source: '',
-        destination: '',
-        type: '',
-        style: '',
-        markerd: '',
-        created_at: '',
-        updated_at: '',
-      }
-      console.log(data);
+    stringLimiter(txt, limit){
+      return txt.slice(0, limit)
     },
-    ...mapActions("dokumentasi", ["index", "edit", "delete"]),
     getDataFromApi() {
       this.loading = true;
       const tableAttr = { options: this.options, search: this.search };
@@ -113,11 +98,8 @@ export default {
     filter() {
       this.getDataFromApi();
     },
-    setpermission(id) {
-      this.$router.push({ path: `/master-data-role/setrole/${id}` });
-    },
     editItem(id) {
-      this.$router.push({ path: `/master-data-role/show/${id}` });
+      this.$router.push({ path: `/dokumentasi/show/${id}` });
     },
     deleteItem(id) {
       this.$swal({

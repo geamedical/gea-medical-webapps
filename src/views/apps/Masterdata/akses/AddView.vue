@@ -47,7 +47,7 @@ export default {
   data: () => ({
     valid: false,
     loading: false,
-    radioGroup: ["create", "read", "update", "delete", "export", "import"],
+    radioGroup: ["create", "read", "update", "delete"],
   }),
   computed: {
     ...mapState("masterdata_akses", {

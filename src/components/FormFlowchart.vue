@@ -83,11 +83,10 @@ export default {
     },
     methods: {
         addChart() {
-            let idset = this.chart.length - 1
             let find = this.chart.length - 1
             const data = this.chart[find]
             this.chart.push({
-                id: `${++idset}`,
+                id: `${Date.now() + Math.random()}`,
                 x: data.x * 2,
                 y: data.y * 2,
                 width: data.width,

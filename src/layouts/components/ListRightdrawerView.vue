@@ -14,15 +14,19 @@
                 </v-list-item>
             </v-list-item-group>
         </v-list>
+        <v-divider v-if="!isDashboard"></v-divider>
+        <ListUserOnline v-if="!isDashboard && !visibleUser($route.name)"></ListUserOnline>
         <ListDocumentation v-if="isDashboard"></ListDocumentation>
-        <form-flowchart v-if="$route.name === 'dokumentasi.add'"></form-flowchart>
+        <form-flowchart v-if="$route.name === 'dokumentasi.add' || $route.name === 'dokumentasi.show'"></form-flowchart>
     </div>
 </template>
 <script>
+import ListUserOnline from '@/components/ListUserOnline.vue';
 import ListDocumentation from '@/components/ListDocumentation.vue';
 import FormFlowchart from '@/components/FormFlowchart.vue';
 export default {
     components: {
+        ListUserOnline,
         ListDocumentation,
         FormFlowchart
     },
@@ -42,8 +46,14 @@ export default {
         }
     },
     methods: {
+        visibleUser(route) {
+            if (route !== null) {
+                const indexOfResult = route.indexOf('dokumentasi');
+                return indexOfResult !== -1 ? true : false
+            }
+        },
         rendered(e) {
-            console.log(e);
+            // console.log(e);
             switch (e) {
                 case 'dashboard':
                     this.isDashboard = true

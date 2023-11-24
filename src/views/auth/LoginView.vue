@@ -10,7 +10,8 @@
           </v-card-title>
           <v-card-text>
             <v-form>
-              <v-text-field label="Tulis Username Anda Disini" name="username" prepend-inner-icon="mdi-account" class="rounded-0" outlined placeholder="Username" v-model="form.username"></v-text-field>
+              <v-text-field label="Tulis Username Anda Disini" name="username" prepend-inner-icon="mdi-account"
+                class="rounded-0" outlined placeholder="Username" v-model="form.username"></v-text-field>
               <v-text-field label="Tulis Kata Sandi Anda Disini" name="password" prepend-inner-icon="mdi-lock"
                 class="rounded-0" outlined :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="showPass ? 'text' : 'password'" @click:append="showPass = !showPass"
@@ -86,7 +87,8 @@ export default {
               ? "Username & password salah !!"
               : "Berhasil.",
         };
-        this.$router.push({ name: "dashboard" }).catch(() => true);
+        if (res.status === true)
+          this.$router.push({ name: "dashboard" }).catch(() => true);
       });
     },
   },

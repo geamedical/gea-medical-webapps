@@ -58,7 +58,7 @@ export default {
       loading: true,
       options: {},
       headers: [
-        { text: "Grup Akses", value: "basepermission" },
+        { text: "Grup Akses", value: "parent.name" },
         { text: "Nama Akses", value: "name" },
         { text: "Tanggal Dibuat", value: "created_at" },
         { text: "Tanggal Diperbaharui", value: "updated_at" },

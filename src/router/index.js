@@ -68,7 +68,7 @@ const routes = [
     },
   },
   {
-    path: '/users-info/:data',
+    path: '/users-info/:id',
     name: 'users-info',
     component: () => import('@/views/apps/beranda/Tools/UserInfoView.vue'),
     meta: {

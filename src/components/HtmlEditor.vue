@@ -21,12 +21,18 @@ export default {
     components: {
         'editor': Editor
     },
+    props:{
+        data:String
+    },
     data: () => ({
         text: '',
     }),
     watch:{
         text(e){
             this.$emit('event', e)
+        },
+        data(e){
+            this.text = e
         }
     }
 }

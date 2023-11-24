@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 import $axios from '../api'
-
+import moment from 'moment'
 const state = () => ({
     form: {
         role_id: '',
@@ -16,6 +16,7 @@ const state = () => ({
         noktp: '',
         address: '',
         telp: '',
+        activation: false,
     },
     rightMenuDrawer: [
         ['List Data', 'mdi-view-list', 'master-data-pengguna.data', 'read-user'],
@@ -39,6 +40,7 @@ const mutations = {
             noktp: '',
             address: '',
             telp: '',
+            activation: false,
         }
     },
 }
@@ -75,7 +77,24 @@ const actions = {
     },
     store({ state, commit }) {
         return new Promise(resolve => {
-            $axios.post('api/users', state.form)
+            const { form } = state
+            const datapost = {
+                role_id: form.role_id,
+                dept_id: form.dept_id,
+                name: form.name,
+                nik: form.nik,
+                email: form.email,
+                username: form.username,
+                birthdate: moment(form.birthdate).format('YYYY-MM-DD'),
+                gender: form.gender,
+                marital: form.marital,
+                npwp: form.npwp,
+                noktp: form.noktp,
+                address: form.address,
+                telp: form.telp,
+                activation: form.activation ? 'valid' : 'invalid',
+            }
+            $axios.post('api/users', datapost)
                 .then(response => {
                     commit('CLEAR_FORM')
                     resolve(response.data)
@@ -104,6 +123,7 @@ const actions = {
                         noktp: x.noktp,
                         address: x.address,
                         telp: x.telp,
+                        activation: x.activation === 'valid' ? true : false,
                     }
                     resolve(response.data)
                 })
@@ -115,7 +135,23 @@ const actions = {
     update({ state }, payload) {
         return new Promise(resolve => {
             const { form } = state
-            $axios.put(`api/users/${payload}`, form)
+            const datapost = {
+                role_id: form.role_id,
+                dept_id: form.dept_id,
+                name: form.name,
+                nik: form.nik,
+                email: form.email,
+                username: form.username,
+                birthdate: moment(form.birthdate).format('YYYY-MM-DD'),
+                gender: form.gender,
+                marital: form.marital,
+                npwp: form.npwp,
+                noktp: form.noktp,
+                address: form.address,
+                telp: form.telp,
+                activation: form.activation ? 'valid' : 'invalid',
+            }
+            $axios.put(`api/users/${payload}`, datapost)
                 .then(response => {
                     resolve(response.data)
                 })

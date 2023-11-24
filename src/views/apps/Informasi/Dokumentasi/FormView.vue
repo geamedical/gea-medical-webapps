@@ -9,7 +9,7 @@
                             :rules="[(v) => !!v || 'Item is required']"></v-text-field>
                     </v-col>
                     <v-col col="12" md="12">
-                        <html-editor @event="setdesc" />
+                        <html-editor @event="setdesc" :data="docinfo.desc" />
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -59,7 +59,7 @@
                             :rules="[(v) => !!v || 'Item is required']"></v-text-field>
                     </v-col>
                     <v-col col="12" md="10">
-                        <v-text-field dense outlined v-model="index.title" :label="`Judul Langkah ${index.step}`"
+                        <v-text-field dense outlined v-model="index.text" :label="`Judul Langkah ${index.step}`"
                             class="mb-input" :rules="[(v) => !!v || 'Item is required']"></v-text-field>
                     </v-col>
                 </v-row>
@@ -79,9 +79,22 @@
 <script>
 import HtmlEditor from '@/components/HtmlEditor'
 import FlowChart from '@/components/FlowChart.vue';
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 export default {
     components: { HtmlEditor, FlowChart },
+    props: {
+        id: Number
+    },
+    mounted() {
+        if (this.id !== null) {
+            this.edit(this.id).then((res) => {
+                this.docinfo.title = res.data.title
+                this.docinfo.desc = res.data.desc
+                this.docinfo.listep = res.data.listep
+                this.docinfo.mapstep = res.data.map
+            })
+        }
+    },
     data: () => ({
         valid: false,
         loading: false,
@@ -99,7 +112,7 @@ export default {
                 {
                     id: 0,
                     step: 1,
-                    title: ''
+                    text: ''
                 }
             ]
         },
@@ -111,6 +124,7 @@ export default {
         }),
     },
     methods: {
+        ...mapActions("dokumentasi", ["edit"]),
         enc(text) {
             return this.$CryptoJS.AES.encrypt(text).toString()
         },
@@ -134,7 +148,7 @@ export default {
             this.docinfo.mapstep.push({
                 id: ++idset,
                 step: ++idset,
-                title: ''
+                text: ''
             })
         },
         removelistmap() {
@@ -142,15 +156,19 @@ export default {
         },
         submit() {
             const datapost = {
-                title: this.docinfo.title,
-                desc: this.docinfo.desc,
-                listep: this.docinfo.listep,
-                mapstep: this.docinfo.mapstep,
-                flowchart: {
-                    chart: this.chart,
-                    flow: this.flow
+                form: {
+                    title: this.docinfo.title,
+                    desc: this.docinfo.desc,
+                    listep: this.docinfo.listep,
+                    mapstep: this.docinfo.mapstep,
+                    flowchart: {
+                        chart: this.chart,
+                        flow: this.flow
+                    }
                 }
             }
+            if (this.id !== null)
+                datapost['id'] = this.id
             this.loading = true;
             this.$emit('action', datapost)
             this.loading = false;

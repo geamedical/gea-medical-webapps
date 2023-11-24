@@ -67,6 +67,9 @@
             <v-text-field dense outlined v-model="form.password_confirmation" class="mb-input"
               label="konfirmasi password"></v-text-field>
           </v-col>
+          <v-col cols="12" md="3">
+            <v-switch v-model="form.activation" inset :label="`Aktivasi: ${form.activation?'Aktif':'Tidak Aktif'}`"></v-switch>
+          </v-col>
         </v-row>
       </v-card-text>
       <v-card-actions>

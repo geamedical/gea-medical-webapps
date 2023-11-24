@@ -57,15 +57,18 @@
             <v-textarea name="address" dense outlined label="Alamat tempat tinggal" auto-grow class="mb-input"
               :value="form.address" v-model="form.address"></v-textarea>
           </v-col>
-          <v-col cols="12" md="4">
+          <v-col cols="12" md="3">
             <DatePicker label="Tgl. Lahir" @someEvent="callback" :disabled="false"></DatePicker>
           </v-col>
-          <v-col cols="12" md="4">
+          <v-col cols="12" md="3">
             <v-text-field dense outlined v-model="form.password" class="mb-input" label="Password"></v-text-field>
           </v-col>
-          <v-col cols="12" md="4">
+          <v-col cols="12" md="3">
             <v-text-field dense outlined v-model="form.password_confirmation" class="mb-input"
               label="konfirmasi password"></v-text-field>
+          </v-col>
+          <v-col cols="12" md="3">
+            <v-switch v-model="form.activation" inset :label="`Aktivasi: ${form.activation.toString()}`"></v-switch>
           </v-col>
         </v-row>
       </v-card-text>

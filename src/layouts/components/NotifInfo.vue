@@ -1,7 +1,7 @@
 <template>
   <v-menu offset-y>
     <template v-slot:activator="{ on, attrs }">
-      <v-badge color="primary" :content="`${count !== null && count > 0 ? 'New ' : ''}${count}`" overlap>
+      <v-badge color="primary" :content="`${count !== null && count > 0 ? `Baru ${count}` : 0}`" overlap>
         <v-btn icon v-bind="attrs" v-on="on">
           <v-icon>mdi-bell-outline</v-icon>
         </v-btn>
@@ -40,6 +40,7 @@
 <script>
 import { mapState, mapActions, mapGetters } from "vuex";
 import moment from "moment";
+import audioNotif from '@/assets/audio-notif/notif-permintaan.wav'
 export default {
   data() {
     return {
@@ -61,7 +62,7 @@ export default {
     }),
   },
   mounted() {
-    if (this.isAuth) {
+    if (this.authenticated.length > 0) {
       this.getNotifLogin();
       this.getNotifLogout();
       this.getNotifPermintaan();
@@ -79,6 +80,14 @@ export default {
         this.getNotifData();
       }
     },
+    isAuth(e) {
+      if (e === true) {
+        this.getNotifLogin();
+        this.getNotifLogout();
+        this.getNotifPermintaan();
+        this.getNotifData();
+      }
+    }
   },
   methods: {
     ...mapActions(["getnotif", "showNotif"]),
@@ -108,6 +117,7 @@ export default {
       this.sockets.subscribe("auth-login:user", (data) => {
         this.getNotifData();
         this.setNotifier(`User atas nama ${data.name} telah online.`)
+        new Audio(audioNotif).play()
       });
     },
     getNotifLogout() {
@@ -121,6 +131,7 @@ export default {
         this.getNotifData();
         if (data.user.id === this.authenticated.id) {
           this.setNotifier(`Permohonan permintaan atas nama ${data.user.name} telah ditindak lanjut, periksa sekarang!`)
+          new Audio(audioNotif).play()
         }
       });
       this.sockets.subscribe("form:permintaan", (data) => {

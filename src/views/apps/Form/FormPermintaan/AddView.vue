@@ -28,16 +28,27 @@
       <v-card-text>
         <v-checkbox v-model="email" :label="`Email: ${email ? 'ya' : 'tidak'}`"></v-checkbox>
         <v-text-field :disabled="!email" dense outlined class="mb-input" label="Alamat email"
-          v-model="permintaan[0].detail" :error-messages="showErr(errors, 'request.0.detail')"></v-text-field>
+          v-model="permintaan[0].detail" :error-messages="showErr(errors, 'request.0.detail')" :rules="[
+            v => !!v || 'E-mail harus diisi!',
+            v => /.+@.+/.test(v) || 'E-mail tidak valid!',
+          ]"></v-text-field>
         <v-checkbox v-model="wifi" :label="`Wifi: ${wifi ? 'ya' : 'tidak'}`"></v-checkbox>
         <v-container>
           <v-row>
             <v-text-field :disabled="!wifi" dense outlined class="mb-input" label="Nama lengkap" v-model="akseswifi.nama"
-              :error-messages="showErr(errors, 'request.1.detail')"></v-text-field>
+              :error-messages="showErr(errors, 'request.1.detail')" :rules="[
+                v => !!v || 'Nama lengkap harus diisi!',
+              ]"></v-text-field>
             <v-text-field :disabled="!wifi" dense outlined class="mb-input" label="Alamat email aktif"
-              v-model="akseswifi.email" :error-messages="showErr(errors, 'request.1.detail')"></v-text-field>
+              v-model="akseswifi.email" :error-messages="showErr(errors, 'request.1.detail')" :rules="[
+                v => !!v || 'E-mail harus diisi!',
+                v => /.+@.+/.test(v) || 'E-mail tidak valid!',
+              ]"></v-text-field>
             <v-text-field :disabled="!wifi" dense outlined class="mb-input" label="Pin" v-model="akseswifi.pin"
-              :error-messages="showErr(errors, 'request.1.detail')"></v-text-field>
+              :error-messages="showErr(errors, 'request.1.detail')" :counter="4" :rules="[
+                v => !!v || 'Pin harus diisi',
+                v => v.length <= 4 || 'Pin maximal 4 karakter!',
+              ]"></v-text-field>
           </v-row>
         </v-container>
         <v-checkbox v-model="server" :label="`Server: ${server ? 'ya' : 'tidak'}`"></v-checkbox>

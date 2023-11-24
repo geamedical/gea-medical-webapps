@@ -4,7 +4,7 @@ import $axios from '../api'
 const state = () => ({
     chart: [
         {
-            id: '0',
+            id: `${Date.now() + Math.random()}`,
             x: 10,
             y: 50,
             width: 80,
@@ -14,7 +14,7 @@ const state = () => ({
             shape: "rect",
         },
         {
-            id: '1',
+            id: `${Date.now() + Math.random()+1}`,
             x: 200,
             y: 50,
             width: 100,
@@ -27,9 +27,9 @@ const state = () => ({
     flow: [
         {
             id: "0",
-            source: { id: "0", position: "right" },
+            source: { id: `${Date.now() + Math.random()}`, position: "right" },
             destination: {
-                id: "1",
+                id: `${Date.now() + Math.random()+1}`,
                 position: "left",
             },
             type: "step",
@@ -82,40 +82,54 @@ const actions = {
                 })
         })
     },
-    // edit({ }, payload) {
-    //     return new Promise(resolve => {
-    //         $axios.get(`api/dokumentasi/${payload}`)
-    //             .then(response => {
-    //                 resolve(response.data)
-    //             })
-    //             .catch(error => {
-    //                 resolve(error.response)
-    //             })
-    //     })
-    // },
-    // update({ state }, payload) {
-    //     return new Promise(resolve => {
-    //         const { form } = state
-    //         $axios.put(`api/dokumentasi/${payload}`, form)
-    //             .then(response => {
-    //                 resolve(response.data)
-    //             })
-    //             .catch(error => {
-    //                 resolve(error.response)
-    //             })
-    //     })
-    // },
-    // delete({ }, payload) {
-    //     return new Promise(resolve => {
-    //         $axios.delete(`api/dokumentasi/${payload}`)
-    //             .then(response => {
-    //                 resolve(response.data)
-    //             })
-    //             .catch(error => {
-    //                 resolve(error.response)
-    //             })
-    //     })
-    // },
+    edit({ commit }, payload) {
+        return new Promise(resolve => {
+            $axios.get(`api/documentation/${payload}`)
+                .then(response => {
+                    const chartData = response.data.data.data.chart
+                    const flowData = response.data.data.data.flow
+                    commit('SET_CHART', chartData)
+                    const fl = []
+                    flowData.forEach(el => {
+                        fl.push({
+                            id: `${el.id}`,
+                            source: JSON.parse(el.source),
+                            destination: JSON.parse(el.destination),
+                            type: el.type,
+                            style: JSON.parse(el.style),
+                            markerEnd: el.markerd,
+                        })
+                    });
+                    commit('SET_FLOW', fl)
+                    resolve(response.data.data)
+                })
+                .catch(error => {
+                    resolve(error.response)
+                })
+        })
+    },
+    update({ }, payload) {
+        return new Promise(resolve => {
+            $axios.put(`api/documentation/${payload.id}`, payload.form)
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    resolve(error.response)
+                })
+        })
+    },
+    delete({ }, payload) {
+        return new Promise(resolve => {
+            $axios.delete(`api/documentation/${payload}`)
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    resolve(error.response)
+                })
+        })
+    },
 }
 
 export default {

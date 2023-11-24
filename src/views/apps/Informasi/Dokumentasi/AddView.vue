@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form-view @action="callback"/>
+    <form-view @action="callback" :id="null"/>
   </div>
 </template>
 <script>
@@ -11,7 +11,7 @@ export default {
   methods: {
     ...mapActions("dokumentasi", ["store"]),
     callback(e) {
-      this.store(e).then((e)=>{
+      this.store(e.form).then((e)=>{
         if (e.status === true) {
           this.$swal({
             title: "Ditambahkan!",
