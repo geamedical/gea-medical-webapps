@@ -31,17 +31,20 @@
                 <v-card-title>Form Profile</v-card-title>
                 <v-card-text>
                     <v-row no-gutters>
-                        <v-col cols="12" md="6">
+                        <v-col cols="12" md="4">
                             <v-select dense outlined v-model="form.role_id" :items="role" item-text="rolename"
                                 item-value="id" label="pilih role user" class="mb-input" disabled></v-select>
                         </v-col>
-                        <v-col cols="12" md="6">
+                        <v-col cols="12" md="4">
                             <v-select dense outlined v-model="form.dept_id" :items="dept" item-text="deptname"
                                 item-value="id" label="pilih departemen user" class="mb-input" disabled></v-select>
                         </v-col>
+                        <v-col cols="12" md="4">
+                            <DatePicker label="Tgl. Lahir" @someEvent="callback" :disabled="false"></DatePicker>
+                        </v-col>
                         <v-col cols="12" md="3">
                             <v-text-field dense outlined v-model="form.username" label="Username"
-                                class="mb-input"></v-text-field>
+                                class="mb-input" disabled></v-text-field>
                         </v-col>
                         <v-col cols="12" md="3">
                             <v-text-field dense outlined v-model="form.name" label="Nama Lengkap"
@@ -53,7 +56,7 @@
                         </v-col>
                         <v-col cols="12" md="3">
                             <v-text-field type="number" dense outlined v-model="form.nik" class="mb-input"
-                                label="nik"></v-text-field>
+                                label="nik" disabled></v-text-field>
                         </v-col>
                         <v-col cols="12" md="4">
                             <v-text-field dense outlined v-model="form.npwp" class="mb-input"
@@ -61,7 +64,7 @@
                         </v-col>
                         <v-col cols="12" md="4">
                             <v-text-field dense outlined v-model="form.noktp" class="mb-input"
-                                label="No. KTP"></v-text-field>
+                                label="No. KTP" disabled></v-text-field>
                         </v-col>
                         <v-col cols="12" md="4">
                             <v-text-field dense outlined v-model="form.telp" class="mb-input"
@@ -91,20 +94,9 @@
                             <v-textarea name="address" dense outlined label="Alamat tempat tinggal" auto-grow
                                 class="mb-input" :value="form.address" v-model="form.address"></v-textarea>
                         </v-col>
-                        <v-col cols="12" md="4">
-                            <DatePicker label="Tgl. Lahir" @someEvent="callback" :disabled="false"></DatePicker>
-                        </v-col>
-                        <v-col cols="12" md="4">
-                            <v-text-field dense outlined v-model="form.password" class="mb-input"
-                                label="Password"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" md="4">
-                            <v-text-field dense outlined v-model="form.password_confirmation" class="mb-input"
-                                label="konfirmasi password"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" md="3">
+                        <v-col cols="12" md="12">
                             <v-switch v-model="form.activation" inset disabled
-                                :label="`Aktivasi: ${form.activation ? 'Aktif' : 'Tidak Aktif'}`"></v-switch>
+                                :label="`Aktivasi: ${form.activation ? 'Aktif' : 'Tidak Aktif'}`" class="ml-5"></v-switch>
                         </v-col>
                     </v-row>
                 </v-card-text>

@@ -1,5 +1,5 @@
 <template>
-  <v-card flat color="card">
+  <v-card flat color="card" v-if="$can('read-user')">
     <v-card-title>Master Data Pengguna</v-card-title>
     <v-card-text>
       <v-text-field label="Cari data..." prepend-inner-icon="mdi-text-search" outlined dense v-model="search"
@@ -86,13 +86,19 @@ export default {
       headers: [
         { text: "NIK", value: "nik" },
         { text: "NAMA", value: "name" },
-        { text: "EMAIL", value: "email" },
-        { text: "AKTIVASI", value: "activation" },
-        { text: "ROLE/JABATAN", value: "roles.rolename" },
-        { text: "DEPT", value: "dept.deptname" },
-        { text: "ACT", value: "act" },
+        { text: "EMAIL", value: "email", sortable: false },
+        { text: "AKTIVASI", value: "activation", sortable: false },
+        { text: "ROLE/JABATAN", value: "roles.rolename", sortable: false },
+        { text: "DEPT", value: "dept.deptname", sortable: false },
+        { text: "ACT", value: "act", sortable: false},
       ],
     };
+  },
+  mounted() {
+    if (this.$store.state.auth.permissions.length > 0) {
+      if (!this.$can('read-user'))
+        this.$router.push({ name: "error-401" }).catch(() => true)
+    }
   },
   watch: {
     options: {
@@ -105,13 +111,34 @@ export default {
   methods: {
     ...mapActions("masterdata_user", ["index", "edit", "delete"]),
     getDataFromApi() {
-      this.loading = true;
-      const tableAttr = { options: this.options, search: this.search };
-      this.index(tableAttr).then((res) => {
-        this.desserts = res.data.data;
-        this.totalDesserts = res.data.meta.total;
-        this.loading = false;
-      });
+      if (this.options.itemsPerPage < 0) {
+        this.$swal({
+          title: "Maaf",
+          text: "Jumlah data terlalu banyak maka data tidak dapat ditampilkan seluruhnya, kami membatasinya dengan jumlah 1000 baris data!",
+          icon: "info",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Ya, tampilkan!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.options.itemsPerPage = 1000
+            const tableAttr = { options: this.options, search: this.search };
+            this.index(tableAttr).then((res) => {
+              this.desserts = res.data.data;
+              this.totalDesserts = res.data.meta.total;
+              this.loading = false;
+            });
+          }
+        });
+      } else {
+        const tableAttr = { options: this.options, search: this.search };
+        this.index(tableAttr).then((res) => {
+          this.desserts = res.data.data;
+          this.totalDesserts = res.data.meta.total;
+          this.loading = false;
+        });
+      }
     },
     filter() {
       this.getDataFromApi();

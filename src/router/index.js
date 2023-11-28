@@ -16,6 +16,14 @@ const routes = [
     },
   },
   {
+    path: '/error-401',
+    name: 'error-401',
+    component: () => import('@/views/ErrorUnauthorizedView.vue'),
+    meta: {
+      layout: 'blank',
+    },
+  },
+  {
     path: '/new-employee-request-form',
     name: 'new-employee-request-form',
     component: () => import('@/views/apps/beranda/Forms/Permintaan/FormPermintaan.vue'),

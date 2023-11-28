@@ -39,7 +39,7 @@
             <v-text-field :disabled="!wifi" dense outlined class="mb-input" label="Alamat email aktif"
               v-model="akseswifi.email" :error-messages="showErr(errors, 'request.1.detail')"></v-text-field>
             <v-text-field :disabled="!wifi" dense outlined class="mb-input" label="Pin" v-model="akseswifi.pin"
-              :error-messages="showErr(errors, 'request.1.detail')"></v-text-field>
+              :error-messages="showErr(errors, 'request.1.detail')" @change="cekpin"></v-text-field>
           </v-row>
         </v-container>
         <v-checkbox v-model="server" :label="`Server: ${server ? 'ya' : 'tidak'}`"></v-checkbox>
@@ -65,8 +65,8 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn :disabled="!validform" class="rounded-0" color="primary" :loading="loading" x-large dark
-          @click="submit()">submit</v-btn>
+        <v-btn :disabled="!validform" class="rounded-0" color="primary" :loading="loading" x-large dark @click="submit()"
+          v-if="$can('update-form-permintaan')">submit</v-btn>
       </v-card-actions>
     </v-card>
   </v-form>
@@ -96,64 +96,76 @@ export default {
       dept_id: '',
     },
     permintaan: [
-      { type: "email", detail: "", notes: "", created_at: "", updated_at: "" },
-      { type: "akses-wifi", detail: "", notes: "", created_at: "", updated_at: "" },
-      { type: "akses-server", detail: "", notes: "", created_at: "", updated_at: "" },
-      { type: "lainya", detail: "", notes: "", created_at: "", updated_at: "" },
+      { no: 0, type: "email", detail: "", notes: "", created_at: "", updated_at: "" },
+      { no: 1, type: "akses-wifi", detail: "", notes: "", created_at: "", updated_at: "" },
+      { no: 2, type: "akses-server", detail: "", notes: "", created_at: "", updated_at: "" },
+      { no: 3, type: "lainya", detail: "", notes: "", created_at: "", updated_at: "" },
     ],
     created_at: "",
     updated_at: ""
   }),
   created() {
+    if (!this.$can('read-form-permintaan'))
+      this.$router.push({ name: "error-401" }).catch(() => true)
+
     this.attr_form().then((res) => {
       this.data_divisi = res.data.depts;
       this.data_role = res.data.roles;
     });
     this.edit(this.$route.params.id).then((res) => {
-      this.form = res.data
-      const arr = this.form
       this.user = {
-        name: arr.user.name,
-        telp: arr.user.telp,
-        role_id: arr.user.role_id,
-        dept_id: arr.user.dept_id,
+        name: res.data.user.name,
+        telp: res.data.user.telp,
+        role_id: res.data.user.role_id,
+        dept_id: res.data.user.dept_id,
       }
-      const e = arr.request.findIndex((i) => i.type == "email")
-      const f = arr.request.findIndex((i) => i.type == "akses-wifi")
-      const s = arr.request.findIndex((i) => i.type == "akses-server")
-      const l = arr.request.findIndex((i) => i.type == "lainya")
-      const req = arr.request
-      const fwifi = JSON.parse(req[f].detail)
-      this.akseswifi = {
-        nama: fwifi.nama,
-        email: fwifi.email,
-        pin: fwifi.pin,
-      }
-      this.permintaan[0].detail = req[e].detail
-      this.permintaan[0].created_at = req[e].created_at
-      this.permintaan[0].updated_at = req[e].updated_at
-
-      this.permintaan[1].detail = JSON.stringify(this.akseswifi)
-      this.permintaan[1].created_at = req[f].created_at
-      this.permintaan[1].updated_at = req[f].updated_at
-
-      this.permintaan[2].detail = req[s].detail
-      this.permintaan[2].created_at = req[s].created_at
-      this.permintaan[2].updated_at = req[s].updated_at
-
-      this.permintaan[3].detail = req[l].detail
-      this.permintaan[3].notes = req[l].notes
-      this.permintaan[3].created_at = req[l].created_at
-      this.permintaan[3].updated_at = req[l].updated_at
-      this.created_at = req[l].created_at
-      this.updated_at = req[l].updated_at
+      const arrfilter = ['email', 'akses-wifi', 'akses-server', 'lainya']
+      arrfilter.forEach(e => {
+        const filteredData = res.data.request.filter(item => item.type === e);
+        filteredData.forEach(el => {
+          this.setState(el)
+        });
+      });
     });
   },
+  mounted() {
+    if (this.$store.state.auth.permissions.length > 0) {
+      if (!this.$can('read-form-permintaan'))
+        this.$router.push({ name: "error-401" }).catch(() => true)
+    }
+  },
   methods: {
-    ...mapActions("form_permintaan", ["edit", "update", "attr_form"]),
+    ...mapActions("form_permintaan", ["edit", "update", "attr_form", "validatePin"]),
     showErr(arr, index) {
       const find = arr.find(x => x.field === index)
       return find !== undefined ? find.message : ''
+    },
+    cekpin() {
+      this.validatePin(this.akseswifi.pin).then((res) => {
+        console.log(res);
+      })
+    },
+    setState(data) {
+      switch (data.type) {
+        case 'email':
+          this.email = true
+          this.permintaan[0] = { no: 0, type: data.type, detail: data.detail, notes: data.notes, created_at: data.created_at, updated_at: data.updated_at }
+          break;
+        case 'akses-wifi':
+          console.log(JSON.parse(data.detail));
+          this.wifi = true
+          this.permintaan[1] = { no: 0, type: data.type, detail: JSON.parse(data.detail), notes: data.notes, created_at: data.created_at, updated_at: data.updated_at }
+          break;
+        case 'akses-server':
+          this.server = true
+          this.permintaan[2] = { no: 0, type: data.type, detail: data.detail, notes: data.notes, created_at: data.created_at, updated_at: data.updated_at }
+          break;
+        case 'lainya':
+          // eslint-disable-next-line no-case-declarations
+          let index = this.permintaan.length - 1
+          this.permintaan[index] = { no: index, type: data.type, detail: data.detail, notes: data.notes, created_at: data.created_at, updated_at: data.updated_at }
+          break;
+      }
     },
     submit() {
       this.loading = true;

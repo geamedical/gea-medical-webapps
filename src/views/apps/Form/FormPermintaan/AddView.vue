@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" v-model="validform" lazy-validation>
+  <v-form ref="form" v-model="validform" lazy-validation v-if="$can('create-form-permintaan')">
     <v-card flat class="card">
       <v-card-title>Form Permintaan</v-card-title>
       <v-card-text>
@@ -32,8 +32,9 @@
             v => !!v || 'E-mail harus diisi!',
             v => /.+@.+/.test(v) || 'E-mail tidak valid!',
           ]"></v-text-field>
-        <v-checkbox v-model="wifi" :label="`Wifi: ${wifi ? 'ya' : 'tidak'}`"></v-checkbox>
-        <v-container>
+        <v-checkbox v-model="wifi" :label="`Wifi: ${wifi ? 'ya' : 'tidak'}`"
+          v-if="this.authenticated.pin === '' || this.authenticated.pin === null"></v-checkbox>
+        <v-container v-if="this.authenticated.pin === '' || this.authenticated.pin === null">
           <v-row>
             <v-text-field :disabled="!wifi" dense outlined class="mb-input" label="Nama lengkap" v-model="akseswifi.nama"
               :error-messages="showErr(errors, 'request.1.detail')" :rules="[
@@ -48,7 +49,7 @@
               :error-messages="showErr(errors, 'request.1.detail')" :counter="4" :rules="[
                 v => !!v || 'Pin harus diisi',
                 v => v.length <= 4 || 'Pin maximal 4 karakter!',
-              ]"></v-text-field>
+              ]" @change="cekpin"></v-text-field>
           </v-row>
         </v-container>
         <v-checkbox v-model="server" :label="`Server: ${server ? 'ya' : 'tidak'}`"></v-checkbox>
@@ -60,19 +61,17 @@
         <v-container>
           <v-row no-gutters v-for="(item, index) in permintaan.slice(3)" :key="index">
             <v-col>
-              <v-text-field dense outlined class="mb-input" label="Detail permintaan"
-                v-model="permintaan[permintaan.length - 1].detail"
+              <v-text-field dense outlined class="mb-input" label="Detail permintaan" v-model="item.detail"
                 :error-messages="showErr(errors, `request.${permintaan.length - 1}.detail`)"></v-text-field>
             </v-col>
             <v-col>
-              <v-text-field dense outlined class="mb-input" label="Untuk keperluan ?"
-                v-model="permintaan[permintaan.length - 1].notes"
+              <v-text-field dense outlined class="mb-input" label="Untuk keperluan ?" v-model="item.notes"
                 :error-messages="showErr(errors, `request.${permintaan.length - 1}.notes`)"></v-text-field>
             </v-col>
             <v-btn class="mx-2" fab dark color="primary" small @click="add()">
               <v-icon dark> mdi-plus </v-icon>
             </v-btn>
-            <v-btn class="mx-2" fab dark color="error" small v-if="permintaan.length > 4" @click="remove(index)">
+            <v-btn class="mx-2" fab dark color="error" small v-if="permintaan.length > 4" @click="remove(item.no)">
               <v-icon dark> mdi-delete </v-icon>
             </v-btn>
           </v-row>
@@ -106,10 +105,10 @@ export default {
       pin: "",
     },
     permintaan: [
-      { type: "email", detail: "", notes: "" },
-      { type: "akses-wifi", detail: "", notes: "" },
-      { type: "akses-server", detail: "", notes: "" },
-      { type: "lainya", detail: "", notes: "" },
+      { no: 0, type: "email", detail: "", notes: "" },
+      { no: 1, type: "akses-wifi", detail: "", notes: "" },
+      { no: 2, type: "akses-server", detail: "", notes: "" },
+      { no: 3, type: "lainya", detail: "", notes: "" },
     ],
   }),
   computed: {
@@ -121,6 +120,10 @@ export default {
     }),
   },
   mounted() {
+    if (this.$store.state.auth.permissions.length > 0) {
+      if (!this.$can('create-form-permintaan'))
+        this.$router.push({ name: "error-401" }).catch(() => true)
+    }
     this.attr_form().then((res) => {
       this.data_divisi = res.data.depts;
       this.data_role = res.data.roles;
@@ -133,12 +136,30 @@ export default {
     }
   },
   methods: {
-    ...mapActions("form_permintaan", ["store", "attr_form"]),
+    ...mapActions("form_permintaan", ["store", "attr_form", "validatePin"]),
+    cekpin() {
+      const datapostcek = { pin: this.akseswifi.pin, username: this.form.user.name }
+      this.validatePin(datapostcek).then((res) => {
+        if (res.data.total > 0) {
+          this.akseswifi.pin = ''
+          this.$swal({
+            title: "Error!",
+            text: "PIN Tidak valid, seseorang telah menggunakan pin tersebut, silahkan gunakan pin lain!",
+            icon: "warning",
+          });
+        }
+      })
+    },
     add() {
-      this.permintaan.push({ type: "lainya", detail: "", notes: "" });
+      let noset = this.permintaan.length
+      this.permintaan.push({ no: noset, type: "lainya", detail: "", notes: "" });
     },
     remove(e) {
-      this.permintaan.splice(e, 1);
+      console.log(e);
+      const indexToRemove = this.permintaan.findIndex(item => item.no === e);
+      if (indexToRemove !== -1) {
+        this.permintaan.splice(indexToRemove, 1);
+      }
     },
     showErr(arr, index) {
       const find = arr.find(x => x.field === index)
@@ -147,8 +168,12 @@ export default {
     submit() {
       this.loading = true;
       this.$refs.form.validate();
-      this.permintaan[1].detail = JSON.stringify(this.akseswifi);
-      this.form.request = this.permintaan;
+      if (this.wifi) {
+        if (this.akseswifi.email !== '' && this.akseswifi.pin !== '')
+          this.permintaan[1].detail = JSON.stringify(this.akseswifi);
+      }
+      const filteredData = this.permintaan.filter(i => i.detail != '' || i.notes != '');
+      this.form.request = filteredData;
       this.store().then((e) => {
         this.loading = false;
         if (e.status === true) {

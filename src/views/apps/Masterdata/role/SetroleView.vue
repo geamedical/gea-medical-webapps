@@ -1,10 +1,10 @@
 <template>
-  <v-form v-model="valid">
+  <v-form v-model="valid" v-if="$can('update-role')">
     <v-card color="card" flat>
       <v-card-title>Form Set Role</v-card-title>
       <v-card-text>
-        <v-select dense outlined v-model="formsetrole.role_id" :items="role" item-text="rolename" item-value="id"
-          label="pilih role user" :rules="[(v) => !!v || 'Item is required']" class="mb-input"></v-select>
+        <v-autocomplete dense outlined v-model="formsetrole.role_id" :items="role" item-text="coderole" item-value="id"
+          label="pilih role user" :rules="[(v) => !!v || 'Item is required']" class="mb-input"></v-autocomplete>
         <v-data-table dense flat :headers="headers" :items="desserts" :options.sync="options"
           :server-items-length="totalDesserts" :loading="loadingtable" class="elevation-0 mt-5">
           <template v-slot:[`item.name`]="{ item }">
@@ -63,6 +63,12 @@ export default {
       },
       deep: true,
     },
+  },
+  mounted() {
+    if (this.$store.state.auth.permissions.length > 0) {
+      if (!this.$can('update-role'))
+        this.$router.push({ name: "error-401" }).catch(() => true)
+    }
   },
   computed: {
     ...mapState("masterdata_role", {

@@ -57,29 +57,31 @@ export default {
         },
         getNotifLogin() {
             this.sockets.subscribe("auth-login:user", () => {
-                this.loadMore();
+                this.loadData();
             });
         },
         getNotifLogout() {
             this.sockets.subscribe("auth-logout:user", () => {
-                this.loadMore();
+                this.loadData();
             });
         },
         loadMore: function () {
-            if (this.authenticated.length > 0 || this.isAuth) {
-                this.busy = true;
-                const tableAttr = { options: this.option, search: this.search };
-                this.index(tableAttr)
-                    .then((res) => {
+            this.loadData()
+        },
+        loadData() {
+            this.busy = true;
+            const tableAttr = { options: this.option, search: this.search };
+            this.index(tableAttr)
+                .then((res) => {
+                    if (res.status === 200)
                         if (res.data.data.length > 0) {
                             res.data.data.forEach(e => {
                                 this.datainfo.push(e)
                             });
                             this.option.page++
                         }
-                        this.busy = false;
-                    })
-            }
+                    this.busy = false;
+                })
         }
     }
 }

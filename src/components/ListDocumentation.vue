@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="$can('read-documentation')">
         <div v-infinite-scroll="loadMore" :infinite-scroll-disabled="busy" :infinite-scroll-distance="scrollDistance">
             <v-list subheader three-line>
                 <v-subheader>Informasi Panduan</v-subheader>
@@ -40,20 +40,21 @@ export default {
     methods: {
         ...mapActions("dokumentasi", ["index"]),
         loadMore: function () {
-            console.log('load more');
-            this.busy = true;
-            const tableAttr = { options: this.option, search: this.search };
-            this.index(tableAttr)
-                .then((res) => {
-                    if (res.data.data.length > 0) {
-                        res.data.data.forEach(e => {
-                            this.datainfo.push(e)
-                        });
-                        this.option.page++
-                    }
-                    this.busy = false;
-                    console.log(this.datainfo);
-                })
+            if (this.$can('read-documentation')) {
+                this.busy = true;
+                const tableAttr = { options: this.option, search: this.search };
+                this.index(tableAttr)
+                    .then((res) => {
+                        if (res.data.data.length > 0) {
+                            res.data.data.forEach(e => {
+                                this.datainfo.push(e)
+                            });
+                            this.option.page++
+                        }
+                        this.busy = false;
+                        console.log(this.datainfo);
+                    })
+            }
         }
     }
 }

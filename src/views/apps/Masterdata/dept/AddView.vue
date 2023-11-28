@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" v-model="valid" lazy-validation>
+  <v-form ref="form" v-model="valid" lazy-validation v-if="$can('create-departement')">
     <v-card flat class="card">
       <v-card-title>Form masterdata departemen</v-card-title>
       <v-card-text>
@@ -57,6 +57,12 @@ export default {
     ...mapState("masterdata_dept", {
       form: (state) => state.form,
     }),
+  },
+  mounted() {
+    if (this.$store.state.auth.permissions.length > 0) {
+      if (!this.$can('create-departement'))
+        this.$router.push({ name: "error-401" }).catch(() => true)
+    }
   },
   methods: {
     ...mapActions("masterdata_dept", ["store"]),

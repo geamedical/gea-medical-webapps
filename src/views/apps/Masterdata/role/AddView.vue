@@ -1,5 +1,5 @@
 <template>
-  <v-form v-model="valid">
+  <v-form v-model="valid" v-if="$can('create-role')">
     <v-card color="card" flat>
       <v-card-title>Form Role</v-card-title>
       <v-card-text>
@@ -41,6 +41,12 @@ export default {
     ...mapState("masterdata_role", {
       form: (state) => state.form,
     }),
+  },
+  mounted() {
+    if (this.$store.state.auth.permissions.length > 0) {
+      if (!this.$can('create-role'))
+        this.$router.push({ name: "error-401" }).catch(() => true)
+    }
   },
   methods: {
     ...mapActions("masterdata_role", ["store"]),

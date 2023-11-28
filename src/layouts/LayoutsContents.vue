@@ -33,6 +33,7 @@
               </v-icon>
             </v-btn>
           </v-card-text>
+          <p>{{ timer }}</p>
           <v-card-text class="pt-0">
             GEA Medical Tower, 7th Floor, Cengkareng Businnes City, Jl. Atang
             Sanjaya No.21, RT.006/RW.007, Benda, Tangerang City, Banten 15125
@@ -51,6 +52,8 @@ import SwitchMode from "@/components/SwitchMode.vue";
 import ListLeftDrawer from "@/layouts/components/ListLeftdrawerView.vue";
 import ListRightdrawerView from "./components/ListRightdrawerView.vue";
 import NotifInfo from "./components/NotifInfo.vue";
+import { mapState, mapActions } from "vuex";
+import moment from 'moment'
 export default {
   name: "App",
   components: {
@@ -65,9 +68,27 @@ export default {
       drawer: true,
       rightDrawer: true,
       icons: ["mdi-facebook", "mdi-linkedin", "mdi-instagram"],
+      timer: 0
     };
   },
+  mounted: function () {
+    const startMoment = moment();
+    const endMoment = moment(new Date(this.token_expired));
+    const diffSeconds = endMoment.diff(startMoment, 'seconds');
+    this.intervalSession(diffSeconds)
+  },
   methods: {
+    ...mapActions('auth', ['logout']),
+    intervalSession(time) {
+      this.timer = setInterval(() => {
+        this.logout().then(e => {
+          if (e === true) {
+            this.$router.push({ name: 'login' })
+          }
+        })
+        // console.log('LOGOUT BOSS KUH');
+      }, time)
+    },
     toggleFullscreen() {
       this.fullscreen = !this.fullscreen;
     },
@@ -78,7 +99,11 @@ export default {
       return phtml
     }
   },
+  beforeDestroy() {
+    clearInterval(this.timer)
+  },
   computed: {
+    ...mapState(["token_expired"]),
     theme() {
       return this.$vuetify.theme.dark ? "dark" : "light";
     },

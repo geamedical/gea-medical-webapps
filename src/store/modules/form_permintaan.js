@@ -12,8 +12,8 @@ const state = () => ({
         request: []
     },
     rightMenuDrawer: [
-        ['List Data', 'mdi-view-list', 'form-permintaan.data', 'read-user'],
-        ['Buat Data Baru', 'mdi-plus-box', 'form-permintaan.add', 'create-user'],
+        ['List Data', 'mdi-view-list', 'form-permintaan.data', 'read-form-permintaan'],
+        ['Buat Data Baru', 'mdi-plus-box', 'form-permintaan.add', 'create-form-permintaan'],
     ]
 })
 
@@ -121,6 +121,17 @@ const actions = {
     delete({ }, payload) {
         return new Promise(resolve => {
             $axios.delete(`api/form-permintaan/${payload}`)
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(error => {
+                    resolve(error.response)
+                })
+        })
+    },
+    validatePin({ }, payload) {
+        return new Promise(resolve => {
+            $axios.post(`api/form-permintaan/validate-pin`, { pin: payload })
                 .then(response => {
                     resolve(response.data)
                 })

@@ -1,5 +1,5 @@
 <template>
-  <v-card flat color="card">
+  <v-card flat color="card" v-if="$can('read-form-permintaan')">
     <v-card-title>Data Permintaan</v-card-title>
     <v-card-text>
       <v-text-field label="Cari data..." prepend-inner-icon="mdi-text-search" outlined dense v-model="search"
@@ -21,10 +21,12 @@
           <div v-html="parseingDetail(item)"></div>
         </template>
         <template v-slot:[`item.act`]="{ item }">
-          <v-icon small class="mr-2" @click="execItem(item.id, 'y')" v-if="authenticated.id === item.user_id && item.status === 'w'">
+          <v-icon small class="mr-2" @click="execItem(item.id, 'y')"
+            v-if="authenticated.id === item.user_id && item.status === 'w'">
             mdi-hand-okay
           </v-icon>
-          <v-icon small class="mr-2" @click="execItem(item.id, 'w')" v-if="$can('update-form-permintaan') && item.status === 'n'">
+          <v-icon small class="mr-2" @click="execItem(item.id, 'w')"
+            v-if="$can('update-form-permintaan') && item.status === 'n'">
             mdi-gift-outline
           </v-icon>
           <v-icon small class="mr-2" @click="editItem(item.user_id)" v-if="$can('update-form-permintaan')">
@@ -50,13 +52,13 @@ export default {
       loading: true,
       options: {},
       headers: [
-        { text: "NIK", value: "user.nik" },
-        { text: "Nama", value: "user.name" },
+        { text: "NIK", value: "user.nik", sortable: false },
+        { text: "Nama", value: "user.name", sortable: false },
         { text: "Type", value: "type" },
-        { text: "Detail", value: "detail" },
-        { text: "Status", value: "status" },
+        { text: "Detail", value: "detail", sortable: false },
+        { text: "Status", value: "status", sortable: false },
         { text: "Tgl Dibuat", value: "created_at" },
-        { text: "ACT", value: "act" },
+        { text: "ACT", value: "act", sortable: false },
       ],
     };
   },
@@ -64,6 +66,12 @@ export default {
     ...mapState("auth", {
       authenticated: (state) => state.authenticated,
     }),
+  },
+  mounted() {
+    if (this.$store.state.auth.permissions.length > 0) {
+      if (!this.$can('read-form-permintaan'))
+        this.$router.push({ name: "error-401" }).catch(() => true)
+    }
   },
   watch: {
     options: {
@@ -97,13 +105,34 @@ export default {
       return text.status == 'n' ? 'mdi-alert' : text.status == 'w' ? 'mdi-sync-alert' : 'mdi-hand-okay'
     },
     getDataFromApi() {
-      this.loading = true;
-      const tableAttr = { options: this.options, search: this.search };
-      this.index(tableAttr).then((r) => {
-        this.desserts = r.data.data;
-        this.totalDesserts = r.data.meta.total;
-        this.loading = false;
-      });
+      if (this.options.itemsPerPage < 0) {
+        this.$swal({
+          title: "Maaf",
+          text: "Jumlah data terlalu banyak maka data tidak dapat ditampilkan seluruhnya, kami membatasinya dengan jumlah 1000 baris data!",
+          icon: "info",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Ya, tampilkan!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.options.itemsPerPage = 1000
+            const tableAttr = { options: this.options, search: this.search };
+            this.index(tableAttr).then((res) => {
+              this.desserts = res.data.data;
+              this.totalDesserts = res.data.meta.total;
+              this.loading = false;
+            });
+          }
+        });
+      } else {
+        const tableAttr = { options: this.options, search: this.search };
+        this.index(tableAttr).then((res) => {
+          this.desserts = res.data.data;
+          this.totalDesserts = res.data.meta.total;
+          this.loading = false;
+        });
+      }
     },
     filter() {
       this.getDataFromApi();
@@ -145,8 +174,8 @@ export default {
       });
     },
     execItem(id, act) {
-      let title = act === 'w'?"Apakah anda sudah menyelesaikan permintaan ini?":"Apakah permintaan anda sudah dipenuhi?"
-      let text = act === 'w'?"Pastikan anda sudah menyelesaikan permintaan ini untuk menunjang kenyamanan pada pekerjaan selanjutnya!":"Pastikan anda sudah menerima permintaan ini untuk menunjang kenyamanan pada pekerjaan anda!"
+      let title = act === 'w' ? "Apakah anda sudah menyelesaikan permintaan ini?" : "Apakah permintaan anda sudah dipenuhi?"
+      let text = act === 'w' ? "Pastikan anda sudah menyelesaikan permintaan ini untuk menunjang kenyamanan pada pekerjaan selanjutnya!" : "Pastikan anda sudah menerima permintaan ini untuk menunjang kenyamanan pada pekerjaan anda!"
       this.$swal({
         title: title,
         text: text,

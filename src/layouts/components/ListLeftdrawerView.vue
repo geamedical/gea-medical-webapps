@@ -132,7 +132,7 @@ export default {
                 child: false,
                 itemchild: [],
                 link: '/master-data-dept',
-                permission: 'read-dept'
+                permission: 'read-departement'
             },
             {
                 no: 8,

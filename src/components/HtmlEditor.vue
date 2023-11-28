@@ -1,6 +1,6 @@
 <template>
     <div>
-        <editor api-key="no-api-key" :init="{
+        <editor api-key="1123qfkdclno272ze9cyzbe3bda8w26u9bxs214d8qca0rnw" :init="{
             height: 500,
             menubar: false,
             plugins: [

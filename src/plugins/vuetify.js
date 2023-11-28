@@ -21,7 +21,7 @@ Vue.use(VueCryptojs);
 Vue.use(VueNativeNotification, {
     requestOnNotify: true
   })
-const url = 'http://localhost:3333/'
+const url = 'http://192.168.84.180:3333/'
 const SocketInstance = socketio.connect(url)
 Vue.use(new VueSocketIO({
     debug: true,

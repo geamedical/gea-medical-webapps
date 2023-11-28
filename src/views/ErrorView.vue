@@ -1,26 +1,25 @@
 <template>
     <v-container>
-        <v-alert text color="info">
+        <v-img height="300" src="@/assets/svg/404.svg"></v-img>
+        <v-alert text color="primary" class="mt-10">
             <h1 class="text-h1 text-center">
                 404
             </h1>
             <h3 class="text-h5 text-center">
-                Lorem Ipsum
+                Maaf, kami tidak mengenali halaman yang anda maksud.
             </h3>
-            <div class="text-center mt-10">Maecenas nec odio et ante tincidunt tempus. Sed mollis, eros et ultrices tempus, mauris ipsum aliquam libero,
-                non adipiscing dolor urna a orci. Proin viverra, ligula sit amet ultrices semper, ligula arcu tristique sapien,
-                a accumsan nisi mauris ac eros. Curabitur turpis.</div>
-        
-            <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
-        
+            <div class="text-center">Jika anda memiliki kesulitan dalam menggunakan sistem, anda dapat membaca dokumentasi kami atau anda juga bisa menghubungi tim IT, terimakasih.</div>
+
+            <v-divider class="my-4 primary" style="opacity: 0.22"></v-divider>
+
             <v-row align="center" no-gutters>
                 <v-col class="grow">
-                    Proin magna. Vivamus in erat ut urna cursus vestibulum. Etiam imperdiet imperdiet orci.
+                    Apakah anda ingin kembali ke beranda ?
                 </v-col>
                 <v-spacer></v-spacer>
                 <v-col class="shrink">
-                    <v-btn color="info" outlined>
-                        Okay
+                    <v-btn color="primary" outlined to="/dashboard">
+                        Kembali ke beranda
                     </v-btn>
                 </v-col>
             </v-row>

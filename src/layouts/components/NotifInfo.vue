@@ -62,12 +62,10 @@ export default {
     }),
   },
   mounted() {
-    if (this.authenticated.length > 0) {
       this.getNotifLogin();
       this.getNotifLogout();
       this.getNotifPermintaan();
       this.getNotifData();
-    }
   },
   watch: {
     scroll(e) {
@@ -117,7 +115,6 @@ export default {
       this.sockets.subscribe("auth-login:user", (data) => {
         this.getNotifData();
         this.setNotifier(`User atas nama ${data.name} telah online.`)
-        new Audio(audioNotif).play()
       });
     },
     getNotifLogout() {
@@ -135,6 +132,7 @@ export default {
         }
       });
       this.sockets.subscribe("form:permintaan", (data) => {
+        console.log(data);
         this.getNotifData();
         if (data.user_target === this.authenticated.id) {
           this.setNotifier(`User atas nama ${data.user.name} telah mengajukan form permintaan, periksa sekarang!`)
@@ -143,8 +141,10 @@ export default {
     },
     getNotifData() {
       this.getnotif(this.options).then((e) => {
-        this.count = e.count;
-        this.notifdata = e.pagination.data;
+        if (e.status !== 401) {
+          this.count = e.count;
+          this.notifdata = e.pagination.data;
+        }
       });
     },
     lihat(e, type) {

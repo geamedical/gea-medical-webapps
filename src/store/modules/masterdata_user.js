@@ -1,12 +1,12 @@
 /* eslint-disable no-empty-pattern */
 import $axios from '../api'
-import moment from 'moment'
 const state = () => ({
     form: {
         role_id: '',
         dept_id: '',
         name: '',
         nik: '',
+        pin: '',
         email: '',
         username: '',
         birthdate: '',
@@ -17,6 +17,8 @@ const state = () => ({
         address: '',
         telp: '',
         activation: false,
+        password: '',
+        password_confirmation: '',
     },
     rightMenuDrawer: [
         ['List Data', 'mdi-view-list', 'master-data-pengguna.data', 'read-user'],
@@ -31,6 +33,7 @@ const mutations = {
             dept_id: '',
             name: '',
             nik: '',
+            pin: '',
             email: '',
             username: '',
             birthdate: '',
@@ -41,6 +44,8 @@ const mutations = {
             address: '',
             telp: '',
             activation: false,
+            password: '',
+            password_confirmation: '',
         }
     },
 }
@@ -75,26 +80,9 @@ const actions = {
                 })
         })
     },
-    store({ state, commit }) {
+    store({ commit }, payload) {
         return new Promise(resolve => {
-            const { form } = state
-            const datapost = {
-                role_id: form.role_id,
-                dept_id: form.dept_id,
-                name: form.name,
-                nik: form.nik,
-                email: form.email,
-                username: form.username,
-                birthdate: moment(form.birthdate).format('YYYY-MM-DD'),
-                gender: form.gender,
-                marital: form.marital,
-                npwp: form.npwp,
-                noktp: form.noktp,
-                address: form.address,
-                telp: form.telp,
-                activation: form.activation ? 'valid' : 'invalid',
-            }
-            $axios.post('api/users', datapost)
+            $axios.post('api/users', payload)
                 .then(response => {
                     commit('CLEAR_FORM')
                     resolve(response.data)
@@ -114,6 +102,7 @@ const actions = {
                         dept_id: x.dept_id,
                         name: x.name,
                         nik: x.nik,
+                        pin: x.pin,
                         email: x.email,
                         username: x.username,
                         birthdate: x.birthdate,
@@ -123,7 +112,9 @@ const actions = {
                         noktp: x.noktp,
                         address: x.address,
                         telp: x.telp,
-                        activation: x.activation === 'valid' ? true : false,
+                        activation: x.activation,
+                        password: x.pin,
+                        password_confirmation: x.pin,
                     }
                     resolve(response.data)
                 })
@@ -132,27 +123,11 @@ const actions = {
                 })
         })
     },
-    update({ state }, payload) {
+    update({ commit }, payload) {
         return new Promise(resolve => {
-            const { form } = state
-            const datapost = {
-                role_id: form.role_id,
-                dept_id: form.dept_id,
-                name: form.name,
-                nik: form.nik,
-                email: form.email,
-                username: form.username,
-                birthdate: moment(form.birthdate).format('YYYY-MM-DD'),
-                gender: form.gender,
-                marital: form.marital,
-                npwp: form.npwp,
-                noktp: form.noktp,
-                address: form.address,
-                telp: form.telp,
-                activation: form.activation ? 'valid' : 'invalid',
-            }
-            $axios.put(`api/users/${payload}`, datapost)
+            $axios.put(`api/users/${payload.id}`, payload.data)
                 .then(response => {
+                    commit('CLEAR_FORM')
                     resolve(response.data)
                 })
                 .catch(error => {

@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container v-if="$can('read-documentation')">
     <div class="d-flex justify-space-between">
       <h3 class="font-weight-bold mt-3" v-text="$route.meta.title"></h3>
       <v-breadcrumbs :items="$route.meta.breadscrum"></v-breadcrumbs>
@@ -12,10 +12,12 @@
               Jangan pernah malas untuk <i><strong>membaca informasi panduan</strong></i> kami.
             </p>
             <p>
-              Kurangnya informasi yang didapat sering kali membuat kerugian, miskomunikasi, <i>human error</i>, dan masih banyak lagi.
+              Kurangnya informasi yang didapat sering kali membuat kerugian, miskomunikasi, <i>human error</i>, dan masih
+              banyak lagi.
             </p>
             <p>
-              Jika anda mendapati adanya kekurangan dari informasi panduan ini, jangan sungkan untuk memberikan masukan agar dapat segera ditangani, terimakasih.
+              Jika anda mendapati adanya kekurangan dari informasi panduan ini, jangan sungkan untuk memberikan masukan
+              agar dapat segera ditangani, terimakasih.
             </p>
           </v-col>
           <v-col col="12" md="4">
@@ -64,6 +66,11 @@ export default {
     }
   },
   mounted() {
+    if (this.$store.state.auth.permissions.length > 0) {
+      if (!this.$can('create-documentation'))
+        this.$router.push({ name: "error-401" }).catch(() => true)
+    }
+
     this.show(this.$route.params.id)
   },
   created() {

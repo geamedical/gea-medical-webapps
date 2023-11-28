@@ -1,27 +1,16 @@
 <template>
-  <v-form ref="form" v-model="valid" lazy-validation>
+  <v-form ref="form" v-model="valid" lazy-validation v-if="$can('create-permission')">
     <v-card flat class="card">
       <v-card-title>Form Privileges</v-card-title>
       <v-card-text>
         <section>
-          <v-text-field
-            v-model="form.name"
-            label="Name"
-            outlined
-            dense
-            color="primary"
-            autocomplete="false"
-            :rules="[(v) => !!v || 'Item is required']"
-          />
+          <v-text-field v-model="form.name" label="Name" outlined dense color="primary" autocomplete="false"
+            :rules="[(v) => !!v || 'Item is required']" />
         </section>
         <section>
           <v-row>
             <v-col v-for="n in radioGroup" :key="n" cols="12" md="2" sm="12">
-              <v-checkbox
-                v-model="form.permission"
-                :label="`${n}`"
-                :value="n"
-              ></v-checkbox>
+              <v-checkbox v-model="form.permission" :label="`${n}`" :value="n"></v-checkbox>
             </v-col>
           </v-row>
         </section>
@@ -29,12 +18,7 @@
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn
-          v-if="$can('create-permission')"
-          text
-          color="primary"
-          @click="submit"
-        >
+        <v-btn v-if="$can('create-permission')" text color="primary" @click="submit">
           Submit
         </v-btn>
       </v-card-actions>
@@ -53,6 +37,12 @@ export default {
     ...mapState("masterdata_akses", {
       form: (state) => state.form,
     }),
+  },
+  mounted() {
+    if (this.$store.state.auth.permissions.length > 0) {
+      if (!this.$can('create-permission'))
+        this.$router.push({ name: "error-401" }).catch(() => true)
+    }
   },
   methods: {
     ...mapActions("masterdata_akses", ["store"]),

@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" v-model="valid" lazy-validation>
+  <v-form ref="form" v-model="valid" lazy-validation v-if="$can('read-permission')">
     <v-card flat class="card">
       <v-card-title>Form Privileges</v-card-title>
       <v-card-text>
@@ -30,7 +30,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          v-if="$can('create-permission')"
+          v-if="$can('update-permission')"
           text
           color="primary"
           @click="submit"
@@ -55,7 +55,15 @@ export default {
     }),
   },
   created() {
+    if (!this.$can('read-permission'))
+      this.$router.push({ name: "error-401" }).catch(() => true)
     this.edit(this.$route.params.id);
+  },
+  mounted() {
+    if (this.$store.state.auth.permissions.length > 0) {
+      if (!this.$can('read-permission'))
+        this.$router.push({ name: "error-401" }).catch(() => true)
+    }
   },
   methods: {
     ...mapActions("masterdata_akses", ["edit", "update"]),

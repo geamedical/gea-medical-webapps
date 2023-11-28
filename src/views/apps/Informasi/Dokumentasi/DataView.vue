@@ -1,5 +1,5 @@
 <template>
-  <v-card flat color="card">
+  <v-card flat color="card" v-if="$can('read-documentation')">
     <v-card-title>Data Dokumentasi</v-card-title>
     <v-card-text>
       <v-text-field label="Cari data..." prepend-inner-icon="mdi-text-search" outlined dense v-model="search"
@@ -65,10 +65,16 @@ export default {
         { text: "JUDUL", value: "title" },
         { text: "DIBUAT", value: "created_at" },
         { text: "DIPERBAHARUI", value: "updated_at" },
-        { text: "ACT", value: "act" },
+        { text: "ACT", value: "act", sortable: false },
       ],
       connflow: [],
     };
+  },
+  mounted() {
+    if (this.$store.state.auth.permissions.length > 0) {
+      if (!this.$can('read-documentation'))
+        this.$router.push({ name: "error-401" }).catch(() => true)
+    }
   },
   watch: {
     options: {
@@ -87,13 +93,34 @@ export default {
       return txt.slice(0, limit)
     },
     getDataFromApi() {
-      this.loading = true;
-      const tableAttr = { options: this.options, search: this.search };
-      this.index(tableAttr).then((res) => {
-        this.desserts = res.data.data;
-        this.totalDesserts = res.data.meta.total;
-        this.loading = false;
-      });
+      if (this.options.itemsPerPage < 0) {
+        this.$swal({
+          title: "Maaf",
+          text: "Jumlah data terlalu banyak maka data tidak dapat ditampilkan seluruhnya, kami membatasinya dengan jumlah 1000 baris data!",
+          icon: "info",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Ya, tampilkan!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.options.itemsPerPage = 1000
+            const tableAttr = { options: this.options, search: this.search };
+            this.index(tableAttr).then((res) => {
+              this.desserts = res.data.data;
+              this.totalDesserts = res.data.meta.total;
+              this.loading = false;
+            });
+          }
+        });
+      } else {
+        const tableAttr = { options: this.options, search: this.search };
+        this.index(tableAttr).then((res) => {
+          this.desserts = res.data.data;
+          this.totalDesserts = res.data.meta.total;
+          this.loading = false;
+        });
+      }
     },
     filter() {
       this.getDataFromApi();

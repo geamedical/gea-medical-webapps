@@ -40,13 +40,7 @@ export default {
           localStorage.setItem("token", null);
           this.$store.commit("SET_TOKEN", null, { root: true });
           this.$router.push({ name: "login" }).catch(() => true);
-        } else {
-          const cekRoute = this.$router.currentRoute.meta.requiresAuth;
-          const cekUrl = this.$router.currentRoute.name;
-          cekRoute === undefined
-            ? this.$router.push({ name: "dashboard" }).catch(() => {})
-            : this.$router.push({ name: cekUrl }).catch(() => {});
-        }
+        } 
       });
     },
   },

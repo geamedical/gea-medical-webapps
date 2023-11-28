@@ -69,7 +69,8 @@
                 <FlowChart :nodes="chart" :conns="flow"></FlowChart>
             </v-card-text>
             <v-card-actions>
-                <v-btn depressed :loading="loading" color="primary" block :disabled="!valid" type="submit">
+                <v-btn depressed :loading="loading" color="primary" block :disabled="!valid" type="submit"
+                    v-if="$can('create-documentation') || $can('update-documentation')">
                     Submit data
                 </v-btn>
             </v-card-actions>

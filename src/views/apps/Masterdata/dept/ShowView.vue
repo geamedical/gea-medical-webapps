@@ -21,7 +21,7 @@
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn v-if="$can('update-dept')" text color="primary" @click="submit">
+        <v-btn v-if="$can('update-departement')" text color="primary" @click="submit">
           Submit
         </v-btn>
       </v-card-actions>
@@ -41,7 +41,15 @@ export default {
     }),
   },
   created() {
+    if (!this.$can('read-departement'))
+      this.$router.push({ name: "error-401" }).catch(() => true)
     this.edit(this.$route.params.id);
+  },
+  mounted() {
+    if (this.$store.state.auth.permissions.length > 0) {
+      if (!this.$can('read-departement'))
+        this.$router.push({ name: "error-401" }).catch(() => true)
+    }
   },
   methods: {
     ...mapActions("masterdata_dept", ["edit", "update"]),

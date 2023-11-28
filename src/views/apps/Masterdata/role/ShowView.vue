@@ -1,5 +1,5 @@
 <template>
-  <v-form v-model="valid">
+  <v-form v-model="valid" v-if="$can('read-role')">
     <v-card color="card" flat>
       <v-card-title>Form Role</v-card-title>
       <v-card-text>
@@ -23,7 +23,8 @@
         </v-row>
       </v-card-text>
       <v-card-actions>
-        <v-btn depressed :loading="loading" color="primary" block :disabled="!valid" @click="submit">
+        <v-btn depressed :loading="loading" color="primary" block :disabled="!valid" @click="submit"
+          v-if="$can('update-role')">
           Submit data
         </v-btn>
       </v-card-actions>
@@ -50,6 +51,12 @@ export default {
   },
   created() {
     this.edit(this.$route.params.id);
+  },
+  mounted() {
+    if (this.$store.state.auth.permissions.length > 0) {
+      if (!this.$can('read-role'))
+        this.$router.push({ name: "error-401" }).catch(() => true)
+    }
   },
   methods: {
     ...mapActions("masterdata_role", ["edit", "update"]),

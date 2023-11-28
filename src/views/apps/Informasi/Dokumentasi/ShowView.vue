@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form-view @action="callback" :id="parseInt($route.params.id)"/>
+    <form-view @action="callback" :id="parseInt($route.params.id)" v-if="$can('read-documentation')" />
   </div>
 </template>
 <script>
@@ -8,10 +8,16 @@ import FormView from './FormView'
 import { mapActions } from "vuex"
 export default {
   components: { FormView },
+  mounted() {
+    if (this.$store.state.auth.permissions.length > 0) {
+      if (!this.$can('read-documentation'))
+        this.$router.push({ name: "error-401" }).catch(() => true)
+    }
+  },
   methods: {
     ...mapActions("dokumentasi", ["update"]),
     callback(e) {
-      this.update(e).then((e)=>{
+      this.update(e).then((e) => {
         if (e.status === true) {
           this.$swal({
             title: "Diperbaharui!",
@@ -25,7 +31,7 @@ export default {
             icon: "warning",
           });
         }
-        this.$router.push({ name: "dokumentasi.data" }).catch(() => {})
+        this.$router.push({ name: "dokumentasi.data" }).catch(() => { })
       })
     },
   },

@@ -9,6 +9,7 @@ const state = () => ({
         dept_id: '',
         name: '',
         nik: '',
+        pin: '',
         email: '',
         username: '',
         birthdate: '',
@@ -18,8 +19,6 @@ const state = () => ({
         noktp: '',
         address: '',
         telp: '',
-        password: '',
-        password_confirmation: '',
         activation: false,
     },
 })
@@ -46,8 +45,6 @@ const mutations = {
             noktp: payload.noktp,
             address: payload.address,
             telp: payload.telp,
-            password: payload.password,
-            password_confirmation: payload.password_confirmation,
             activation: payload.activation,
         }
     },
@@ -66,8 +63,6 @@ const mutations = {
             noktp: '',
             address: '',
             telp: '',
-            password: '',
-            password_confirmation: '',
             activation: false,
         }
     },
@@ -151,8 +146,6 @@ const actions = {
                         noktp: user.noktp,
                         address: user.address,
                         telp: user.telp,
-                        password: '',
-                        password_confirmation: '',
                         activation: user.activation === 'valid' ? true : false,
                     }
                     commit('SET_FORM_PROFILE', payload)
