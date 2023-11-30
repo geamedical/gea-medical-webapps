@@ -21,7 +21,7 @@ Vue.use(VueCryptojs);
 Vue.use(VueNativeNotification, {
     requestOnNotify: true
   })
-const url = 'http://192.168.84.180:3333/'
+const url = `${process.env.SERVICES_PROTOCOL}://${process.env.SERVICES_HOST}:${process.env.SERVICES_PORT}/`
 const SocketInstance = socketio.connect(url)
 Vue.use(new VueSocketIO({
     debug: true,
@@ -36,8 +36,8 @@ export default new Vuetify({
                 bg: '#f7f8ff',
                 appbar: '#f7f8ff',
                 drawer: '#0C134F',
-                rightdrawer: '#f7f8ff',
-                footer: '#f7f8ff',
+                rightdrawer: '#ffffff',
+                footer: '#fbfcff',
                 card: '#ffffff',
                 primary: '#0C134F',
                 secondary: '#1D267D',

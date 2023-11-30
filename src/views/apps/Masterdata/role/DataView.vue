@@ -7,7 +7,7 @@
       <v-data-table dense flat :headers="headers" :items="desserts" :options.sync="options"
         :server-items-length="totalDesserts" :loading="loading">
         <template v-slot:[`item.act`]="{ item }">
-          <v-icon small class="mr-2" @click="setpermission(item.id)" v-if="$can('update-role')">
+          <!-- <v-icon small class="mr-2" @click="setpermission(item.id)" v-if="$can('update-role')">
             mdi-key-chain
           </v-icon>
           <v-icon small class="mr-2" @click="editItem(item.id)" v-if="$can('update-role')">
@@ -15,7 +15,8 @@
           </v-icon>
           <v-icon small @click="deleteItem(item.id)" v-if="$can('delete-role')">
             mdi-delete
-          </v-icon>
+          </v-icon> -->
+          <btn-action :menu="menu" @action="callback" :unique="item.id"></btn-action>
         </template>
       </v-data-table>
     </v-card-text>
@@ -24,9 +25,16 @@
 <script>
 import { mapActions } from "vuex";
 import { mapState } from "vuex";
+import BtnAction from '@/components/BtnAction.vue'
 export default {
+  components: { BtnAction },
   data() {
     return {
+      menu: [
+        { text: 'Set akses', icon: 'mdi-key-chain', permission: 'update-role' },
+        { text: 'Ubah', icon: 'mdi-pencil', permission: 'update-role' },
+        { text: 'Hapus', icon: 'mdi-delete', permission: 'delete-role' },
+      ],
       search: "",
       baseUrl: `http://${process.env.BASE_URL_API}/api/images/avatar-users/`,
       totalDesserts: 0,
@@ -38,7 +46,7 @@ export default {
         { text: "Kode", value: "code" },
         { text: "Nama", value: "rolename", sortable: false },
         { text: "Kode-Role", value: "coderole", sortable: false },
-        { text: "ACT", value: "act", sortable: false},
+        { text: "ACT", value: "act", sortable: false },
       ],
     };
   },
@@ -63,36 +71,27 @@ export default {
   },
   methods: {
     ...mapActions("masterdata_role", ["index", "edit", "delete"]),
+    callback(res) {
+      switch (res.act) {
+        case 'Ubah':
+          this.editItem(res.id)
+          break;
+        case 'Hapus':
+          this.deleteItem(parseInt(res.id))
+          break;
+        case 'Set akses':
+          this.setpermission(parseInt(res.id))
+          break;
+      }
+    },
     getDataFromApi() {
       this.loading = true;
-      if (this.options.itemsPerPage < 0) {
-        this.$swal({
-          title: "Maaf",
-          text: "Jumlah data terlalu banyak maka data tidak dapat ditampilkan seluruhnya, kami membatasinya dengan jumlah 1000 baris data!",
-          icon: "info",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Ya, tampilkan!",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.options.itemsPerPage = 1000
-            const tableAttr = { options: this.options, search: this.search };
-            this.index(tableAttr).then((res) => {
-              this.desserts = res.data.data;
-              this.totalDesserts = res.data.meta.total;
-              this.loading = false;
-            });
-          }
-        });
-      } else {
-        const tableAttr = { options: this.options, search: this.search };
-        this.index(tableAttr).then((res) => {
-          this.desserts = res.data.data;
-          this.totalDesserts = res.data.meta.total;
-          this.loading = false;
-        });
-      }
+      const tableAttr = { options: this.options, search: this.search };
+      this.index(tableAttr).then((res) => {
+        this.desserts = res.data.data;
+        this.totalDesserts = res.data.meta.total;
+        this.loading = false;
+      });
     },
     filter() {
       this.getDataFromApi();

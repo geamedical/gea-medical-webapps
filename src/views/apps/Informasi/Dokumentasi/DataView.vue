@@ -37,12 +37,7 @@
           {{ parseDate(item.updated_at) }}
         </template>
         <template v-slot:[`item.act`]="{ item }">
-          <v-icon small class="mr-2" @click="editItem(item.id)" v-if="$can('update-user')">
-            mdi-pencil
-          </v-icon>
-          <v-icon small @click="deleteItem(item.id)" v-if="$can('delete-role')">
-            mdi-delete
-          </v-icon>
+          <btn-action :menu="menu" @action="callback" :unique="item.id"></btn-action>
         </template>
       </v-data-table>
     </v-card-text>
@@ -51,9 +46,15 @@
 <script>
 import { mapActions } from "vuex";
 import moment from 'moment'
+import BtnAction from '@/components/BtnAction.vue'
 export default {
+  components: { BtnAction },
   data() {
     return {
+      menu: [
+        { text: 'Ubah', icon: 'mdi-pencil', permission: 'update-documentation' },
+        { text: 'Hapus', icon: 'mdi-delete', permission: 'delete-documentation' },
+      ],
       search: "",
       baseUrl: `http://${process.env.BASE_URL_API}/api/images/avatar-users/`,
       totalDesserts: 0,
@@ -86,41 +87,29 @@ export default {
   },
   methods: {
     ...mapActions("dokumentasi", ["index", "edit", "delete"]),
+    callback(res) {
+      switch (res.act) {
+        case 'Ubah':
+          this.editItem(res.id)
+          break;
+        case 'Hapus':
+          this.deleteItem(parseInt(res.id))
+          break;
+      }
+    },
     parseDate(e) {
       return moment(e).format("MMMM Do YYYY, h:mm:ss a");
     },
-    stringLimiter(txt, limit){
+    stringLimiter(txt, limit) {
       return txt.slice(0, limit)
     },
     getDataFromApi() {
-      if (this.options.itemsPerPage < 0) {
-        this.$swal({
-          title: "Maaf",
-          text: "Jumlah data terlalu banyak maka data tidak dapat ditampilkan seluruhnya, kami membatasinya dengan jumlah 1000 baris data!",
-          icon: "info",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Ya, tampilkan!",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.options.itemsPerPage = 1000
-            const tableAttr = { options: this.options, search: this.search };
-            this.index(tableAttr).then((res) => {
-              this.desserts = res.data.data;
-              this.totalDesserts = res.data.meta.total;
-              this.loading = false;
-            });
-          }
-        });
-      } else {
-        const tableAttr = { options: this.options, search: this.search };
-        this.index(tableAttr).then((res) => {
-          this.desserts = res.data.data;
-          this.totalDesserts = res.data.meta.total;
-          this.loading = false;
-        });
-      }
+      const tableAttr = { options: this.options, search: this.search };
+      this.index(tableAttr).then((res) => {
+        this.desserts = res.data.data;
+        this.totalDesserts = res.data.meta.total;
+        this.loading = false;
+      });
     },
     filter() {
       this.getDataFromApi();

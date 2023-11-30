@@ -13,12 +13,7 @@
           {{ parseDate(item) }}
         </template>
         <template v-slot:[`item.act`]="{ item }">
-          <v-icon small class="mr-2" @click="editItem(item.id)" v-if="$can('update-permission')">
-            mdi-pencil
-          </v-icon>
-          <v-icon small @click="deleteItem(item.id)" v-if="$can('delete-permission')">
-            mdi-delete
-          </v-icon>
+          <btn-action :menu="menu" @action="callback" :unique="item.id"></btn-action>
         </template>
       </v-data-table>
     </v-card-text>
@@ -27,9 +22,15 @@
 <script>
 import moment from "moment";
 import { mapActions } from "vuex";
+import BtnAction from '@/components/BtnAction.vue'
 export default {
+  components: { BtnAction },
   data() {
     return {
+      menu: [
+        { text: 'Ubah', icon: 'mdi-pencil', permission: 'update-permission' },
+        { text: 'Hapus', icon: 'mdi-delete', permission: 'delete-permission' },
+      ],
       search: "",
       totalDesserts: 0,
       desserts: [],
@@ -60,35 +61,23 @@ export default {
   },
   methods: {
     ...mapActions("masterdata_akses", ["index", "edit", "delete"]),
-    getDataFromApi() {
-      if (this.options.itemsPerPage < 0) {
-        this.$swal({
-          title: "Maaf",
-          text: "Jumlah data terlalu banyak maka data tidak dapat ditampilkan seluruhnya, kami membatasinya dengan jumlah 1000 baris data!",
-          icon: "info",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Ya, tampilkan!",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.options.itemsPerPage = 1000
-            const tableAttr = { options: this.options, search: this.search };
-            this.index(tableAttr).then((res) => {
-              this.desserts = res.data.data;
-              this.totalDesserts = res.data.meta.total;
-              this.loading = false;
-            });
-          }
-        });
-      } else {
-        const tableAttr = { options: this.options, search: this.search };
-        this.index(tableAttr).then((res) => {
-          this.desserts = res.data.data;
-          this.totalDesserts = res.data.meta.total;
-          this.loading = false;
-        });
+    callback(res) {
+      switch (res.act) {
+        case 'Ubah':
+          this.editItem(res.id)
+          break;
+        case 'Hapus':
+          this.deleteItem(parseInt(res.id))
+          break;
       }
+    },
+    getDataFromApi() {
+      const tableAttr = { options: this.options, search: this.search };
+      this.index(tableAttr).then((res) => {
+        this.desserts = res.data.data;
+        this.totalDesserts = res.data.meta.total;
+        this.loading = false;
+      });
     },
     filter() {
       this.getDataFromApi();

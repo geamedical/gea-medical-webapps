@@ -132,7 +132,6 @@ export default {
         }
       });
       this.sockets.subscribe("form:permintaan", (data) => {
-        console.log(data);
         this.getNotifData();
         if (data.user_target === this.authenticated.id) {
           this.setNotifier(`User atas nama ${data.user.name} telah mengajukan form permintaan, periksa sekarang!`)

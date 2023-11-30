@@ -10,17 +10,14 @@
           {{ parseDate(item) }}
         </template>
         <template v-slot:[`item.status`]="{ item }">
-          <v-chip class="ma-2" :color="chipColor(item)" label text-color="white">
-            <v-icon left>
-              {{ chipIcon(item) }}
-            </v-icon>
-            {{ chipText(item) }}
-          </v-chip>
+          <v-icon :color="chipColor(item)">
+            {{ chipIcon(item) }}
+          </v-icon>
         </template>
         <template v-slot:[`item.detail`]="{ item }">
           <div v-html="parseingDetail(item)"></div>
         </template>
-        <template v-slot:[`item.act`]="{ item }">
+        <template v-slot:[`item.exec`]="{ item }">
           <v-icon small class="mr-2" @click="execItem(item.id, 'y')"
             v-if="authenticated.id === item.user_id && item.status === 'w'">
             mdi-hand-okay
@@ -29,12 +26,9 @@
             v-if="$can('update-form-permintaan') && item.status === 'n'">
             mdi-gift-outline
           </v-icon>
-          <v-icon small class="mr-2" @click="editItem(item.user_id)" v-if="$can('update-form-permintaan')">
-            mdi-pencil
-          </v-icon>
-          <v-icon small @click="deleteItem(item.id)" v-if="$can('delete-form-permintaan')">
-            mdi-delete
-          </v-icon>
+        </template>
+        <template v-slot:[`item.act`]="{ item }">
+          <btn-action :menu="menu" @action="callback" :unique="item.id"></btn-action>
         </template>
       </v-data-table>
     </v-card-text>
@@ -43,9 +37,15 @@
 <script>
 import moment from "moment";
 import { mapActions, mapState } from "vuex";
+import BtnAction from '@/components/BtnAction.vue'
 export default {
+  components: { BtnAction },
   data() {
     return {
+      menu: [
+        { text: 'Ubah', permission: 'update-form-permintaan' },
+        { text: 'Hapus', permission: 'delete-form-permintaan' },
+      ],
       search: "",
       totalDesserts: 0,
       desserts: [],
@@ -58,7 +58,8 @@ export default {
         { text: "Detail", value: "detail", sortable: false },
         { text: "Status", value: "status", sortable: false },
         { text: "Tgl Dibuat", value: "created_at" },
-        { text: "ACT", value: "act", sortable: false },
+        { text: "#", value: "exec", sortable: false },
+        { text: "#", value: "act", sortable: false },
       ],
     };
   },
@@ -83,6 +84,16 @@ export default {
   },
   methods: {
     ...mapActions("form_permintaan", ["index", "edit", "delete", "setStatus"]),
+    callback(res) {
+      switch (res.act) {
+        case 'Ubah':
+          this.editItem(res.id)
+          break;
+        case 'Hapus':
+          this.deleteItem(parseInt(res.id))
+          break;
+      }
+    },
     parseingDetail(item) {
       if (item.type === 'akses-wifi') {
         const p = JSON.parse(item.detail)
@@ -95,9 +106,6 @@ export default {
       }
       return `<strong>${item.detail}</strong>`
     },
-    chipText(text) {
-      return text.status == 'n' ? 'Belum dipersiapkan' : text.status == 'w' ? 'Menunggu konfirm penerima' : 'Permintaan selesai'
-    },
     chipColor(text) {
       return text.status == 'n' ? 'error' : text.status == 'w' ? 'accent' : 'primary'
     },
@@ -105,34 +113,12 @@ export default {
       return text.status == 'n' ? 'mdi-alert' : text.status == 'w' ? 'mdi-sync-alert' : 'mdi-hand-okay'
     },
     getDataFromApi() {
-      if (this.options.itemsPerPage < 0) {
-        this.$swal({
-          title: "Maaf",
-          text: "Jumlah data terlalu banyak maka data tidak dapat ditampilkan seluruhnya, kami membatasinya dengan jumlah 1000 baris data!",
-          icon: "info",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Ya, tampilkan!",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.options.itemsPerPage = 1000
-            const tableAttr = { options: this.options, search: this.search };
-            this.index(tableAttr).then((res) => {
-              this.desserts = res.data.data;
-              this.totalDesserts = res.data.meta.total;
-              this.loading = false;
-            });
-          }
-        });
-      } else {
-        const tableAttr = { options: this.options, search: this.search };
-        this.index(tableAttr).then((res) => {
-          this.desserts = res.data.data;
-          this.totalDesserts = res.data.meta.total;
-          this.loading = false;
-        });
-      }
+      const tableAttr = { options: this.options, search: this.search };
+      this.index(tableAttr).then((res) => {
+        this.desserts = res.data.data;
+        this.totalDesserts = res.data.meta.total;
+        this.loading = false;
+      });
     },
     filter() {
       this.getDataFromApi();

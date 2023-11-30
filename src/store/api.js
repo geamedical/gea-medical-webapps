@@ -2,7 +2,7 @@ import axios from 'axios'
 import store from './index.js'
 
 const $axios = axios.create({
-    baseURL: 'http://192.168.84.180:3333/',
+    baseURL: `${process.env.SERVICES_PROTOCOL}://${process.env.SERVICES_HOST}:${process.env.SERVICES_PORT}/`,
     headers: {
         'Content-Type': 'application/json',
     },

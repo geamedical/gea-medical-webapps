@@ -73,7 +73,7 @@ export default {
             const tableAttr = { options: this.option, search: this.search };
             this.index(tableAttr)
                 .then((res) => {
-                    if (res.status === 200)
+                    if (res.status === true)
                         if (res.data.data.length > 0) {
                             res.data.data.forEach(e => {
                                 this.datainfo.push(e)

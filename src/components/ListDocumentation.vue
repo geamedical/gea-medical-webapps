@@ -52,7 +52,6 @@ export default {
                             this.option.page++
                         }
                         this.busy = false;
-                        console.log(this.datainfo);
                     })
             }
         }

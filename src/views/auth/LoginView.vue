@@ -53,7 +53,7 @@ export default {
       form: {
         username: "",
         password: "",
-        remember_me: "",
+        remember_me: false,
       },
       alert: {
         type: "",
@@ -77,8 +77,8 @@ export default {
       this.loading = true;
       this.submitLogin(this.form).then((res) => {
         this.loading = false;
-        if (this.remember_me === true)
-          localStorage.setItem("email", this.form.email);
+        if (this.form.remember_me)
+          localStorage.setItem("username", this.form.username);
         this.alert = {
           type: res.data.msg === "login error" ? "error" : "success",
           title: res.data.msg,
