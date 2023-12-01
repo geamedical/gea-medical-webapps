@@ -17,7 +17,8 @@ export default {
     callback() {
       this.store().then((e) => {
         this.loading = false;
-        if (e.status === 200) {
+        console.log(e.status);
+        if (e.status === true) {
           this.$swal({
             title: "Ditambahkan!",
             text: "Data berhasil ditambahkan.",

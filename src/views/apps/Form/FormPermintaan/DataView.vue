@@ -6,6 +6,9 @@
         @keyup="filter()"></v-text-field>
       <v-data-table dense flat :headers="headers" :items="desserts" :options.sync="options"
         :server-items-length="totalDesserts" :loading="loading">
+        <template v-slot:[`item.no`]="{ item }">
+          {{ item.index }}
+        </template>
         <template v-slot:[`item.created_at`]="{ item }">
           {{ parseDate(item) }}
         </template>
@@ -28,30 +31,36 @@
           </v-icon>
         </template>
         <template v-slot:[`item.act`]="{ item }">
-          <btn-action :menu="menu" @action="callback" :unique="item.id"></btn-action>
+          <btn-action :menu="menu" @action="callback" :unique="item.user_id"></btn-action>
         </template>
       </v-data-table>
     </v-card-text>
+    <DetailView :dialogShow="showDetail" :data="dataDetail" @event="eventDialog" />
   </v-card>
 </template>
 <script>
 import moment from "moment";
 import { mapActions, mapState } from "vuex";
 import BtnAction from '@/components/BtnAction.vue'
+import DetailView from "./DetailView.vue"
 export default {
-  components: { BtnAction },
+  components: { BtnAction, DetailView },
   data() {
     return {
       menu: [
-        { text: 'Ubah', permission: 'update-form-permintaan' },
-        { text: 'Hapus', permission: 'delete-form-permintaan' },
+        { text: 'Lihat', icon: 'mdi-key-chain', permission: 'read-form-permintaan' },
+        { text: 'Ubah', icon: 'mdi-pencil', permission: 'update-form-permintaan' },
+        { text: 'Hapus', icon: 'mdi-delete', permission: 'delete-form-permintaan' },
       ],
+      showDetail: false,
+      dataDetail: {},
       search: "",
       totalDesserts: 0,
       desserts: [],
       loading: true,
       options: {},
       headers: [
+        { text: "NO", value: "no", sortable: false },
         { text: "NIK", value: "user.nik", sortable: false },
         { text: "Nama", value: "user.name", sortable: false },
         { text: "Type", value: "type" },
@@ -84,8 +93,25 @@ export default {
   },
   methods: {
     ...mapActions("form_permintaan", ["index", "edit", "delete", "setStatus"]),
+    getNotifPermintaan() {
+      this.sockets.subscribe("form:permintaan:setstatus", (data) => {
+        this.getNotifData();
+        if (data.user.id === this.authenticated.id) {
+          this.getDataFromApi();
+        }
+      });
+      this.sockets.subscribe("form:permintaan", (data) => {
+        this.getNotifData();
+        if (data.user_target === this.authenticated.id) {
+          this.getDataFromApi();
+        }
+      });
+    },
     callback(res) {
       switch (res.act) {
+        case 'Lihat':
+          this.showItem(res.id)
+          break;
         case 'Ubah':
           this.editItem(res.id)
           break;
@@ -93,6 +119,9 @@ export default {
           this.deleteItem(parseInt(res.id))
           break;
       }
+    },
+    eventDialog(res) {
+      this.showDetail = res
     },
     parseingDetail(item) {
       if (item.type === 'akses-wifi') {
@@ -128,6 +157,15 @@ export default {
     },
     editItem(id) {
       this.$router.push({ path: `/form-permintaan/show/${id}` });
+    },
+    showItem(id) {
+      this.edit(id)
+        .then((res) => {
+          this.showDetail = true
+          this.dataDetail = res.data
+        }).catch((err) => {
+          console.log(err);
+        })
     },
     deleteItem(id) {
       this.$swal({

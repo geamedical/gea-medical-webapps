@@ -37,7 +37,7 @@ export default new Vuetify({
                 appbar: '#f7f8ff',
                 drawer: '#0C134F',
                 rightdrawer: '#ffffff',
-                footer: '#fbfcff',
+                footer: '#f7f8ff',
                 card: '#ffffff',
                 primary: '#0C134F',
                 secondary: '#1D267D',

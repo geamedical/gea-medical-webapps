@@ -32,16 +32,16 @@
                     v-model="permintaan[findData('email')].detail" :rules="[
                         v => !!v || 'E-mail harus diisi!',
                         v => /.+@.+/.test(v) || 'E-mail tidak valid!',
-                    ]" v-if="findData('email') > 0"></v-text-field>
+                    ]" v-if="findData('email') > -1"></v-text-field>
                 <v-textarea outlined :name="permintaan[findData('email')].notes"
                     v-model="permintaan[findData('email')].notes" label="Untuk Keperluan?" :disabled="!email"
-                    v-if="findData('email') > 0"></v-textarea>
+                    v-if="findData('email') > -1"></v-textarea>
                 <!-- email::end -->
 
                 <!-- wifi::started -->
                 <v-switch v-model="wifi" inset :label="`Wifi: ${wifi ? 'ya' : 'tidak'}`"
                     :disabled="this.authenticated.pin === '' || this.authenticated.pin === null ? false : true"></v-switch>
-                <v-container v-if="findData('akses-wifi') > 0">
+                <v-container v-if="findData('akses-wifi') > -1">
                     <v-row>
                         <v-text-field :disabled="!wifi" dense outlined class="mb-input" label="Nama lengkap"
                             v-model="akseswifi.nama" :rules="[
@@ -66,19 +66,21 @@
 
                 <!-- server::started -->
                 <v-switch v-model="server" inset :label="`Akses Server: ${server ? 'ya' : 'tidak'}`"></v-switch>
-                <v-row no-gutters v-if="findData('akses-server') > 0" class="mb-5">
+                <v-row no-gutters v-if="findData('akses-server') > -1" class="mb-5">
                     <v-col col="12" md="6" v-for="i in serverName" :key="i">
                         <v-checkbox v-model="selectedServer" :label="i" :value="i" class="mb-input"></v-checkbox>
                     </v-col>
                 </v-row>
                 <v-textarea outlined :name="permintaan[findData('akses-server')].notes"
                     v-model="permintaan[findData('akses-server')].notes" label="Untuk Keperluan?" :disabled="!server"
-                    v-if="findData('akses-server') > 0" @change="setupServer(findData('akses-server'))"></v-textarea>
+                    v-if="findData('akses-server') > -1" @change="setupServer(findData('akses-server'))"></v-textarea>
                 <!-- server::ended -->
 
             </v-card-text>
-            <v-card-title>Permintaan tambahan</v-card-title>
-            <v-card-text>
+            <v-card-title>
+                <v-switch v-model="anyReq" inset :label="`Apakah anda memiliki permintaan tambahan: ${anyReq ? 'ya' : 'tidak'}`"></v-switch>
+            </v-card-title>
+            <v-card-text v-if="anyReq">
                 <v-container>
                     <v-row no-gutters v-for="(item, index) in permintaan.filter(item => item.type === 'lainya')"
                         :key="index">
@@ -127,14 +129,13 @@ export default {
         email: false,
         wifi: false,
         server: false,
+        anyReq: false,
         akseswifi: {
             nama: "",
             email: "",
             pin: "",
         },
-        permintaan: [
-            { no: 0, type: "lainya", detail: "", notes: "", created_at: "", updated_at: "" },
-        ],
+        permintaan: [],
     }),
     watch: {
         email(e) {
@@ -165,6 +166,17 @@ export default {
                 this.permintaan.push({ no: setno, type: "akses-server", detail: "", notes: "", created_at: "", updated_at: "" })
             } else {
                 const indexToRemove = this.permintaan.findIndex(item => item.type === 'akses-server')
+                if (indexToRemove !== -1) {
+                    this.permintaan.splice(indexToRemove, 1);
+                }
+            }
+        },
+        anyReq(e) {
+            if (e) {
+                let setno = this.permintaan.length
+                this.permintaan.push({ no: setno, type: "lainya", detail: "", notes: "", created_at: "", updated_at: "" })
+            } else {
+                const indexToRemove = this.permintaan.findIndex(item => item.type === 'lainya')
                 if (indexToRemove !== -1) {
                     this.permintaan.splice(indexToRemove, 1);
                 }

@@ -3,15 +3,16 @@
         <v-list dense nav subheader v-if="!isDashboard">
             <v-subheader>Aksi Data</v-subheader>
             <v-list-item-group v-model="selectedRightDrawer" color="primary">
-                <v-list-item v-for="([title, icon, link, permission], i) in menu" :key="i" @click="movePage(link)" router
-                    exact>
-                    <v-list-item-action v-if="$can(permission)">
-                        <v-icon>{{ icon }}</v-icon>
-                    </v-list-item-action>
-                    <v-list-item-content v-if="$can(permission)">
-                        <v-list-item-title>{{ title }}</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
+                <div v-for="([title, icon, link, permission], i) in menu" :key="i">
+                    <v-list-item @click="movePage(link)" router exact v-if="$can(permission)">
+                        <v-list-item-action>
+                            <v-icon>{{ icon }}</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title>{{ title }}</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </div>
             </v-list-item-group>
         </v-list>
         <v-divider v-if="!isDashboard"></v-divider>

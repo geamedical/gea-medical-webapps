@@ -6,11 +6,12 @@
             </v-btn>
         </template>
         <v-list dense>
-            <v-list-item v-for="item in menu" :key="item.text" link>
-                <v-icon small>{{ item.icon }}</v-icon>
-                <v-list-item-title v-text="item.text" @click="clickAct(item.text, unique)" v-if="$can(item.permission)">
-                </v-list-item-title>
-            </v-list-item>
+            <div v-for="item in menu" :key="item.text">
+                <v-list-item link @click="clickAct(item.text, unique)"  v-if="$can(item.permission)">
+                    <v-icon small class="mr-2">{{ item.icon }}</v-icon>
+                    <v-list-item-title v-text="item.text"/>
+                </v-list-item>
+            </div>
         </v-list>
     </v-menu>
 </template>

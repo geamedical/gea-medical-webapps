@@ -7,15 +7,6 @@
       <v-data-table dense flat :headers="headers" :items="desserts" :options.sync="options"
         :server-items-length="totalDesserts" :loading="loading">
         <template v-slot:[`item.act`]="{ item }">
-          <!-- <v-icon small class="mr-2" @click="setpermission(item.id)" v-if="$can('update-role')">
-            mdi-key-chain
-          </v-icon>
-          <v-icon small class="mr-2" @click="editItem(item.id)" v-if="$can('update-role')">
-            mdi-pencil
-          </v-icon>
-          <v-icon small @click="deleteItem(item.id)" v-if="$can('delete-role')">
-            mdi-delete
-          </v-icon> -->
           <btn-action :menu="menu" @action="callback" :unique="item.id"></btn-action>
         </template>
       </v-data-table>
@@ -72,6 +63,7 @@ export default {
   methods: {
     ...mapActions("masterdata_role", ["index", "edit", "delete"]),
     callback(res) {
+      console.log(res.act);
       switch (res.act) {
         case 'Ubah':
           this.editItem(res.id)
