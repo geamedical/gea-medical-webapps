@@ -1,7 +1,8 @@
 <template>
-    <div>
+    <div class="mt-5">
+        <v-subheader style="font-size: 20px; font-weight: bold;">Aksi Data</v-subheader>
+        <v-divider></v-divider>
         <v-list dense nav subheader v-if="!isDashboard">
-            <v-subheader>Aksi Data</v-subheader>
             <v-list-item-group v-model="selectedRightDrawer" color="primary">
                 <div v-for="([title, icon, link, permission], i) in menu" :key="i">
                     <v-list-item @click="movePage(link)" router exact v-if="$can(permission)">
