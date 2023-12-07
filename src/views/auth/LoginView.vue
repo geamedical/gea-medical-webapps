@@ -9,7 +9,7 @@
             <SwitchMode />
           </v-card-title>
           <v-card-text>
-            <v-form>
+            <v-form @submit.prevent="submit">
               <v-text-field label="Tulis Username Anda Disini" name="username" prepend-inner-icon="mdi-account"
                 class="rounded-0" outlined placeholder="Username" v-model="form.username"></v-text-field>
               <v-text-field label="Tulis Kata Sandi Anda Disini" name="password" prepend-inner-icon="mdi-lock"
@@ -20,12 +20,10 @@
               <v-card-actions class="text--secondary">
                 <v-checkbox color="primary" label="Ingat Saya" v-model="form.remember_me"></v-checkbox>
                 <v-spacer></v-spacer>
-                Tidak punya akun?
-                <a href="#" class="pl-2" color="primary">Daftar Akun</a>
               </v-card-actions>
               <v-btn class="rounded-0" color="primary" :disabled="
                 form.email === '' && form.password === '' ? true : false
-              " :loading="loading" x-large block dark @click="submit()">Login</v-btn>
+              " :loading="loading" x-large block dark type="submit">Login</v-btn>
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex justify-center">

@@ -24,7 +24,7 @@ export default {
             text: "Data berhasil ditambahkan.",
             icon: "success",
           });
-          this.$router.push({ name: "form-permintaan.data" });
+          this.$router.push({ name: "form-permintaan.data" }).catch(() => true);
         } else {
           this.errors = e.data.errors
           var txt = '<div>'

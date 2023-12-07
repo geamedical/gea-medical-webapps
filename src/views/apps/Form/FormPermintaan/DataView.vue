@@ -60,9 +60,8 @@ export default {
       loading: true,
       options: {},
       headers: [
-        { text: "NO", value: "no", sortable: false },
-        { text: "NIK", value: "user.nik", sortable: false },
-        { text: "Nama", value: "user.name", sortable: false },
+        { text: "NIK", value: "nik", sortable: false },
+        { text: "Nama", value: "name", sortable: false },
         { text: "Type", value: "type" },
         { text: "Detail", value: "detail", sortable: false },
         { text: "Status", value: "status", sortable: false },
