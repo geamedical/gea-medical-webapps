@@ -36,7 +36,7 @@
         </v-list>
         <v-divider></v-divider>
         <v-list nav dense shaped subheader>
-            <v-subheader>Perlengkapan Data</v-subheader>
+            <v-subheader>Keseluruhan</v-subheader>
             <div v-for="(item) in menus" :key="item.no">
                 <v-list-item v-if="!item.child" link :to="item.link">
                     <v-list-item-icon>
@@ -44,12 +44,32 @@
                     </v-list-item-icon>
                     <v-list-item-title>{{ item.title }}</v-list-item-title>
                 </v-list-item>
-
-                <v-list-group v-else :prepend-icon="item.icon" color="#FFFFFF" v-model="menuchildren" no-action>
+                <v-list-group v-else :prepend-icon="item.icon" color="#FFFFFF" no-action>
                     <template v-slot:activator>
                         <v-list-item-title>{{ item.title }}</v-list-item-title>
                     </template>
-                    <v-list-item v-for="([title, icon, link, permission], x) in item.itemchild" :key="x" :to="link" link >
+                    <v-list-item v-for="([title, icon, link, permission], x) in item.itemchild" :key="x" :to="link" link>
+                        <v-list-item-title v-if="$can(permission)">{{ title }}</v-list-item-title>
+                        <v-list-item-icon v-if="$can(permission)">
+                            <v-icon>{{ icon }}</v-icon>
+                        </v-list-item-icon>
+                    </v-list-item>
+                </v-list-group>
+            </div>
+            <v-subheader>Konfigurasi</v-subheader>
+            <div v-for="(item) in menus_konfigurasi" :key="item.no">
+                <v-list-item v-if="!item.child" link :to="item.link">
+                    <v-list-item-icon>
+                        <v-icon>{{ item.icon }}</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item>
+
+                <v-list-group v-else :prepend-icon="item.icon" color="#FFFFFF" no-action>
+                    <template v-slot:activator>
+                        <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    </template>
+                    <v-list-item v-for="([title, icon, link, permission], x) in item.itemchild" :key="x" :to="link" link>
                         <v-list-item-title v-if="$can(permission)">{{ title }}</v-list-item-title>
                         <v-list-item-icon v-if="$can(permission)">
                             <v-icon>{{ icon }}</v-icon>
@@ -84,7 +104,6 @@ export default {
     data: () => ({
         appname: 'GEA MEDICAL APPS',
         LeftSelectedDrawer: 0,
-        menuchildren: 0,
         menus: [
             {
                 no: 0,
@@ -100,7 +119,31 @@ export default {
                 icon: 'mdi-list-box-outline',
                 child: true,
                 itemchild: [
-                    ['Form Permintaan', 'mdi-frequently-asked-questions', '/form-permintaan', 'read-form-permintaan'],
+                    ['Permintaan Akses', 'mdi-frequently-asked-questions', '/form-permintaan', 'read-form-permintaan'],
+                ],
+                link: '/'
+            },
+            {
+                no: 2,
+                title: 'Permintaan',
+                icon: 'mdi-leak',
+                child: true,
+                itemchild: [
+                    ['Akses Server', 'mdi-server', '/permintaan-server', 'read-form-permintaan'],
+                    ['Akses Folder NAS Server', 'mdi-access-point', '/permintaan-folder-nas', 'read-form-permintaan'],
+                ],
+                link: '/permintaan'
+            },
+        ],
+        menus_konfigurasi: [
+            {
+                no: 11,
+                title: 'Perizinan akses',
+                icon: 'mdi-folder-key',
+                child: true,
+                itemchild: [
+                    ['Folder Server NAS', 'mdi-server-network', '/folder-nas-permission', 'read-permission'],
+                    ['Server', 'mdi-server-network', '/server-permission', 'read-permission'],
                 ],
                 link: '/'
             },

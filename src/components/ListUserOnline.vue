@@ -4,6 +4,7 @@
             <v-list subheader>
                 <v-subheader>Rekanan Aktif</v-subheader>
                 <v-list-item v-for="i in datainfo" :key="i.id">
+                    <!-- {{ i.id }} -->
                     <v-list-item-avatar>
                         <v-avatar size="40" color="primary">
                             <v-icon dark>
@@ -30,9 +31,7 @@ export default {
             search: 'y',
             option: {
                 page: 1,
-                itemsPerPage: 10,
-                sortBy: 'islogin',
-                sortDesc: true
+                limit: 10
             },
             busy: false,
             scrollDistance: '10px',
@@ -51,7 +50,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions("masterdata_user", ["index"]),
+        ...mapActions(["user_login"]),
         Online(login) {
             return login === 'n' ? 'offline' : 'online'
         },
@@ -70,16 +69,16 @@ export default {
         },
         loadData() {
             this.busy = true;
-            const tableAttr = { options: this.option, search: this.search };
-            this.index(tableAttr)
+            this.user_login(this.option)
                 .then((res) => {
-                    if (res.status === true)
-                        if (res.data.data.length > 0) {
-                            res.data.data.forEach(e => {
+                    if (res.status === 200) {
+                        if (res.data.data.data.length > 0) {
+                            res.data.data.data.forEach(e => {
                                 this.datainfo.push(e)
                             });
                             this.option.page++
                         }
+                    }
                     this.busy = false;
                 })
         }

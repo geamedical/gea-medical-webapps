@@ -2,8 +2,12 @@
   <v-card flat color="card" v-if="$can('read-user')">
     <v-card-title>Master Data Pengguna</v-card-title>
     <v-card-text>
-      <v-text-field label="Cari data..." prepend-inner-icon="mdi-text-search" outlined dense v-model="search"
-        @keyup="filter()"></v-text-field>
+      <v-row no-gutter>
+        <v-text-field label="Cari data..." prepend-inner-icon="mdi-text-search" outlined dense v-model="search"
+          @keyup="filter()"></v-text-field>
+        <DatePicker label="Filter dari" :disabled="false" @someEvent="dari_tgl" />
+        <DatePicker label="Filter sampai" :disabled="false" @someEvent="sampai_tgl" />
+      </v-row>
       <v-data-table dense flat :headers="headers" :items="desserts" :options.sync="options"
         :server-items-length="totalDesserts" :loading="loading" item-key="id" single-expand :expanded.sync="expanded"
         show-expand>
@@ -63,6 +67,9 @@
           <strong :class="item.activation === 'invalid' ? 'error--text' : 'accent--text'">{{
             item.activation.toUpperCase() }}</strong>
         </template>
+        <template v-slot:[`item.created_at`]="{ item }">
+          <strong>{{ parseDate(item.created_at) }}</strong>
+        </template>
         <template v-slot:[`item.act`]="{ item }">
           <btn-action :menu="menu" @action="callback" :unique="item.id"></btn-action>
         </template>
@@ -73,9 +80,10 @@
 <script>
 import moment from "moment";
 import BtnAction from '@/components/BtnAction.vue'
+import DatePicker from '@/components/DatePicker.vue'
 import { mapActions } from "vuex";
 export default {
-  components: { BtnAction },
+  components: { BtnAction, DatePicker },
   data() {
     return {
       menu: [
@@ -83,6 +91,8 @@ export default {
         { text: 'Hapus', icon: 'mdi-delete', permission: 'delete-user' },
       ],
       search: "",
+      start: "",
+      finish: "",
       expanded: [],
       totalDesserts: 0,
       desserts: [],
@@ -94,6 +104,7 @@ export default {
         { text: "AKTIVASI", value: "activation", sortable: false },
         { text: "ROLE/JABATAN", value: "roles.rolename", sortable: false },
         { text: "DEPT", value: "dept.deptname", sortable: false },
+        { text: "TGL. DIBUAT", value: "created_at", sortable: false },
         { text: "ACT", value: "act", sortable: false },
       ],
     };
@@ -114,6 +125,14 @@ export default {
   },
   methods: {
     ...mapActions("masterdata_user", ["index", "edit", "delete"]),
+    dari_tgl(e) {
+      this.start = e
+      this.getDataFromApi()
+    },
+    sampai_tgl(e) {
+      this.finish = e
+      this.getDataFromApi()
+    },
     callback(res) {
       switch (res.act) {
         case 'Ubah':
@@ -125,7 +144,7 @@ export default {
       }
     },
     getDataFromApi() {
-      const tableAttr = { options: this.options, search: this.search };
+      const tableAttr = { options: this.options, search: this.search, start: this.start, finish: this.finish };
       this.index(tableAttr).then((res) => {
         this.desserts = res.data.data;
         this.totalDesserts = res.data.meta.total;

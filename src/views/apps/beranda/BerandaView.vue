@@ -107,6 +107,30 @@ export default {
           link:'/dokumentasi',
           authorization:'read-documentation'
         },
+        {
+          color: 'accent',
+          src: 'mdi-server-security',
+          title: 'NAS Server',
+          artist: 'Daftar permintaan NAS Server',
+          link:'/permintaan-folder-nas',
+          authorization:'read-permission'
+        },
+        {
+          color: 'error',
+          src: 'mdi-server',
+          title: 'Akses Server',
+          artist: 'Daftar permintaan Akses Server',
+          link:'/permintaan-server',
+          authorization:'read-permission'
+        },
+        {
+          color: 'primary',
+          src: 'mdi-script-text-key',
+          title: 'Perizinan Akses',
+          artist: 'Daftar Perizinan Akses Server',
+          link:'/server-permission',
+          authorization:'read-permission'
+        },
       ],
       // optionsDonuts: {
       //   series: [44, 55, 13, 33],

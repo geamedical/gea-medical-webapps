@@ -1,5 +1,5 @@
 <template>
-  <v-menu offset-y>
+  <v-menu offset- :close-on-content-click="closemenu">
     <template v-slot:activator="{ on, attrs }">
       <v-badge color="primary" :content="`${count !== null && count > 0 ? `Baru ${count}` : 0}`" overlap>
         <v-btn icon v-bind="attrs" v-on="on">
@@ -7,24 +7,33 @@
         </v-btn>
       </v-badge>
     </template>
-    <v-list subheader two-line dense v-scroll.self="onScroll" class="overflow-y-auto" max-height="400">
+    <v-list subheader two-line dense class="overflow-y-auto" max-height="400" max-width="400">
       <v-list-item-group v-model="selected" active-class="primary--text" v-if="notifdata.length > 0">
-        <div v-for="(item, index) in notifdata" :key="index" @click="lihat(item.id, item.type)">
+        <div v-for="(item, index) in notifdata" :key="index" @click="lihat(item.tablename)">
           <v-list-item>
-            <v-icon :color="item.color">
-              {{ item.icon }}
-            </v-icon>
-            <v-list-item-content v-html="item.data_encode">
+            <v-list-item-icon>
+              <v-icon :color="getColor(item.tablename)">{{ getIcon(item.tablename) }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>{{ setTitle(item.tablename) }}</v-list-item-title>
+              <v-list-item-subtitle>{{ setSubtitle(item) }}</v-list-item-subtitle>
             </v-list-item-content>
 
             <v-list-item-action>
               <v-list-item-action-text>{{
-                item.view === "n" ? "Lihat" : ""
+                item.status === "n" || item.status === "w" ? "Lihat" : ""
               }}</v-list-item-action-text>
             </v-list-item-action>
           </v-list-item>
 
           <v-divider v-if="index < notifdata.length - 1" :key="index"></v-divider>
+        </div>
+        <div class="d-flex justify-center">
+          <v-col cols="12" sm="3">
+            <v-btn icon color="green" @click="loadMore">
+              <v-icon>mdi-cached</v-icon>
+            </v-btn>
+          </v-col>
         </div>
       </v-list-item-group>
       <v-list-item v-else>
@@ -39,13 +48,12 @@
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from "vuex";
-import moment from "moment";
 import audioNotif from '@/assets/audio-notif/notif-permintaan.wav'
 export default {
   data() {
     return {
-      scroll: 0,
       count: null,
+      closemenu: false,
       selected: null,
       notifdata: [],
       options: {
@@ -62,101 +70,106 @@ export default {
     }),
   },
   mounted() {
-      this.getNotifLogin();
-      this.getNotifLogout();
-      this.getNotifPermintaan();
-      this.getNotifData();
+    this.getNotifPermintaan();
+    this.getNotifData();
   },
   watch: {
-    scroll(e) {
-      if (e > 420) {
-        this.options.page++;
-        this.getNotifData();
-      }
-      if (e < 0) {
-        this.options.page--;
-        this.getNotifData();
-      }
-    },
     isAuth(e) {
       if (e === true) {
-        this.getNotifLogin();
-        this.getNotifLogout();
         this.getNotifPermintaan();
         this.getNotifData();
       }
     }
   },
   methods: {
-    ...mapActions(["getnotif", "showNotif"]),
+    ...mapActions(["getnotif"]),
+    loadMore() {
+      this.closemenu = false
+      this.options.page++;
+      this.getNotifData();
+    },
     setNotifier(body) {
       this.$notification.show('Hello World', {
         body: body
       }, {
         onclick: function (e) {
           e.preventDefault()
-          window.open("http://localhost:8080", "_blank");
+          window.open(process.env.BASE_URL, "_blank");
         },
       })
     },
-    onScroll(e) {
-      this.scroll = e.target.scrollTop;
+    getColor(data) {
+      switch (data) {
+        case 'form_permintaan_akses':
+          return 'primary'
+        case 'access_server_requests':
+          return 'secondary'
+        case 'access_nas_directory_requests':
+          return 'accent'
+      }
     },
-    subtitle(data, type) {
-      const dt = JSON.parse(data);
-      return `<strong>${type.charAt(0).toUpperCase() +
-        type.slice(1).toLowerCase().replace(/-/g, " ")
-        } </strong> pada <strong>${moment(dt.created_at)
-          .locale("id")
-          .startOf("hour")
-          .fromNow()}</strong>`;
+    getIcon(data) {
+      switch (data) {
+        case 'form_permintaan_akses':
+          return 'mdi-receipt-send'
+        case 'access_server_requests':
+          return 'mdi-server-network-outline'
+        case 'access_nas_directory_requests':
+          return 'mdi-folder-lock-open'
+      }
     },
-    getNotifLogin() {
-      this.sockets.subscribe("auth-login:user", (data) => {
-        this.getNotifData();
-        this.setNotifier(`User atas nama ${data.name} telah online.`)
-      });
+    setTitle(data) {
+      switch (data) {
+        case 'form_permintaan_akses':
+          return 'Permintaan akses'
+        case 'access_server_requests':
+          return 'Permintaan akses server'
+        case 'access_nas_directory_requests':
+          return 'Permintaan akses folder NAS server'
+      }
     },
-    getNotifLogout() {
-      this.sockets.subscribe("auth-logout:user", (data) => {
-        this.getNotifData()
-        this.setNotifier(`User atas nama ${data.name} telah offline.`)
-      });
+    setSubtitle(data) {
+      switch (data.tablename) {
+        case 'form_permintaan_akses':
+          return `User atas nama ${data.from_user.name} dengan No. NIK ${data.from_user.nik} telah mengajukan permohonan permintaan akses. Anda memiliki kewajiban untuk menindak lanjuti permohonan tersebut.`
+        case 'access_server_requests':
+          return `User atas nama ${data.from_user.name} dengan No. NIK ${data.from_user.nik} telah mengajukan permohonan permintaan akses server. Anda memiliki kewajiban untuk menindak lanjuti permohonan tersebut.`
+        case 'access_nas_directory_requests':
+          return `User atas nama ${data.from_user.name} dengan No. NIK ${data.from_user.nik} telah mengajukan permohonan permintaan akses folder NAS server. Anda memiliki kewajiban untuk menindak lanjuti permohonan tersebut.`
+      }
     },
     getNotifPermintaan() {
-      this.sockets.subscribe("form:permintaan:setstatus", (data) => {
-        this.getNotifData();
-        if (data.user.id === this.authenticated.id) {
-          this.setNotifier(`Permohonan permintaan atas nama ${data.user.name} telah ditindak lanjut, periksa sekarang!`)
+      this.sockets.subscribe("notif:permintaan-akses", (data) => {
+        const cek = data.to.includes(this.authenticated.id)
+        if (cek) {
+          this.getNotifData();
+          this.setNotifier(data.message)
           new Audio(audioNotif).play()
-        }
-      });
-      this.sockets.subscribe("form:permintaan", (data) => {
-        this.getNotifData();
-        if (data.user_target === this.authenticated.id) {
-          this.setNotifier(`User atas nama ${data.user.name} telah mengajukan form permintaan, periksa sekarang!`)
         }
       });
     },
     getNotifData() {
       this.getnotif(this.options).then((e) => {
         if (e.status !== 401) {
-          this.count = e.count;
-          this.notifdata = e.pagination.data;
+          this.count = e.data.count;
+          e.data.pagination.data.forEach(el => {
+            this.notifdata.push(el)
+          });
         }
       });
     },
-    lihat(e, type) {
-      this.showNotif(e).then((res) => {
-        if (res.status)
-          this.getNotifData()
-      })
-      switch (type) {
-        case 'form-permintaan':
+    lihat(e) {
+      this.closemenu = true
+      switch (e) {
+        case 'access_server_requests':
+          this.$router.push({ name: "permintaan-server.data" }).catch(() => { })
+          break;
+        case 'form_permintaan_akses':
           this.$router.push({ name: "form-permintaan.data" }).catch(() => { })
           break;
-        case 'lainya':
-          this.$router.push({ name: "dashboard" }).catch(() => { })
+        case 'access_nas_directory_requests':
+          console.log(e);
+          this.$router.push({ name: "permintaan-folder-nas.data" }).catch(() => { })
           break;
       }
     },

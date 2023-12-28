@@ -24,15 +24,6 @@ const routes = [
     },
   },
   {
-    path: '/new-employee-request-form',
-    name: 'new-employee-request-form',
-    component: () => import('@/views/apps/beranda/Forms/Permintaan/FormPermintaan.vue'),
-    meta: {
-      layout: 'blank',
-      requiresAuth: false,
-    },
-  },
-  {
     path: '/login',
     name: 'login',
     component: () => import('@/views/auth/LoginView.vue'),
@@ -621,6 +612,238 @@ const routes = [
               text: 'Lihat Data Dokumentasi',
               disabled: true,
               href: '/dokumentasi/show/:id',
+            },
+          ]
+        }
+      },
+    ]
+  },
+  {
+    path: '/folder-nas-permission',
+    component: () => import('@/views/apps/Konfigurasi/PermissionNas/IndexView.vue'),
+    meta: {
+      layout: 'content',
+      requiresAuth: true,
+      title: 'Konfigurasi Folder NAS',
+    },
+    children: [
+      {
+        path: '',
+        name: 'folder-nas-permission.data',
+        component: () => import('@/views/apps/Konfigurasi/PermissionNas/DataView.vue'),
+        meta: {
+          requiresAuth: true,
+          title: 'Kelola Konfigurasi Folder NAS',
+          breadscrum: [
+            {
+              text: 'Beranda',
+              disabled: false,
+              href: '/',
+            },
+            {
+              text: 'Konfigurasi Folder NAS',
+              disabled: true,
+              href: '/folder-nas-permission',
+            },
+          ]
+        }
+      },
+      {
+        path: 'add',
+        name: 'folder-nas-permission.add',
+        component: () => import('@/views/apps/Konfigurasi/PermissionNas/AddView.vue'),
+        meta: {
+          requiresAuth: true,
+          title: 'Tambah Konfigurasi Folder NAS',
+          breadscrum: [
+            {
+              text: 'Beranda',
+              disabled: false,
+              href: '/',
+            },
+            {
+              text: 'Konfigurasi Folder NAS',
+              disabled: true,
+              href: '/folder-nas-permission',
+            },
+            {
+              text: 'Tambah Konfigurasi Folder NAS',
+              disabled: true,
+              href: '/folder-nas-permission/add',
+            },
+          ]
+        }
+      },
+      {
+        path: 'show/:id',
+        name: 'folder-nas-permission.show',
+        component: () => import('@/views/apps/Konfigurasi/PermissionNas/ShowView.vue'),
+        meta: {
+          requiresAuth: true,
+          title: 'Detail/Update Konfigurasi Folder NAS',
+          breadscrum: [
+            {
+              text: 'Beranda',
+              disabled: false,
+              href: '/',
+            },
+            {
+              text: 'Konfigurasi Folder NASa',
+              disabled: true,
+              href: '/folder-nas-permission',
+            },
+            {
+              text: 'Lihat Konfigurasi Folder NAS',
+              disabled: true,
+              href: '/folder-nas-permission/show/:id',
+            },
+          ]
+        }
+      },
+    ]
+  },
+  {
+    path: '/server-permission',
+    component: () => import('@/views/apps/Konfigurasi/PermissionServer/IndexView.vue'),
+    meta: {
+      layout: 'content',
+      requiresAuth: true,
+      title: 'Konfigurasi Izin Server',
+    },
+    children: [
+      {
+        path: '',
+        name: 'server-permission.data',
+        component: () => import('@/views/apps/Konfigurasi/PermissionServer/DataView.vue'),
+        meta: {
+          requiresAuth: true,
+          title: 'Kelola Konfigurasi Izin Server',
+          breadscrum: [
+            {
+              text: 'Beranda',
+              disabled: false,
+              href: '/',
+            },
+            {
+              text: 'Konfigurasi Izin Server',
+              disabled: true,
+              href: '/server-permission',
+            },
+          ]
+        }
+      },
+      {
+        path: 'add',
+        name: 'server-permission.add',
+        component: () => import('@/views/apps/Konfigurasi/PermissionServer/AddView.vue'),
+        meta: {
+          requiresAuth: true,
+          title: 'Tambah Konfigurasi Izin Server',
+          breadscrum: [
+            {
+              text: 'Beranda',
+              disabled: false,
+              href: '/',
+            },
+            {
+              text: 'Konfigurasi Izin Server',
+              disabled: true,
+              href: '/server-permission',
+            },
+            {
+              text: 'Tambah Konfigurasi Izin Server',
+              disabled: true,
+              href: '/folder-nas-permission/add',
+            },
+          ]
+        }
+      },
+      {
+        path: 'show/:id',
+        name: 'server-permission.show',
+        component: () => import('@/views/apps/Konfigurasi/PermissionServer/ShowView.vue'),
+        meta: {
+          requiresAuth: true,
+          title: 'Detail/Update Konfigurasi Izin Server',
+          breadscrum: [
+            {
+              text: 'Beranda',
+              disabled: false,
+              href: '/',
+            },
+            {
+              text: 'Konfigurasi Izin Server',
+              disabled: true,
+              href: '/server-permission',
+            },
+            {
+              text: 'Lihat Konfigurasi Izin Server',
+              disabled: true,
+              href: '/server-permission/show/:id',
+            },
+          ]
+        }
+      },
+    ]
+  },
+  {
+    path: '/permintaan-server',
+    component: () => import('@/views/apps/Permintaan/Akses-Server/IndexView.vue'),
+    meta: {
+      layout: 'content',
+      requiresAuth: true,
+      title: 'Permintaan Izin Server',
+    },
+    children: [
+      {
+        path: '',
+        name: 'permintaan-server.data',
+        component: () => import('@/views/apps/Permintaan/Akses-Server/DataView.vue'),
+        meta: {
+          requiresAuth: true,
+          title: 'Kelola Permintaan Izin Server',
+          breadscrum: [
+            {
+              text: 'Beranda',
+              disabled: false,
+              href: '/',
+            },
+            {
+              text: 'Permintaan Izin Server',
+              disabled: true,
+              href: '/permintaan-server',
+            },
+          ]
+        }
+      },
+    ]
+  },
+  {
+    path: '/permintaan-folder-nas',
+    component: () => import('@/views/apps/Permintaan/Akses-Folder-NAS/IndexView.vue'),
+    meta: {
+      layout: 'content',
+      requiresAuth: true,
+      title: 'Permintaan Izin Akses Folder NAS Server',
+    },
+    children: [
+      {
+        path: '',
+        name: 'permintaan-folder-nas.data',
+        component: () => import('@/views/apps/Permintaan/Akses-Folder-NAS/DataView.vue'),
+        meta: {
+          requiresAuth: true,
+          title: 'Kelola Permintaan Izin Akses Folder NAS Server',
+          breadscrum: [
+            {
+              text: 'Beranda',
+              disabled: false,
+              href: '/',
+            },
+            {
+              text: 'Permintaan Izin Akses Folder NAS Server',
+              disabled: true,
+              href: '/permintaan-folder-nas',
             },
           ]
         }

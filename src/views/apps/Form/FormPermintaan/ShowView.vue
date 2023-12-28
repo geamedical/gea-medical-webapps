@@ -34,15 +34,7 @@ export default {
   methods: {
     ...mapActions("form_permintaan", ["edit", "update", "attr_form", "validatePin"]),
     showData() {
-      this.edit(this.$route.params.id).then((res) => {
-        this.form.user = {
-          name: res.data.user.name,
-          telp: res.data.user.telp,
-          role_id: res.data.user.role_id,
-          dept_id: res.data.user.dept_id,
-        }
-        this.request = res.data.request
-      });
+      this.edit(this.$route.params.id);
     },
     callback() {
       this.loading = true;

@@ -9,6 +9,10 @@ import masterdata_akses from './modules/masterdata_akses.js'
 import masterdata_dept from './modules/masterdata_dept.js'
 import form_permintaan from './modules/form_permintaan.js'
 import dokumentasi from './modules/dokumentasi.js'
+import permission_nas from './modules/permission_nas'
+import permission_server from './modules/permission_server'
+import permintaan_akses_server from './modules/permintaan_akses_server'
+import permintaan_akses_folder_nas_server from './modules/permintaan_akses_folder_nas_server'
 // modules::end
 
 Vue.use(Vuex)
@@ -44,7 +48,7 @@ export default new Vuex.Store({
         } = payload
         $axios.get(`api/notification?page=${page}&limit=${limit}&sortDesc=${sortDesc}`)
           .then(response => {
-            resolve(response.data.data)
+            resolve(response)
           })
           .catch(error => {
             resolve(error.response)
@@ -52,11 +56,15 @@ export default new Vuex.Store({
       })
     },
     // eslint-disable-next-line no-empty-pattern
-    showNotif({},payload) {
+    user_login({},payload) {
       return new Promise(resolve => {
-        $axios.get(`api/notification/${payload}`)
+        const {
+          page,
+          limit
+        } = payload
+        $axios.get(`api/users-login?page=${page}&limit=${limit}`)
           .then(response => {
-            resolve(response.data)
+            resolve(response)
           })
           .catch(error => {
             resolve(error.response)
@@ -71,6 +79,10 @@ export default new Vuex.Store({
     masterdata_akses,
     masterdata_dept,
     form_permintaan,
-    dokumentasi
+    dokumentasi,
+    permission_nas,
+    permission_server,
+    permintaan_akses_server,
+    permintaan_akses_folder_nas_server,
   }
 })

@@ -161,6 +161,36 @@ export default {
                     this.selectedRightDrawer = 1
                     this.isDashboard = false
                     break;
+                case 'folder-nas-permission.data':
+                    this.menu = this.$store.state.permission_nas.rightMenuDrawer
+                    this.selectedRightDrawer = 0
+                    this.isDashboard = false
+                    break;
+                case 'folder-nas-permission.add':
+                    this.menu = this.$store.state.permission_nas.rightMenuDrawer
+                    this.selectedRightDrawer = 1
+                    this.isDashboard = false
+                    break;
+                case 'folder-nas-permission.show':
+                    this.menu = this.$store.state.permission_nas.rightMenuDrawer
+                    this.selectedRightDrawer = 1
+                    this.isDashboard = false
+                    break;
+                case 'server-permission.data':
+                    this.menu = this.$store.state.permission_server.rightMenuDrawer
+                    this.selectedRightDrawer = 0
+                    this.isDashboard = false
+                    break;
+                case 'server-permission.add':
+                    this.menu = this.$store.state.permission_server.rightMenuDrawer
+                    this.selectedRightDrawer = 1
+                    this.isDashboard = false
+                    break;
+                case 'server-permission.show':
+                    this.menu = this.$store.state.permission_server.rightMenuDrawer
+                    this.selectedRightDrawer = 1
+                    this.isDashboard = false
+                    break;
                 default:
                     break;
             }
