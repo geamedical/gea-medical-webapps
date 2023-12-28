@@ -1,10 +1,6 @@
 <template>
     <div>
         <v-list>
-            <v-list-item class="px-2">
-                <v-list-item-title class="text-h6 text-center white--text">{{ appname }}</v-list-item-title>
-            </v-list-item>
-            <v-divider class="mt-2" height="1000"></v-divider>
             <v-menu offset-x down max-width="150" :style="{ background: $vuetify.theme.themes[theme].bg }">
                 <template v-slot:activator="{ on, attrs }">
                     <v-list-item link v-bind="attrs" v-on="on">
@@ -102,7 +98,6 @@
 import { mapState, mapActions } from 'vuex'
 export default {
     data: () => ({
-        appname: 'GEA MEDICAL APPS',
         LeftSelectedDrawer: 0,
         menus: [
             {

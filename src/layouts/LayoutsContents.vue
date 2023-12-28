@@ -1,10 +1,10 @@
 <template>
   <fullscreen v-model="fullscreen">
     <v-app :style="{ background: $vuetify.theme.themes[theme].bg }">
-      <v-navigation-drawer app v-model="drawer" color="drawer" dark>
+      <v-navigation-drawer app v-model="drawer" color="drawer" dark clipped>
         <list-left-drawer />
       </v-navigation-drawer>
-      <v-app-bar fixed app color="appbar" elevation="0">
+      <v-app-bar fixed app color="appbar" clipped-left clipped-right elevation="1">
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
         <v-spacer />
         <v-btn icon @click="toggleFullscreen">
@@ -21,7 +21,7 @@
       <v-main>
         <router-view></router-view>
       </v-main>
-      <v-navigation-drawer v-model="rightDrawer" right app fixed color="rightdrawer">
+      <v-navigation-drawer v-model="rightDrawer" right app fixed color="rightdrawer" clipped>
         <list-rightdrawer-view />
       </v-navigation-drawer>
       <v-container>
