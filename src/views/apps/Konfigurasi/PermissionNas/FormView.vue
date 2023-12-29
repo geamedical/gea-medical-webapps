@@ -67,7 +67,7 @@ export default {
         }),
     },
     mounted() {
-        this.getdir('../').then((res) => {
+        this.getdir('../../../../').then((res) => {
             this.dirlist = res
         })
         this.getUser1('')
