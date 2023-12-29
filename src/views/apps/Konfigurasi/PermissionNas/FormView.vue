@@ -35,7 +35,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-btn depressed :loading="loading" color="primary" block type="submit"
-                    v-if="$can('create-user') || $can('update-user')">
+                    v-if="$can('create-permission') && $can('update-permission')">
                     Submit data
                 </v-btn>
             </v-card-actions>

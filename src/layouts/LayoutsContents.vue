@@ -5,6 +5,8 @@
         <list-left-drawer />
       </v-navigation-drawer>
       <v-app-bar fixed app color="appbar" clipped-left clipped-right elevation="1">
+        <v-icon color="primary">mdi-human-greeting-proximity</v-icon>
+        <h2 class="font-weight-black primary--text">GEA SUPERAPPS</h2>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
         <v-spacer />
         <v-btn icon @click="toggleFullscreen">
