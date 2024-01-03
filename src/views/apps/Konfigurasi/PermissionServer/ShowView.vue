@@ -32,19 +32,11 @@ export default {
       this.update(this.$route.params.id).then((res) => {
         this.loading = false;
         if (res.status === true) {
-          this.$swal({
-            title: "Diperbaharui!",
-            text: "Data berhasil diperbaharui.",
-            icon: "success",
-          });
+          this.$swallInfo("Diperbaharui!", "Data berhasil diperbaharui.")
           this.$router.push({ name: "server-permission.data" });
         } else {
           this.errors = res.data.errors
-          this.$swal({
-            title: "Error!",
-            text: "Terjadi kesalahan, silahkan hubungi tim IT!",
-            icon: "warning",
-          });
+          this.$swallErrors("Error!", "Terjadi kesalahan, silahkan hubungi tim IT!")
         }
       });
     },

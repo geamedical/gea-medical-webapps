@@ -23,19 +23,11 @@ export default {
     callback() {
       this.store().then((e) => {
         if (e.status === true) {
-          this.$swal({
-            title: "Ditambahkan!",
-            text: "Data berhasil ditambahkan.",
-            icon: "success",
-          });
+          this.$swallInfo("Ditambahkan!", "Data berhasil ditambahkan.")
           this.$router.push({ name: "server-permission.data" });
         } else {
           this.errors = e.data.errors
-          this.$swal({
-            title: "Error!",
-            text: "Terjadi kesalahan, silahkan hubungi tim IT!",
-            icon: "warning",
-          });
+          this.$swallErrors("Error!", "Terjadi kesalahan, silahkan hubungi tim IT!")
         }
       });
     },

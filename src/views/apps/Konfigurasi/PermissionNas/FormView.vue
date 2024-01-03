@@ -102,11 +102,7 @@ export default {
                     this.form.dirname = find
                 } else {
                     this.dirgroup = null
-                    this.$swal({
-                        title: "Error!",
-                        text: "Anda sudah mendaftarkan folder tersebut, anda bisa memperbaharui nya jika diperlukan!",
-                        icon: "warning",
-                    });
+                    this.$swallErrors("Error!", "Anda sudah mendaftarkan folder tersebut, anda bisa memperbaharui nya jika diperlukan!")
                     this.form.dirname = find
                 }
             })

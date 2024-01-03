@@ -32,7 +32,7 @@ const actions = {
             const search = payload.search
             $axios.get(`api/server-permission?page=${page}&limit=${itemsPerPage}&sortBy=${sortBy}&sortDesc=${sortDesc}&search=${search}`)
                 .then(response => {
-                    resolve(response.data)
+                    resolve(response)
                 })
                 .catch(error => {
                     resolve(error.response)
@@ -55,7 +55,7 @@ const actions = {
             $axios.post('api/server-permission', state.form)
                 .then(response => {
                     commit('CLEAR_FORM')
-                    resolve(response.data)
+                    resolve(response)
                 })
                 .catch(error => {
                     resolve(error.response)
@@ -71,7 +71,7 @@ const actions = {
                         authorization_id: x.authorization_id,
                         server: x.server,
                     }
-                    resolve(response.data)
+                    resolve(response)
                 })
                 .catch(error => {
                     resolve(error.response)
@@ -83,7 +83,7 @@ const actions = {
             $axios.put(`api/server-permission/${payload}`, state.form)
                 .then(response => {
                     commit('CLEAR_FORM')
-                    resolve(response.data)
+                    resolve(response)
                 })
                 .catch(error => {
                     resolve(error.response)
@@ -94,7 +94,7 @@ const actions = {
         return new Promise(resolve => {
             $axios.delete(`api/server-permission/${payload}`)
                 .then(response => {
-                    resolve(response.data)
+                    resolve(response)
                 })
                 .catch(error => {
                     resolve(error.response)

@@ -31,7 +31,21 @@ export default {
       }
     },
     $findArrayByObjectName(array, objname, value) {
-      return array.find(obj => obj[objname] === value);
-    }
+      return array.find((obj) => obj[objname] === value);
+    },
+    $swallErrors(title, txt) {
+      this.$swal({
+        title: title,
+        text: txt,
+        icon: "warning",
+      });
+    },
+    $swallInfo(title, txt) {
+      this.$swal({
+        title: title,
+        text: txt,
+        icon: "info",
+      });
+    },
   },
 };

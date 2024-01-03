@@ -23,20 +23,12 @@ export default {
     ...mapActions("permission_nas", ["attr_form_user", "store"]),
     callback() {
       this.store().then((e) => {
-        if (e.status === true) {
-          this.$swal({
-            title: "Ditambahkan!",
-            text: "Data berhasil ditambahkan.",
-            icon: "success",
-          });
+        if (e.status === 200) {
+          this.$swallInfo("Ditambahkan!", "Data berhasil ditambahkan.")
           this.$router.push({ name: "folder-nas-permission.data" });
         } else {
           this.errors = e.data.errors
-          this.$swal({
-            title: "Error!",
-            text: "Terjadi kesalahan, silahkan hubungi tim IT!",
-            icon: "warning",
-          });
+          this.$swallErrors("Error!", "Terjadi kesalahan, silahkan hubungi tim IT!")
         }
       });
     },

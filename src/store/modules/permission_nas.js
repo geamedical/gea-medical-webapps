@@ -42,7 +42,7 @@ const actions = {
           `api/nas-permission?page=${page}&limit=${itemsPerPage}&sortBy=${sortBy}&sortDesc=${sortDesc}&search=${search}`
         )
         .then((response) => {
-          resolve(response.data);
+          resolve(response);
         })
         .catch((error) => {
           resolve(error.response);
@@ -67,7 +67,7 @@ const actions = {
         .post("api/nas-permission", state.form)
         .then((response) => {
           commit("CLEAR_FORM");
-          resolve(response.data);
+          resolve(response);
         })
         .catch((error) => {
           resolve(error.response);
@@ -98,7 +98,7 @@ const actions = {
         .put(`api/nas-permission/${payload}`, state.form)
         .then((response) => {
           commit("CLEAR_FORM");
-          resolve(response.data);
+          resolve(response);
         })
         .catch((error) => {
           resolve(error.response);
@@ -110,7 +110,7 @@ const actions = {
       $axios
         .delete(`api/nas-permission/${payload}`)
         .then((response) => {
-          resolve(response.data);
+          resolve(response);
         })
         .catch((error) => {
           resolve(error.response);
