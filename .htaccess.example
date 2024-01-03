@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Perbaikan: Tambahkan %{HTTP_HOST} pada RewriteCond
+  RewriteCond %{HTTP_HOST} !^geamedical\.net$ [NC]
+  RewriteRule ^(.*)$ https://geamedical.net/$1 [R,L]
+
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule . /index.html [L]
+</IfModule>
