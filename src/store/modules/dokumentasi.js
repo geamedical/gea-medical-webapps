@@ -38,8 +38,8 @@ const state = () => ({
         },
     ],
     rightMenuDrawer: [
-        ['List Data', 'mdi-view-list', 'dokumentasi.data', 'read-user'],
-        ['Buat Data Baru', 'mdi-plus-box', 'dokumentasi.add', 'create-user'],
+        ['List Data', 'mdi-view-list', 'dokumentasi.data', 'read-documentation'],
+        ['Buat Data Baru', 'mdi-plus-box', 'dokumentasi.add', 'create-documentation'],
     ]
 })
 
