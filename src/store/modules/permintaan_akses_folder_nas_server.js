@@ -34,7 +34,7 @@ const actions = {
           `api/permintaan-akses-folder-nas-server?page=${page}&limit=${itemsPerPage}&sortBy=${sortBy}&sortDesc=${sortDesc}`
         )
         .then((response) => {
-          resolve(response.data);
+          resolve(response);
         })
         .catch((error) => {
           resolve(error.response);
@@ -61,7 +61,7 @@ const actions = {
       $axios
         .delete(`api/permintaan-akses-folder-nas-server/${payload}`)
         .then((response) => {
-          resolve(response.data);
+          resolve(response);
         })
         .catch((error) => {
           resolve(error.response);

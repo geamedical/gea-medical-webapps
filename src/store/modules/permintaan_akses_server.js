@@ -35,7 +35,7 @@ const actions = {
           `api/permintaan-akses-server?page=${page}&limit=${itemsPerPage}&sortBy=${sortBy}&sortDesc=${sortDesc}&search=${search}`
         )
         .then((response) => {
-          resolve(response.data);
+          resolve(response);
         })
         .catch((error) => {
           resolve(error.response);
@@ -49,7 +49,7 @@ const actions = {
           status: payload.status,
         })
         .then((response) => {
-          resolve(response.data);
+          resolve(response);
         })
         .catch((error) => {
           resolve(error.response);
@@ -61,7 +61,7 @@ const actions = {
       $axios
         .delete(`api/permintaan-akses-server/${payload}`)
         .then((response) => {
-          resolve(response.data);
+          resolve(response);
         })
         .catch((error) => {
           resolve(error.response);

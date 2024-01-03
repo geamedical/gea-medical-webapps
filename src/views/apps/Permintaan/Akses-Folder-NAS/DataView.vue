@@ -192,9 +192,15 @@ export default {
     getDataFromApi() {
       const tableAttr = { options: this.options };
       this.index(tableAttr).then((res) => {
-        this.desserts = res.data.data;
-        this.totalDesserts = res.data.meta.total;
-        this.loading = false;
+        if (res.status === 200) {
+            this.desserts = res.data.data.data;
+            this.totalDesserts = res.data.data.meta.total;
+            this.loading = false;
+          } else if (res.status === 401) {
+            this.$router.push({ name: "error-401" }).catch(() => true)
+          } else {
+            this.$swallErrors('Terjadi kesalahan', `Status sumber permintaan ${res.status}`)
+          }
       });
     },
     deleteItem(id) {
@@ -210,17 +216,9 @@ export default {
         if (result.isConfirmed) {
           this.delete(id).then((e) => {
             if (e.status === true) {
-              this.$swal({
-                title: "Terhapus!",
-                text: "Data berhasil dihapus.",
-                icon: "success",
-              });
+              this.$swallInfo("Terhapus!", "Data berhasil dihapus.")
             } else {
-              this.$swal({
-                title: "Error!",
-                text: "Terjadi kesalahan, silahkan hubungi tim IT!",
-                icon: "warning",
-              });
+              this.$swallErrors('Terjadi kesalahan', `Status sumber permintaan ${e.status}`)
             }
             this.getDataFromApi();
           });
