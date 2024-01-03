@@ -15,7 +15,7 @@ export default {
   }),
   created() {
     if (this.$store.state.auth.permissions.length > 0) {
-      if (!this.$can('create-permission'))
+      if (!this.$can('create-nasserver'))
         this.$router.push({ name: "error-401" }).catch(() => true)
     }
   },

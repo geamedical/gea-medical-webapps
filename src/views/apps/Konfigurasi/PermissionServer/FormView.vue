@@ -17,7 +17,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-btn depressed :loading="loading" color="primary" block type="submit"
-                    v-if="$can('create-permission') || $can('update-permission')">
+                    v-if="$can('create-server') || $can('update-server')">
                     Submit data
                 </v-btn>
             </v-card-actions>

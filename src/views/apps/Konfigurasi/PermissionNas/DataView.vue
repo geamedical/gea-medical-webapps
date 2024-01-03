@@ -38,7 +38,7 @@ export default {
   },
   mounted() {
     if (this.$store.state.auth.permissions.length > 0) {
-      if (!this.$can('read-permission'))
+      if (!this.$can('read-nasserver'))
         this.$router.push({ name: "error-401" }).catch(() => true)
     }
   },

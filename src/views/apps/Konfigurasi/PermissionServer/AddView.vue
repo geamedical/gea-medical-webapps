@@ -14,7 +14,7 @@ export default {
   }),
   mounted() {
     if (this.$store.state.auth.permissions.length > 0) {
-      if (!this.$can('create-permission'))
+      if (!this.$can('create-server'))
         this.$router.push({ name: "error-401" }).catch(() => true)
     }
   },

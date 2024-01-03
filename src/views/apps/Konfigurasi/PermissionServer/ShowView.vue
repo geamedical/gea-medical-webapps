@@ -14,7 +14,7 @@ export default {
   }),
   created() {
     if (this.$store.state.auth.permissions.length > 0) {
-      if (!this.$can('update-permission')) this.$router.push({ name: "error-401" }).catch(() => true)
+      if (!this.$can('update-server')) this.$router.push({ name: "error-401" }).catch(() => true)
     }
     this.edit(this.$route.params.id).then((res) => {
       this.search = res.data.user.name

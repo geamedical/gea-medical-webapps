@@ -35,7 +35,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-btn depressed :loading="loading" color="primary" block type="submit"
-                    v-if="$can('create-permission') && $can('update-permission')">
+                    v-if="$can('create-nasserver') || $can('update-nasserver')">
                     Submit data
                 </v-btn>
             </v-card-actions>
