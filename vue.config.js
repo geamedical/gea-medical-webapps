@@ -9,7 +9,7 @@ module.exports = {
   configureWebpack: {
     plugins: [
       new Dotenv({
-        path: './config/.env.production',
+        path: './config/.env.development',
       }),
     ],
   },
