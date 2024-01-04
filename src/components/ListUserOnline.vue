@@ -65,7 +65,9 @@ export default {
             });
         },
         loadMore: function () {
-            this.loadData()
+            if (this.isAuth) {
+                this.loadData()
+            }
         },
         loadData() {
             this.busy = true;

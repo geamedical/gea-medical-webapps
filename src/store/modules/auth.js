@@ -118,7 +118,7 @@ const actions = {
     },
     attr_form_user() {
         return new Promise(resolve => {
-            $axios.get('api/attr_form')
+            $axios.get('api/users-attr')
                 .then(response => {
                     resolve(response.data)
                 })

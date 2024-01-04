@@ -70,8 +70,10 @@ export default {
     }),
   },
   mounted() {
-    this.getNotifPermintaan();
-    this.getNotifData();
+    if (this.isAuth) {
+      this.getNotifPermintaan();
+      this.getNotifData();
+    }
   },
   watch: {
     isAuth(e) {
@@ -89,7 +91,7 @@ export default {
       this.getNotifData();
     },
     setNotifier(body) {
-      this.$notification.show('Hello World', {
+      this.$notification.show('Pemberitahuan', {
         body: body
       }, {
         onclick: function (e) {
