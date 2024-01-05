@@ -2,15 +2,18 @@
     <v-form @submit.prevent="submit">
         <v-card flat color="card" class="mb-5" v-if="!$route.params.id">
             <v-card-title>Daftar folder yang tersedia</v-card-title>
-            <v-card-text>
+            <v-card-text v-if="dirlistLoading === false">
                 <v-chip-group v-model="dirgroup" column v-if="dirlist.length > 0">
-                    <v-chip filter outlined v-for="i in dirlist" :key="i">
-                        {{ i }}
+                    <v-chip filter outlined v-for="i in dirlist" :key="i.path">
+                        {{ i.name }}
                     </v-chip>
                 </v-chip-group>
                 <v-alert dense outlined type="error" v-else>
                     Data folder pada server <strong>kosong</strong>!
                 </v-alert>
+            </v-card-text>
+            <v-card-text class="d-flex justify-center" v-else>
+                <v-progress-circular indeterminate color="primary"></v-progress-circular>
             </v-card-text>
         </v-card>
         <v-card color="card" flat>
@@ -55,6 +58,7 @@ export default {
         find2: null,
         dirgroup: null,
         dirlist: [],
+        dirlistLoading: true,
         err: [],
         user1: [],
         user2: [],
@@ -67,8 +71,10 @@ export default {
         }),
     },
     mounted() {
-        this.getdir('../../../../').then((res) => {
+        this.dirlistLoading = true
+        this.getdir().then((res) => {
             this.dirlist = res
+            this.dirlistLoading = false
         })
         this.getUser1('')
         this.getUser2('')
@@ -95,17 +101,22 @@ export default {
             }
         },
         dirgroup(v) {
-            const find = this.dirlist[v]
-            const tableAttr = { options: { page: 1, itemsPerPage: 10, sortBy: '', sortDesc: true }, search: find };
-            this.index(tableAttr).then((res) => {
-                if (res.data.data.length < 1) {
-                    this.form.dirname = find
-                } else {
-                    this.dirgroup = null
-                    this.$swallErrors("Error!", "Anda sudah mendaftarkan folder tersebut, anda bisa memperbaharui nya jika diperlukan!")
-                    this.form.dirname = find
-                }
-            })
+            if (v !== null) {
+                const find = this.dirlist[v]
+                const tableAttr = { options: { page: 1, itemsPerPage: 10, sortBy: '', sortDesc: true }, search: find.name };
+                this.index(tableAttr).then((res) => {
+                    if (res.data.data.data.length < 1) {
+                        this.form.dirname = find.name
+                    } else {
+                        this.dirgroup = null
+                        this.$swallErrors("Error!", "Anda sudah mendaftarkan folder tersebut, anda bisa memperbaharui nya jika diperlukan!")
+                        this.form.dirname = ''
+                    }
+                })
+            } else {
+                this.$swallErrors("Error!", "Anda harus memilih daftar folder pada list dan pastikan folder yang anda daftarkan belum pernah didaftarkan sebelumnya, anda bisa memperbaharui nya jika diperlukan!")
+                this.form.dirname = ''
+            }
         }
     },
     methods: {

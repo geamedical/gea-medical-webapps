@@ -34,26 +34,27 @@ export default {
                 sortDesc: true
             },
             busy: false,
-            scrollDistance: '10px',
+            scrollDistance: '5px',
         }
+    },
+    mounted() {
+        this.loadMore()
     },
     methods: {
         ...mapActions("dokumentasi", ["index"]),
         loadMore: function () {
-            if (this.$can('read-documentation')) {
-                this.busy = true;
-                const tableAttr = { options: this.option, search: this.search };
-                this.index(tableAttr)
-                    .then((res) => {
-                        if (res.data.data.length > 0) {
-                            res.data.data.forEach(e => {
-                                this.datainfo.push(e)
-                            });
-                            this.option.page++
-                        }
-                        this.busy = false;
-                    })
-            }
+            this.busy = true;
+            const tableAttr = { options: this.option, search: this.search };
+            this.index(tableAttr)
+                .then((res) => {
+                    if (res.data.data.length > 0) {
+                        res.data.data.forEach(e => {
+                            this.datainfo.push(e)
+                        });
+                        this.option.page++
+                    }
+                    this.busy = false;
+                })
         }
     }
 }

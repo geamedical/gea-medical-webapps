@@ -117,11 +117,11 @@ const actions = {
         });
     });
   },
-  getdir({ }, payload) {
+  getdir({ }) {
     return new Promise(resolve => {
-        $axios.get(`/dir?directory=${payload}`)
+        $axios.get(`api/nas-permission?directory=true`)
             .then(response => {
-                resolve(response.data.res.data.readir)
+                resolve(response.data.data)
             })
             .catch(error => {
                 resolve(error.response)
