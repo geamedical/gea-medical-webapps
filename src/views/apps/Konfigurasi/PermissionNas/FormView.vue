@@ -19,10 +19,15 @@
         <v-card color="card" flat>
             <v-card-title>Form Perizinan Server NAS</v-card-title>
             <v-card-text>
+                <v-alert border="left" color="primary" dark>
+                    Anda dapat <strong>menulis secara manual</strong> jika memang data yang ingin anda daftarkan tidak
+                    tercantum dalam daftar folder yang yang muncul/sistem tidak menampilkan daftar folder yang tersedia pada
+                    server NAS.
+                </v-alert>
                 <v-row no-gutters>
                     <v-col cols="12" md="4">
                         <v-text-field dense outlined v-model="form.dirname" label="Nama folder" class="mb-input"
-                            :error-messages="getMsg('dirname')" disabled></v-text-field>
+                            :error-messages="getMsg('dirname')"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="4">
                         <v-autocomplete dense outlined v-model="form.primary_authorization_id" :items="user1"
