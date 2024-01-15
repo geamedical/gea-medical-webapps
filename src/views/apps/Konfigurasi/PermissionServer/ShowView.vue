@@ -31,7 +31,7 @@ export default {
     callback() {
       this.update(this.$route.params.id).then((res) => {
         this.loading = false;
-        if (res.status === true) {
+        if (res.status === 200) {
           this.$swallInfo("Diperbaharui!", "Data berhasil diperbaharui.")
           this.$router.push({ name: "server-permission.data" });
         } else {
