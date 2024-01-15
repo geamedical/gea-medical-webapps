@@ -22,7 +22,8 @@ export default {
     ...mapActions("permission_server", ["attr_form_user", "store"]),
     callback() {
       this.store().then((e) => {
-        if (e.status === true) {
+        console.log(e.status);
+        if (e.status === 200) {
           this.$swallInfo("Ditambahkan!", "Data berhasil ditambahkan.")
           this.$router.push({ name: "server-permission.data" });
         } else {
