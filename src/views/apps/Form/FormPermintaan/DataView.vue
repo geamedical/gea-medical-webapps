@@ -77,8 +77,9 @@
                       : <strong :class="$status_wny_color(i.status_secondary)">{{ $status_wny(i.status_secondary)
                       }}</strong>
                       <v-divider inset vertical class="ml-5 mr-5"></v-divider>
+                      {{ authenticated.dept_name }}
                       <v-btn outlined class="ma-2" small @click="tindak(i, 'status_secondary')"
-                        v-if="authenticated.id === i.accept_secondary_id && i.status_secondary === 'w'">
+                        v-if="authenticated.id === i.accept_secondary_id && i.status_secondary === 'w' || authenticated.role_name === 'Superadmin' && authenticated.dept_name === 'IT Programmer' || authenticated.role_name === 'Manager IT Infra' && authenticated.dept_name === 'IT'">
                         <v-icon>mdi-clipboard-arrow-down-outline</v-icon>
                         Tindak lanjuti permintaan ini
                       </v-btn>

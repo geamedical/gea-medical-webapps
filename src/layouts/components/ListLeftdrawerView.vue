@@ -137,8 +137,9 @@ export default {
                 icon: 'mdi-folder-key',
                 child: true,
                 itemchild: [
-                    ['Folder Server NAS', 'mdi-server-network', '/folder-nas-permission', 'read-permission'],
-                    ['Server', 'mdi-server-network', '/server-permission', 'read-permission'],
+                    ['Folder Server NAS', 'mdi-folder-sync', '/folder-nas-permission', 'read-nasserver'],
+                    ['Server', 'mdi-server-network', '/server-permission', 'read-server'],
+                    ['Fortigate', 'mdi-vpn', '/fortigate', 'read-server'],
                 ],
                 link: '/'
             },
@@ -151,6 +152,14 @@ export default {
                 child: true,
                 link: '/dokumentasi',
                 permission: 'read-documentation'
+            },
+            {
+                no: 12,
+                title: 'Penggunaan Email',
+                icon: 'mdi-email-multiple-outline',
+                child: true,
+                link: '/office-mail',
+                permission: 'read-email'
             },
         ],
         menus_masterdata: [

@@ -10,14 +10,15 @@ import VueSocketIO from 'vue-socket.io'
 import VueNativeNotification from 'vue-native-notification'
 import VueCryptojs from 'vue-cryptojs'
 import infiniteScroll from 'vue-infinite-scroll'
-
+import CKEditor from '@ckeditor/ckeditor5-vue2';
+Vue.use( CKEditor )
 Vue.use(infiniteScroll)
 Vue.use(VueApexCharts)
 Vue.use(VueFullscreen)
 Vue.component('apexchart', VueApexCharts)
 Vue.use(Vuetify)
-Vue.use(VueSweetalert2);
-Vue.use(VueCryptojs);
+Vue.use(VueSweetalert2)
+Vue.use(VueCryptojs)
 Vue.use(VueNativeNotification, {
     requestOnNotify: true
   })

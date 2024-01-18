@@ -1,39 +1,34 @@
 <template>
-    <div>
-        <editor api-key="1123qfkdclno272ze9cyzbe3bda8w26u9bxs214d8qca0rnw" :init="{
-            height: 500,
-            menubar: false,
-            plugins: [
-                'a11ychecker', 'advlist', 'advcode', 'advtable', 'autolink', 'checklist', 'export',
-                'lists', 'link', 'image', 'charmap', 'preview', 'anchor', 'searchreplace', 'visualblocks',
-                'powerpaste', 'fullscreen', 'formatpainter', 'insertdatetime', 'media', 'table', 'help', 'wordcount'
-            ],
-            toolbar:
-                'undo redo | casechange blocks | bold italic backcolor | \
-                           alignleft aligncenter alignright alignjustify | \
-                           bullist numlst checklist outdent indent | removeformat | a11ycheck code table help'
-        }" initial-value="Tulis disini" v-model="text" />
-    </div>
+    <ckeditor :editor="editor" v-model="text" :config="editorConfig"></ckeditor>
 </template>
 <script>
-import Editor from '@tinymce/tinymce-vue';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 export default {
-    components: {
-        'editor': Editor
+    props: {
+        data: String
     },
-    props:{
-        data:String
+    data() {
+        return {
+            editor: ClassicEditor,
+            text: '<p>Content of the editor.</p>',
+            editorConfig: {
+                // The configuration of the editor.
+            }
+        };
     },
-    data: () => ({
-        text: '',
-    }),
-    watch:{
-        text(e){
+    watch: {
+        text(e) {
             this.$emit('event', e)
         },
-        data(e){
+        data(e) {
             this.text = e
         }
     }
 }
 </script>
+<style>
+.ck-editor__editable {
+    min-height: 500px;
+}
+</style>

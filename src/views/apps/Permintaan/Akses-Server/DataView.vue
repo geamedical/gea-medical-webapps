@@ -5,7 +5,7 @@
         :server-items-length="totalDesserts" :loading="loading">
         <template v-slot:[`item.status`]="{ item }">
           <strong v-bind:class="getClass(item.status)">{{ getTextStatus(item.status) }}</strong>
-          <v-btn icon color="primary" v-if="item.status === 'w' && authenticated.id === item.authorization_id"
+          <v-btn icon color="primary" v-if="item.status === 'w' && authenticated.id === item.authorization_id || authenticated.role_name === 'Manager IT Infra' && authenticated.dept_name === 'IT' || authenticated.role_name === 'Superadmin' && authenticated.dept_name === 'IT Programmer'"
             @click="tindak(item.id)">
             <v-icon>mdi-gesture-double-tap</v-icon>
           </v-btn>

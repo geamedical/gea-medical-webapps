@@ -13,6 +13,8 @@ import permission_nas from './modules/permission_nas'
 import permission_server from './modules/permission_server'
 import permintaan_akses_server from './modules/permintaan_akses_server'
 import permintaan_akses_folder_nas_server from './modules/permintaan_akses_folder_nas_server'
+import fortigate from './modules/fortigate'
+import email from './modules/email'
 // modules::end
 
 Vue.use(Vuex)
@@ -84,5 +86,7 @@ export default new Vuex.Store({
     permission_server,
     permintaan_akses_server,
     permintaan_akses_folder_nas_server,
+    fortigate,
+    email,
   }
 })

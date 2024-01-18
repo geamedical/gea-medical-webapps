@@ -133,7 +133,8 @@ export default {
             this.docinfo.desc = text
         },
         addlist() {
-            let idset = this.docinfo.listep.length - 1
+            let idset = this.docinfo.listep.length
+            console.log(idset);
             this.docinfo.listep.push({
                 id: ++idset,
                 title: '',
@@ -145,7 +146,7 @@ export default {
         },
 
         addlistmap() {
-            let idset = this.docinfo.mapstep.length - 1
+            let idset = this.docinfo.mapstep.length
             this.docinfo.mapstep.push({
                 id: ++idset,
                 step: ++idset,

@@ -850,6 +850,60 @@ const routes = [
       },
     ]
   },
+  {
+    path: '/fortigate',
+    name: 'fortigate',
+    component: () => import('@/views/apps/Konfigurasi/Fortigate/IndexView.vue'),
+    meta: {
+      layout: 'content',
+      requiresAuth: true,
+      title: 'Fortigate Setup',
+      breadscrum: [
+        {
+          text: 'Beranda',
+          disabled: true,
+          href: '/',
+        },
+        {
+          text: 'Konfigurasi',
+          disabled: true,
+          href: '/',
+        },
+        {
+          text: 'Fortigate',
+          disabled: false,
+          href: '/fortigate',
+        },
+      ]
+    },
+  },
+  {
+    path: '/office-mail',
+    name: 'mail',
+    component: () => import('@/views/apps/Informasi/Mail/IndexView.vue'),
+    meta: {
+      layout: 'content',
+      requiresAuth: true,
+      title: 'Informasi Penggunaan Email Kantor',
+      breadscrum: [
+        {
+          text: 'Beranda',
+          disabled: true,
+          href: '/',
+        },
+        {
+          text: 'Informasi',
+          disabled: true,
+          href: '/',
+        },
+        {
+          text: 'Penggunaan Email',
+          disabled: false,
+          href: '/office-mail',
+        },
+      ]
+    },
+  },
 ]
 
 const router = new VueRouter({

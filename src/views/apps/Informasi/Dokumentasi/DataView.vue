@@ -28,13 +28,13 @@
           </td>
         </template>
         <template v-slot:[`item.created_at`]="{ item }">
-          {{ parseDate(item.created_at) }}
+          {{ $parseDate(item.created_at) }}
         </template>
         <template v-slot:[`item.title`]="{ item }">
           {{ stringLimiter(item.title, 20) }}
         </template>
         <template v-slot:[`item.updated_at`]="{ item }">
-          {{ parseDate(item.updated_at) }}
+          {{ $parseDate(item.updated_at) }}
         </template>
         <template v-slot:[`item.act`]="{ item }">
           <btn-action :menu="menu" @action="callback" :unique="item.id"></btn-action>
@@ -45,7 +45,6 @@
 </template>
 <script>
 import { mapActions } from "vuex";
-import moment from 'moment'
 import BtnAction from '@/components/BtnAction.vue'
 export default {
   components: { BtnAction },
@@ -96,9 +95,6 @@ export default {
           this.deleteItem(parseInt(res.id))
           break;
       }
-    },
-    parseDate(e) {
-      return moment(e).format("MMMM Do YYYY, h:mm:ss a");
     },
     stringLimiter(txt, limit) {
       return txt.slice(0, limit)

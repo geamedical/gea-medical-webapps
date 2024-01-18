@@ -7,7 +7,7 @@
           <strong v-bind:class="getClass(item.authorization_primary_axec)">{{
             getTextStatus(item.authorization_primary_axec) }}</strong>
           <v-btn icon color="primary"
-            v-if="item.authorization_primary_axec === 'waiting' && authenticated.id === item.authorization_primary_id"
+            v-if="item.authorization_primary_axec === 'waiting' && authenticated.id === item.authorization_primary_id || authenticated.role_name === 'Manager IT Infra' && authenticated.dept_name === 'IT' || authenticated.role_name === 'Superadmin' && authenticated.dept_name === 'IT Programmer'"
             @click="tindak(item)">
             <v-icon>mdi-gesture-double-tap</v-icon>
           </v-btn>
@@ -16,7 +16,7 @@
           <strong v-bind:class="getClass(item.authorization_secondary_axec)">{{
             getTextStatus(item.authorization_secondary_axec) }}</strong>
           <v-btn icon color="primary"
-            v-if="item.authorization_secondary_axec === 'waiting' && authenticated.id === item.authorization_secondary_id"
+            v-if="item.authorization_secondary_axec === 'waiting' && authenticated.id === item.authorization_secondary_id || authenticated.role_name === 'Manager IT Infra' && authenticated.dept_name === 'IT' || authenticated.role_name === 'Superadmin' && authenticated.dept_name === 'IT Programmer'"
             @click="tindak(item)">
             <v-icon>mdi-gesture-double-tap</v-icon>
           </v-btn>
@@ -133,6 +133,12 @@ export default {
         this.showTindak({ id: data.id, column: 'authorization_primary_exec' }, data)
       } else if (this.authenticated.id === data.authorization_primary_id && this.authenticated.id === data.authorization_secondary_id) {
         this.showTindak({ id: data.id, column: 'authorization_primary_exec' }, data)
+      }else if (this.authenticated.role_name === 'Superadmin' && this.authenticated.dept_name === 'IT' || this.authenticated.role_name === 'Superadmin' && this.authenticated.dept_name === 'IT Programmer') {
+        if (data.authorization_primary_axec === 'waiting') {
+          this.showTindak({ id: data.id, column: 'authorization_primary_exec' }, data)
+        } else {
+          this.showTindak({ id: data.id, column: 'authorization_secondary_exec' }, data)
+        }
       }
       else if (this.authenticated.id === data.authorization_secondary_id) {
         if (data.authorization_primary_axec === 'gift') {
